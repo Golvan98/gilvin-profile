@@ -15,7 +15,7 @@ function MainHeader() {
       <div id="section1" className="h-screen flex items-center justify-center bg-deepPurple text-white">
         <h2 className="text-4xl">Section 1</h2>
       </div>
-
+dada
     </div>
   );
 }
