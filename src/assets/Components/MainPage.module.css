@@ -1,8 +1,96 @@
-.test{
-    background-color: red;
-    text-align: center;
-}
+
 
 .header{
     background-color: palegreen;
 }
+
+
+
+@media (max-width: 799px) {   /* this is figure1, small screen */
+    .section1LeftSideSmall {
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        width: 66.666667%; 
+        height: 50%; 
+        background-color: blue;
+    }
+  }
+
+  @media (min-width: 800px) {   /* this is figure1, small screen */
+    .section1RightSideSmall {
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        width: 66.666667%; 
+        height: 50%; 
+        background-color: green;
+    }
+  }
+
+
+
+  @media (min-width: 800px) {
+    .section1LeftSideBig {
+      background-color: #1A1A2E!important;
+      flex-wrap: nowrap; 
+        width: 60%; 
+        height: 100%; 
+        font-size: 3rem;
+        line-height: 1; 
+    }
+  }
+
+  @media (min-width: 800px) {
+    .section1RightSideBig {
+        display: flex; 
+        justify-content: center; 
+        align-items: flex-start; 
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem; 
+        width: 40%; 
+        height: 100%; 
+        background-color: #1A1A2E!important;
+    }
+  }
+
+  
+  
+  
+  
+
+  @media (max-width: 799px) {
+    .smallScreenSection1Container {
+        flex-wrap: nowrap; 
+        width: 100%; 
+        height: 80%; 
+        font-size: 2.25rem;
+        line-height: 2.5rem; 
+        background-color: green
+    }
+  }
+
+  @media (min-width: 799px) {
+    .bigScreenSection1Container {
+        display: flex; 
+        width: 100%; 
+        height: 80%; 
+        font-size: 2.25rem;
+        line-height: 2.5rem; 
+        background-color: #FCA5A5; 
+
+    }
+  }
+
+
+
+  @media (max-width: 799px) {
+    .bigScreen {
+      background-color: indigo !important;
+      display: flex; 
+        width: 100%; 
+        font-size: 2.25rem;
+        line-height: 2.5rem; 
+
+    }
+  }

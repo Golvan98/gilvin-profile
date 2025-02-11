@@ -21,10 +21,10 @@ function MainPage() {
         </div>
         
 
-        <article id="section1Container" className="text-4xl text-lightCyan h-4/5 w-full flex items-center justify-center">
-
-            <figure id="section1LeftSide" className="w-1/2 h-full flex-wrap">
-              <div className="mt-4 text-6xl w-full h-1/4"> 
+        <article id="section1Container" className={`${classes.bigScreenSection1Container} ${classes.smallScreenSection1Container}`} >
+        
+            <figure id="section1LeftSide" className={`${classes.section1LeftSideBig} `}>
+              <div className="mt-4  w-full h-1/4">
               Here to help with everything Tech🤓
               </div>
               <div className="mt-4 text-2xl w-full h-3/4"> Hello there, I am Gilvin Zalsos. I am a react developer fixated on delivering websites for anyone in need of my services. This website has everything
@@ -32,8 +32,8 @@ function MainPage() {
               </div>
             </figure>
 
-            <figure id="section1RightSide" className="w-2/3 h-full flex items-start justify-center rounded-l ">
-              <div className="w-auto bg-red-300 h-3/5 rounded-lg">
+            <figure id="section1RightSide" className={`${classes.section1RightSideBig}`}>
+              <div className="w-auto h-3/5 rounded-lg">
               <img src="https://i.imgur.com/OWZxfoV.jpeg" className="object-contain w-full h-full" alt="Example" />  
               </div> 
                {
