@@ -23,17 +23,17 @@ function MainPage() {
 
         <article id="section1Container" className={`${classes.bigScreenSection1Container} ${classes.smallScreenSection1Container}`} >
         
-            <figure id="section1LeftSide" className={`${classes.section1LeftSideBig} `}>
-              <div className="mt-4  w-full h-1/4">
+            <figure id="section1LeftSide" className={`${classes.section1LeftSideBig} ${classes.section1LeftSideSmall} `}>
+              <div className="mt-4 w-full h-1/4">
               Here to help with everything Tech🤓
               </div>
-              <div className="mt-4 text-2xl w-full h-3/4"> Hello there, I am Gilvin Zalsos. I am a react developer fixated on delivering websites for anyone in need of my services. This website has everything
+              <div className="mt-4 w-full h-3/4"> Hello there, I am Gilvin Zalsos. I am a react developer fixated on delivering websites for anyone in need of my services. This website has everything
               you need to know (both personal and professional) about me. 
               </div>
             </figure>
 
-            <figure id="section1RightSide" className={`${classes.section1RightSideBig}`}>
-              <div className="w-auto h-3/5 rounded-lg">
+            <figure id="section1RightSide" className={`${classes.section1RightSideBig} ${classes.section1RightSideSmall}`}>
+              <div className="w-auto h-4/5 rounded-lg">
               <img src="https://i.imgur.com/OWZxfoV.jpeg" className="object-contain w-full h-full" alt="Example" />  
               </div> 
                {
@@ -46,9 +46,11 @@ function MainPage() {
        
       </section>  {/* End of Section 1 */}
 
-      <SecondSection/>
-      <ThirdSection/>
-      <Footer/>
+      <SecondSection/> 
+      {/* <ThirdSection/>*/}
+      {/*    <Footer/>*/}
+      
+   
       
 
     </main>
