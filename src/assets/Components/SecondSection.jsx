@@ -3,7 +3,7 @@ import classes from './SecondSection.module.css';
 function secondSection ()
 {
     return (
-        <section id="section2" className="h-1/2 w-full flex items-center justify-center bg-deepPurple text-white">
+        <section id="section2" className="min-h-screen w-full flex items-center justify-center bg-deepPurple text-white">
           <article class=" w-4/5 h-full "> 
           
               <figure id="figure1" className={`${classes.figure1Big}  h-auto flex-nowrap`} >

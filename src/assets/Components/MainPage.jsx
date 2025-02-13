@@ -7,7 +7,7 @@ function MainPage() {
   return (
 
 
-    <main className="fixed inset-0 overflow-y-auto snap-y snap-mandatory bg-deepPurple">
+    <main className="fixed inset-0 overflow-y-auto snap-y snap-mandatory bg-deepPurple ">
      
       <header className="text-3xl font-bold flex justify-between p-3 border-b  border-b-neonPink">
       <h1 className="text-lightCyan items-center flex-1 justify-start text-center">Gilvin🧑‍💻</h1>
@@ -47,7 +47,7 @@ function MainPage() {
       </section>  {/* End of Section 1 */}
 
       <SecondSection/> 
-      {/* <ThirdSection/>*/}
+       <ThirdSection/>*
       {/*    <Footer/>*/}
       
    
