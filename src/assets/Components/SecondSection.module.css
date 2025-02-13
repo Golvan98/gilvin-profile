@@ -1,0 +1,29 @@
+
+.test {
+    background-color: red;;
+}
+
+@media (max-width:800px) {
+    .figure1Small {
+     
+        font-size: 1.125rem;
+        line-height: 1.75rem; 
+    }
+
+    .figure2Small{
+        font-size: 1.125rem;
+        line-height: 1.75rem; 
+        color: yellow;
+    }
+}
+
+@media (min-width: 800px )
+{
+    .figure1Big{
+        background-color: aqua;
+    }
+
+    .figure2Big{
+        background-color: aqua;
+    }
+}
