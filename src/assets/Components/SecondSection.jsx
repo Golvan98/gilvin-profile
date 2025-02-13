@@ -4,7 +4,7 @@ function secondSection ()
 {
     return (
         <section id="section2" className="h-1/2 w-full flex items-center justify-center bg-deepPurple text-white">
-          <article class=" w-4/5 bg-red-300 h-full border border-white"> 
+          <article class=" w-4/5 h-full "> 
           
               <figure id="figure1" className={`${classes.figure1Big}  h-auto flex-nowrap`} >
                     <div className="w-full h-auto text-4xl flex items-center justify-center my-4">What We Do Echoes in Eternity</div>
@@ -13,19 +13,19 @@ function secondSection ()
                     </div>
               </figure>
 
-              <figure className="w-full h-2/5 bg-deepPurple">
+              <figure className="w-full h-auto ">
 
-                <div className="w-full h-1/5 flex items-center justify-center text-4xl"> 
+                <div className="w-full h-1/2 flex items-center justify-center text-4xl"> 
                 I Revel In 
                 </div>
 
-                <div className="mt-4 w-full h-2/5  flex items-center justify-center text-4xl space-x-4">
+                <div className="mt-4 w-full h-1/2 flex items-center justify-center text-4xl space-x-4">
 
-                    <p className="w-1/6 h-full flex items-center justify-center">
+                    <p className="w-1/6 h-24 flex items-center justify-center">
                     <img src="https://i.imgur.com/QM2COh0.png" className="object-contain w-full h-full" alt="Example" /> 
                     </p>
 
-                    <p className="w-1/6 h-full flex items-center justify-center"> 
+                    <p className="w-1/6 h-24 flex items-center justify-center"> 
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Laravel.svg/1969px-Laravel.svg.png" className="object-contain w-full h-full" alt="Example" /> 
                     </p>
 
