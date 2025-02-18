@@ -25,7 +25,7 @@ function MainPage() {
         
             <figure id="section1LeftSide" className={`${classes.section1LeftSideBig} ${classes.section1LeftSideSmall} `}>
               <div className="mt-4 w-full h-1/4">
-              Here to help with everything Tech🤓
+              Here to help with everyTech🤓
               </div>
               <div className="mt-4 w-full h-3/4"> Hello there, I am Gilvin Zalsos. I am a react developer fixated on delivering websites for anyone in need of my services. This website has everything
               you need to know (both personal and professional) about me. 
