@@ -47,7 +47,7 @@ function MainPage() {
       </section>  {/* End of Section 1 */}
 
       <SecondSection/> 
-       <ThirdSection/>*
+       <ThirdSection/>
       {/*    <Footer/>*/}
       
    
