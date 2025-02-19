@@ -48,7 +48,7 @@ function ThirdSection ()
                    <article className="w-full h-full flex-nowrap justify-start"> 
                     <div className="w-full h-auto"> 
                     This project features a membership system where only the project owner can edit or delete the project name, while co-members can add and edit tasks. 
-                    The website encompasses all CRUD functionalities, demonstrating the ability to manage and implement complex features effectively.
+                    The project encompasses all CRUD functionalities, demonstrating the ability to manage and implement complex features effectively.
                     Laravel and Vue.js were used for the project's reactive elements and front-end capabilities. Docker Desktop was utilized for containerization, and MySQL serves as the project's database.
                     </div>
                     <div className="w-full h-auto mt-8 flex justify-center items-center text-sm ">  
@@ -59,6 +59,8 @@ function ThirdSection ()
                    
                 </div>
            </figure>
+
+           
 
            
 

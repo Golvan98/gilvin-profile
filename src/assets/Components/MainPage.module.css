@@ -2,6 +2,20 @@
     background-color: palegreen;
 }
 
+
+
+  .testBody{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+
+
+
+
+
 @media (max-width: 799px) {   /* section1LeftSide */
     .section1LeftSideSmall {
       flex-wrap: nowrap; 
