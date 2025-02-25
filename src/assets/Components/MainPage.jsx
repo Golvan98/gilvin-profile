@@ -6,16 +6,16 @@ import Footer from './Footer.jsx';
 function MainPage() {
   return (
 
-    <body className="bg-deepPurple w-full min-h-[100vh] ">
+    <body className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
       
-      <header className="text-3xl h-auto font-bold flex justify-between items-center border-b border-b-neonPink bg-deepPurple mx-16 min-h-[10vh]">
-        <h1 className="text-lightCyan">Gilvin🧑‍💻</h1>
-        <h1 className="text-lightCyan">myHeadSpace ☰</h1>
+      <header className="text-xs h-auto font-bold flex justify-between items-center border-b border-b-neonPink bg-deepPurple mx-16 min-h-[10vh] md:text-3xl">
+        <h1 className="text-lightCyan ">Gilvin🧑‍💻</h1>
+        <h1 className="text-lightCyan mx-auto">myHeadSpace ☰</h1>
       </header>
 
 
 
-      <main className="bg-deepPurple text-white min-h-[100vh] flex">
+    <main className="bg-deepPurple text-white min-h-[90vh] flex overflow-auto flex-col ">
         
       
       <article className="min-h-[90vh] flex justify-between text-xs md:text-2xl">
@@ -27,7 +27,7 @@ function MainPage() {
           </div>
 
           <div className="h-auto flex items-center justify-center "> 
-          <p className="mx-2"> Hello there, I am Gilvin Zalsos. I am a react developer fixated on delivering websites for anyone in need of my services. This website has everything
+          <p className="mx-2 text-center"> Hello there, I am Gilvin Zalsos. I am a react developer fixated on delivering websites for anyone in need of my services. This website has everything
           you need to know (both personal and professional) about me.  </p>
           </div>
 
@@ -53,7 +53,7 @@ function MainPage() {
 
       
 
-         {/*<SecondSection/> */}
+         <SecondSection/> 
          {/* <ThirdSection/> */}
         {/* <Footer/> */} 
         

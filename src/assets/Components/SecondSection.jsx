@@ -7,15 +7,23 @@ function secondSection ()
           <article class=" w-4/5 h-full "> 
           
               <figure id="figure1" className={`${classes.figure1Big}  h-auto flex-nowrap`} >
-                    <div className="w-full h-auto text-4xl flex items-center justify-center my-4">What We Do Echoes in Eternity</div>
+                    <div className={`w-full h-auto text-4xl flex items-center justify-center my-4 ${classes.figure1Small}`}>
+                      What We Do Echoes in Eternity
+                    </div>
+
+
                     <div className="w-full h-auto text-2xl flex items-center justify-center my-4">
-                    <p className={`w-1/2 ${classes.figure2Small}`}>What we post online echoes throughout the information super highway. Let us build something worth preserving</p>
+
+                      <p className={`w-1/2 ${classes.figure2Small} mx-auto  flex justify-center items-center text-center`}>
+                      What we post online echoes throughout the information super highway. Let us build something worth preserving.
+                      </p>
+
                     </div>
               </figure>
 
-              <figure className="w-full h-auto ">
+              <figure className="w-full h-auto my-24 ">
 
-                <div className="w-full h-1/2 flex items-center justify-center text-4xl"> 
+                <div className="w-full h-1/2 flex items-center justify-center text-4xl "> 
                 I Revel In 
                 </div>
 
@@ -34,6 +42,7 @@ function secondSection ()
                     </p>
                 
                 </div>
+
               </figure>
         
           </article>
