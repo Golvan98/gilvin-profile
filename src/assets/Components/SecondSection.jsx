@@ -3,7 +3,7 @@ import classes from './SecondSection.module.css';
 function secondSection ()
 {
     return (
-        <section id="section2" className="min-h-screen w-full flex items-center justify-center bg-deepPurple text-white">
+        <section id="section2" className="h-auto w-full flex flex-col items-center justify-center bg-deepPurple text-white">
           <article class=" w-4/5 h-full "> 
           
               <figure id="figure1" className={`${classes.figure1Big}  h-auto flex-nowrap`} >
@@ -21,9 +21,9 @@ function secondSection ()
                     </div>
               </figure>
 
-              <figure className="w-full h-auto my-24 ">
+              <figure className="w-full h-auto mt-24">
 
-                <div className="w-full h-1/2 flex items-center justify-center text-4xl "> 
+                <div className="w-full h-auto flex items-center justify-center text-4xl "> 
                 I Revel In 
                 </div>
 

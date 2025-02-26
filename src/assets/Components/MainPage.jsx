@@ -44,17 +44,9 @@ function MainPage() {
         
       </article>
 
-      
-
-        
-      
-
-
-
-      
 
          <SecondSection/> 
-         {/* <ThirdSection/> */}
+        <ThirdSection/>
         {/* <Footer/> */} 
         
     
