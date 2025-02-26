@@ -8,9 +8,9 @@ function MainPage() {
 
     <body className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
       
-      <header className="text-xs h-auto font-bold flex justify-between items-center border-b border-b-neonPink bg-deepPurple mx-16 min-h-[10vh] md:text-3xl">
-        <h1 className="text-lightCyan ">Gilvin🧑‍💻</h1>
-        <h1 className="text-lightCyan mx-auto">myHeadSpace ☰</h1>
+      <header className="flex justify-between items-center bg-deepPurple min-h-[10vh] md:text-3xl border-b border-neonPink">
+        <h1 className=" ml-16 text-lightCyan ">Gilvin🧑‍💻</h1>
+        <h1 className="text-lightCyan mx-auto mr-16">myHeadSpace ☰</h1>
       </header>
 
 
@@ -47,7 +47,7 @@ function MainPage() {
 
          <SecondSection/> 
         <ThirdSection/>
-        {/* <Footer/> */} 
+         <Footer/> 
         
     
         

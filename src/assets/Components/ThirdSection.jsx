@@ -77,6 +77,7 @@ function ThirdSection ()
                         </a>
                     </p>
                     </article>
+                    
                 </aside>
             </figure>
 

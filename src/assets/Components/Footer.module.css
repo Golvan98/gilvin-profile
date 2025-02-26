@@ -1,0 +1,13 @@
+@media (min-width: 800px )
+{
+    
+}
+
+
+@media (max-width: 1000px)
+{
+    .smallScreenText {
+        font-size: 8px;
+        line-height: 10px;
+    }
+}
