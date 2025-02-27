@@ -7,30 +7,30 @@ import { useState } from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
 
 function MainPage() { 
- 
+  
   return (
 
    
 
-    <body className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
+    <body  className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
       
-      <header className="flex justify-between items-center bg-deepPurple min-h-[10vh] md:text-3xl border-b border-neonPink">
+      <header  className="flex justify-between items-center bg-deepPurple min-h-[10vh] md:text-3xl border-b border-neonPink">
         <h1 className=" ml-16 text-lightCyan ">Gilvin🧑‍💻</h1>
         
-        <h1 className="text-lightCyan mx-auto mr-16">myHeadSpace ☰</h1>
-        <HamburgerMenu toggled={open} toggle={setOpen} />
+        <h1 className="text-lightCyan mx-auto mr-16 text-xs"><HamburgerMenu  /></h1>
+        
       </header>
 
 
 
-    <main className="bg-deepPurple text-white min-h-[90vh] flex overflow-auto flex-col ">
+    <main  className="bg-deepPurple text-white min-h-[90vh] flex overflow-auto flex-col ">
         
       
       <article className="min-h-[90vh] flex justify-between text-xs md:text-2xl">
 
         <aside className="flex flex-col justify justify-start w-1/2 items-center gap-12">
 
-          <div className="h-1/3 flex items-center justify-center "> 
+          <div  id="shit" className="h-1/3 flex items-center justify-center "> 
           <p className="text-xs md:text-3xl"> Here to help with everyTech🤓 </p>
           </div>
 

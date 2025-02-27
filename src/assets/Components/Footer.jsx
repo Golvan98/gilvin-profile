@@ -1,10 +1,12 @@
 
 import classes from './Footer.module.css';
+
+
 function Footer()
 {
    
     return (
-        <footer className={`min-h-[150px] flex items-center justify-between text-center mt-12  ${classes.smallScreenText} text-center  border-t border-gray-700`}>
+        <footer id="footer" className={`min-h-[150px] flex items-center justify-between text-center mt-12  ${classes.smallScreenText} text-center  border-t border-gray-700`}>
             
 
            
