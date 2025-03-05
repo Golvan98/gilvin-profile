@@ -18,11 +18,10 @@ function Footer()
             </div>
 
             <div className={`w-1/3 h-full flex flex-col mt-12 ${classes.smallScreenText} `}>
-                <p className="mt-2 h-1/4"> Links</p>
-                <p className="text-blue-500"> Linkedin</p>
-                <p className="text-blue-500"> Upwork</p>
-                <p className="text-blue-500"> Github</p>
-                
+                    <p className="mt-2 h-1/4"> Links</p> 
+                    <a href="https://www.linkedin.com/in/gilvin-zalsos-213692141/" target="blank"> <p className="text-blue-500"> Linkedin</p> </a>
+                    <a href="https://www.upwork.com/freelancers/~01ad5af5c1458d0a34" target="blank">   <p className="text-blue-500"> Upwork</p> </a>
+                    <a href="https://github.com/Golvan98" target="blank">     <p className="text-blue-500"> Github</p></a>                           
             </div>
 
             <div className={`w-1/3 h-full flex flex-col ${classes.smallScreenText} mt-12 `}>
