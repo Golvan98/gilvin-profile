@@ -102,7 +102,7 @@ function ThirdSection ()
                     <p className=" w-full py-2 text-xl font-bold max-[768px]:text-xs">Professionals Booking App</p>
 
                     <p className={`w-full text-xl leading-relaxed mt-4 ${classes.smallScreenText}`}>
-                    The Professionals Booking App is a web-based platform designed to connect users with registered professionals across various industries. Built with Vue.js, Laravel, and MySQL, the application enables users to seamlessly browse, book, and schedule appointments with professionals for consultations. The system supports CRUD functionalities, allowing both users and professionals to manage their accounts, update profiles, and organize schedules efficiently.
+                    This Professionals Booking App I created is a web-based platform designed to connect users with registered professionals across various industries. Built with Vue.js, Laravel, and MySQL, the application enables users to seamlessly browse, book, and schedule appointments with professionals for consultations. The system supports CRUD functionalities, allowing both users and professionals to manage their accounts, update profiles, and organize schedules efficiently.
                     This booking system ensures streamlined appointment management where users can search for professionals based on expertise, check availability, and request meetings. Professionals, in turn, can accept or decline bookings, maintaining control over their schedules.   </p>
 
                     <p className={`w-full flex justify-center items-center mt-6 ${classes.smallScreenText}`}>
