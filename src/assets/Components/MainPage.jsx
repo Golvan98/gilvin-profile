@@ -2,6 +2,7 @@ import classes from './MainPage.module.css';
 import SecondSection from './SecondSection.jsx';
 import ThirdSection from './ThirdSection.jsx';
 import Footer from './Footer.jsx';
+import FourthSection from './FourthSection.jsx'
 
 import { useState } from 'react';
 import HamburgerMenu from './HamburgerMenu.jsx';
@@ -55,6 +56,7 @@ function MainPage() {
 
          <SecondSection/> 
         <ThirdSection/>
+       
          <Footer/> 
         
     
