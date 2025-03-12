@@ -3,12 +3,14 @@ import SecondSection from './SecondSection.jsx';
 import ThirdSection from './ThirdSection.jsx';
 import Footer from './Footer.jsx';
 import FourthSection from './FourthSection.jsx'
-
 import { useState } from 'react';
+
 import HamburgerMenu from './HamburgerMenu.jsx';
 
 function MainPage() { 
   
+  
+
   return (
 
    
@@ -16,7 +18,7 @@ function MainPage() {
     <body  className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
       
       <header  className="flex justify-between items-center bg-deepPurple min-h-[10vh] md:text-3xl border-b border-neonPink">
-        <h1 className=" ml-16 text-lightCyan ">Gilvin🧑‍💻</h1>
+        <a href="/"><h1 className=" ml-16 text-lightCyan ">Gilvin🧑‍💻</h1></a>
         
         <h1 className="text-lightCyan mx-auto mr-16 text-xs"><HamburgerMenu  /></h1>
         
