@@ -1,3 +1,4 @@
+
 /* src/index.css */
 @tailwind base;
 @tailwind components;
@@ -5,7 +6,6 @@
 
 
 
-/*  these stuff are here in the first place, not gonna touch them but they do center your content if left untouched 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -73,8 +73,7 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}  */
-
+}  
 
 
 

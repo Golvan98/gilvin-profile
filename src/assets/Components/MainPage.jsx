@@ -17,8 +17,8 @@ function MainPage() {
 
     <body  className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
       
-      <header  className="flex justify-between items-center bg-deepPurple min-h-[10vh] md:text-3xl border-b border-neonPink">
-        <a href="/"><h1 className=" ml-16 text-lightCyan ">Gilvin🧑‍💻</h1></a>
+      <header className="flex justify-between items-center bg-deepPurple min-h-[10vh] md:text-3xl border-b border-neonPink w-full mx-auto">
+        <a href="/"><h1 className=" ml-16 text-lightCyan text-3xl ">Gilvin🧑‍💻</h1></a>
         
         <h1 className="text-lightCyan mx-auto mr-16 text-xs"><HamburgerMenu  /></h1>
         
