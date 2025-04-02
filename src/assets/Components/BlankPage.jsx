@@ -14,9 +14,9 @@ function BlankPage(){
             <h1 className="text-3xl ml-16">Gilvin🧑‍💻</h1>
         </Link>
 
-        <h1 className="text-lightCyan ml-auto mr-16 text-3xl">
+        <h2 className="text-lightCyan ml-auto mr-16 text-3xl">
             <HamburgerMenu />
-        </h1>
+        </h2>
       </header>
 
 
@@ -60,6 +60,8 @@ function BlankPage(){
                 <aside id="nav2" className="h-full w-2/5 border border-white flex items-center justify-center">
                   <div className="w-4/5 bg-red-300 rounded-sm h-5/6 flex-wrap justify-between bg-teal-300 flex items-start justify-center overflow-y-auto ">
 
+                    <p className='my-2 bg-red-300 w-2/5 h-40 mx-auto rounded-md flex items-center justify-center'> hehe</p>
+                    <p className='my-2 bg-red-300 w-2/5 h-40 mx-auto rounded-md flex items-center justify-center'> hehe</p>
                     <p className='my-2 bg-red-300 w-2/5 h-40 mx-auto rounded-md flex items-center justify-center'> hehe</p>
                     <p className='my-2 bg-red-300 w-2/5 h-40 mx-auto rounded-md flex items-center justify-center'> hehe</p>
               

@@ -1,0 +1,12 @@
+@media (min-width: 769px) {
+    .headerSetting {
+      font-size: 1.875rem
+    }
+
+}
+
+@media (max-width:768px){
+  .headerSetting {
+    font-size :.625rem;
+  }
+}

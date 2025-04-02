@@ -2,7 +2,9 @@
     background-color: palegreen;
 }
 
-
+  .red {
+    background-color: red;
+  }
 
   .testBody{
     margin: 0;
@@ -11,6 +13,18 @@
     overflow-x: hidden;
   }
 
+  @media (min-width: 769px) {
+      .headerSetting {
+        font-size: 1.875rem
+      }
+
+  }
+
+  @media (max-width:768px){
+    .headerSetting {
+      font-size :.625rem;
+    }
+  }
 
 
 
