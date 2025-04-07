@@ -3,9 +3,19 @@ import HamburgerMenu from './HamburgerMenu';
 import Footer from './Footer';
 import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
+import React, { useState, useEffect } from 'react';
 
 
 function BlankPage(){
+
+    const [clickedButton, setClickedButton] =useState(null);
+
+    const handleButtonClick = (buttonId) => {
+      setClickedButton(buttonId);
+    };
+
+    
+
     return (
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
       
@@ -17,25 +27,25 @@ function BlankPage(){
                 <aside id="Categories" className={`h-full w-1/5 h-full  items-center justify-start overflow-y-auto bg-inherit  flex flex-col  rounded-lg`}>
 
                   <div className={`mt-10 mb-2 font-bold  ${classes.secondTaskBox}`}> 
-                    <p className="text-white text-md">Categories </p>
+                    <p className="text-white text-md">Categories {clickedButton && `- ${clickedButton}`} </p>
                   </div>
                   
                   <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center`}> 
 
                     <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center space-y-4'> 
-                      <p className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm hover:cursor-pointer '> Personal Projects</p>
+                      <button onClick={ () =>handleButtonClick("personalProjects")} className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm'> Personal Projects</button>
                     </div>
 
                     <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center'> 
-                      <p className='p-1.5 w-2/3 bg-white  h-full rounded-sm'> Work Reminders</p>
+                      <button onClick={ () =>handleButtonClick("workReminders")} className='p-1.5 w-2/3 bg-white hover:bg-gray-300  h-full rounded-sm'> Work Reminders</button>
                     </div>
 
                     <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center'> 
-                      <p className='p-1.5 w-2/3 bg-white  h-full rounded-sm'> Gaming Stuff</p>
+                      <button onClick={ () =>handleButtonClick("gamingStuff")}  className='p-1.5 w-2/3 bg-white hover:bg-gray-300  h-full rounded-sm'> Gaming Stuff</button>
                     </div>
 
                     <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center'> 
-                      <p className='p-1.5 w-2/3 bg-white  h-full rounded-sm'> Others</p>
+                      <button onClick={ () =>handleButtonClick("others")} className='p-1.5 w-2/3 bg-white hover:bg-gray-300  h-full rounded-sm'> Others</button>
                     </div>
 
 
