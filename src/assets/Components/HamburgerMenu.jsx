@@ -28,7 +28,7 @@ function HamburgerMenu (toggled, toggle)
         {open && (
           <div className="absolute right-0 mt-44 w-24 bg-white border rounded-lg shadow-lg p-2 flex-nowrap">
             <ul className="">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => scrollToSection("shit")}>Home</li>
+              <li className={`p-2 hover:bg-gray-200 cursor-pointer  ${classes.burgerFont}`} onClick={() => scrollToSection("shit")}>Home</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={ () => scrollToSection("footer")}>About</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={ () => scrollToSection("footer")}>Contact</li>
             </ul>
