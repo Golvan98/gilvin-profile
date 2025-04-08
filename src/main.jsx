@@ -5,11 +5,11 @@ import App from './App.jsx'
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {RouterProvider, createBrowserRouter} from 'react-router-dom';
-import BlankPage from './assets/Components/BlankPage.jsx';
+import MyHeadSpace from './assets/Components/MyHeadSpace.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <App/>},
-  { path: '/myHeadSpace', element:<BlankPage/>}
+  { path: '/myHeadSpace', element:<MyHeadSpace/>}
 ]);
 
 createRoot(document.getElementById('root')).render(
