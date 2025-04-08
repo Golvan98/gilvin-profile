@@ -12,20 +12,25 @@ function BlankPage(){
     {
       id: 1,
       title: "lores epsm",
-      description: "Description for lores epsm: This is a sample task about Roman things.",
+      description: "This is a sample task about Roman things.",
       image: "https://images.pexels.com/photos/3299/postit-scrabble-to-do.jpg?auto=compress&cs=tinysrgb&w=600"
     },
     {
       id: 2,
       title: "dolores de maximum opus",
-      description: "Description for dolores: The max power of the opus dei is within.",
+      description: "The max power of the opus dei is within.",
       image: "https://images.pexels.com/photos/414519/pexels-photo-414519.jpeg?auto=compress&cs=tinysrgb&w=600"
     },
     {
       id: 3,
       title: "at non este",
-      description: "Description for at non este: Lorem ipsum dolor sit amet.",
+      description: "Lorem ipsum dolor sit amet.",
       image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    { id:4,
+    title: "bisaya ko nga nasalaag",
+    description: "imperialist manila huhuhuhu",
+    image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600"
     }
   ];
 
@@ -84,37 +89,56 @@ function BlankPage(){
                 <aside id="nav2" className="h-full w-2/5  flex items-center justify-center text-black bg-[#2980B9]">
                   <div className="w-4/5 rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto ">
 
-                    <button className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}> lores epsm</button>
-                    <button className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}>dolores de maximum opus </button>
-                    <button className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}>at non este </button>
-                    <button className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}>at non este </button>
+                  {
+                  tasks.map(task => (
+                  <button key={task.id} 
+                  onClick={ () => handleTaskClick(task)} 
+                  className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`} >
+                    {task.title}
+                  </button>
+                  ))
+                  }
 
+                   
                   </div>
                 </aside>
 
-               
-
-               
-
+                             
                 <aside id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
 
                 <article className="h-1/2 w-full">
 
                   <div className="w-full h-full flex items-center justify-center">  
-                    
-                    <img src="https://images.pexels.com/photos/3299/postit-scrabble-to-do.jpg?auto=compress&cs=tinysrgb&w=600" className="object-contain h-4/5 w-5/6" alt="Example" />
-                    
+                  {clickedTask ? (
+                    <img src={clickedTask.image} className="object-contain h-4/5 w-5/6" alt={clickedTask.title} />
+                    ) : 
+
+                    ( <p className="text-white"> Select a task to view details </p>
+                    )} 
+
                   </div>
 
                 </article>
 
                 <article id="thirdSectionofHeadSpace" className="h-1/2 w-full flex flex-col items-center text-white "> 
                   <div className="h-1/4 flex w-full items-center">
-                   <p  className='justify-start mx-4'> Task lores epsum dolores eptum in to lerandi</p>
+                  { clickedTask ? (
+
+                    <>
+                     <p className="justify-start mx-4"> {clickedTask.title} </p> 
+                     </>
+                    ) : (<p>No task selected</p>)}
                    </div>
 
-                  <div className="h-3/4 w-full flex justify-start mt-2 items-start "> 
-                      <p id="testpara" className='mx-2'> description of task lores epsum ectum akwitas pax romana markus orelyos sanctum nomini lapri el tu cori </p>
+                  <div className="h-3/4 w-full flex justify-start mt-2 items-start"> 
+                  { clickedTask ? (
+                    <>
+                    <p className="mx-4"> {clickedTask.description}</p>
+                    </>
+                    ) : (<p> nada sir</p>)}
+                    
+                  
+            
                   </div>
                 </article>
 
