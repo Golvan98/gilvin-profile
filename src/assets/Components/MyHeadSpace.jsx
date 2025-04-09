@@ -8,6 +8,18 @@ import React, { useState, useEffect } from 'react';
 
 function BlankPage(){
 
+  const renderTasks = (taskList) => {
+    return taskList.map(task => (
+      <button
+        onClick={() => handleTaskClick(task)}
+        key={task.id}
+        className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
+      >
+        {task.title}
+      </button>
+    ));
+  };
+
   const tasks = [
     {
       id: 1,
@@ -87,7 +99,7 @@ function BlankPage(){
     const gamingTasks = tasks.filter(task => task.category==="gaming");
     const otherTasks = tasks.filter(task => task.category==="others");
 
-    const [clickedButton, setClickedButton] =useState(null);
+    const [clickedButton, setClickedButton] =useState("all");
 
     const [clickedTask, setClickedTask] = useState(null);
 
@@ -118,6 +130,10 @@ function BlankPage(){
                   <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center`}> 
 
                     <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center space-y-4'> 
+                      <button onClick={ () =>handleButtonClick("all")} className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm'> All </button>
+                    </div>
+
+                    <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center space-y-4'> 
                       <button onClick={ () =>handleButtonClick("personal")} className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm'> Personal Projects</button>
                     </div>
 
@@ -141,24 +157,12 @@ function BlankPage(){
                 <aside id="nav2" className="h-full w-2/5  flex items-center justify-center text-black bg-[#2980B9]">
                   <div className="w-4/5 rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto ">
 
+                  {clickedButton === "personal" && renderTasks(personalTasks)}
+                  {clickedButton === "work" && renderTasks(workTasks)}
+                  {clickedButton === "others" && renderTasks(otherTasks)}
+                  {clickedButton === "gaming" && renderTasks(gamingTasks)}
+                  {clickedButton === "all" && renderTasks(tasks)}
 
-                  
-
-                  {personalTasks.map (task => (
-                    <button onClick={ () => handleTaskClick(task)}  key={task.id} className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}> {task.title} </button>
-                  ))}
-
-                  {gamingTasks.map (task => (
-                    <button onClick={ () => handleTaskClick(task)}  key={task.id} className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}> {task.title} </button>
-                  ))}
-
-                   {otherTasks.map (task => (
-                    <button onClick={ () => handleTaskClick(task)}  key={task.id} className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}> {task.title} </button>
-                  ))}
-
-                   {workTasks.map (task => (
-                    <button onClick={ () => handleTaskClick(task)}  key={task.id} className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}> {task.title} </button>
-                  ))}
 
                    
                   </div>
