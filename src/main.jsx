@@ -5,7 +5,13 @@ import App from './App.jsx'
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {RouterProvider, createBrowserRouter} from 'react-router-dom';
-import MyHeadSpace from './assets/Components/MyHeadSpace.jsx';
+import MyHeadSpace from './Components/MyHeadSpace.jsx';
+
+
+
+
+
+
 
 const router = createBrowserRouter([
   { path: '/', element: <App/>},

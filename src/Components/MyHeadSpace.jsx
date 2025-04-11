@@ -1,6 +1,6 @@
 import classes from './MyHeadSpace.module.css'
-import HamburgerMenu from './HamburgerMenu';
-import Footer from './Footer';
+import HamburgerMenu from './HamburgerMenu.jsx';
+import Footer from './Footer.jsx';
 import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
 import React, { useState, useEffect } from 'react';
