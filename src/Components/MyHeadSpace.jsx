@@ -154,9 +154,12 @@ function BlankPage(){
 
                 </aside>
 
-                <aside id="nav2" className="h-full w-2/5  flex items-center justify-center text-black bg-[#2980B9]">
+                <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]">
+                  <div id="addAndDeleteTaskSection" className="w-full flex items-center justify-end my-4"> 
+                     <button className="mx-4 bg-white "> + Add a Task </button>
+                  </div>
                   <div className="w-4/5 rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto ">
-
+                    
                   {clickedButton === "personal" && renderTasks(personalTasks)}
                   {clickedButton === "work" && renderTasks(workTasks)}
                   {clickedButton === "others" && renderTasks(otherTasks)}
