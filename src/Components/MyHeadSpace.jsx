@@ -3,10 +3,32 @@ import HamburgerMenu from './HamburgerMenu.jsx';
 import Footer from './Footer.jsx';
 import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
+import { firestore } from "../firebase.js"
+import { addDoc,collection, } from "@firebase/firestore"
+import Modal from './Modal.jsx';
 
 function BlankPage(){
+
+
+  const messageRef = useRef();
+  const ref = collection(firestore , "messages");
+
+    const handleSave = async (e) => {
+      e.preventDefault();
+      console.log(messageRef.current.value);
+
+      let data  = {
+        message: messageRef.current.value,
+      };
+      
+      try {
+        await addDoc (ref, data);
+      } catch (e) {
+        console.log(e);
+      }
+      }
+
 
   const renderTasks = (taskList) => {
     return taskList.map(task => (
@@ -99,6 +121,8 @@ function BlankPage(){
     const gamingTasks = tasks.filter(task => task.category==="gaming");
     const otherTasks = tasks.filter(task => task.category==="others");
 
+    
+
     const [clickedButton, setClickedButton] =useState("all");
 
     const [clickedTask, setClickedTask] = useState(null);
@@ -111,6 +135,15 @@ function BlankPage(){
       setClickedButton(buttonId);
     };
 
+    const [showModal, setShowModal] = useState(false);
+
+    const handleAddTaskClick = () => {
+      setShowModal(true);  // Show modal when the button is clicked
+    };
+  
+    const handleCloseModal = () => {
+      setShowModal(false);  // Close modal when clicked outside or a close button
+    };
     
 
     return (
@@ -156,7 +189,23 @@ function BlankPage(){
 
                 <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]">
                   <div id="addAndDeleteTaskSection" className="w-full flex items-center justify-end my-4"> 
-                     <button className="mx-4 bg-white "> + Add a Task </button>
+                   
+                    
+                  <button className="mx-4 bg-white" onClick={handleAddTaskClick}> 
+                + Add a Task
+                 </button>
+            
+
+                  {/* Conditional rendering of Modal */}
+                  {showModal && (
+                    <Modal onClose={handleCloseModal}>
+                      <p>Hello there! test modal here</p>
+                      
+                    </Modal>
+                  )}
+
+
+                     
                   </div>
                   <div className="w-4/5 rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto ">
                     
@@ -205,7 +254,11 @@ function BlankPage(){
                     </>
                     ) : (<p> nada sir</p>)}
                     
-                  
+                    <form onSubmit={handleSave}>
+                      <label> Enter Message</label>
+                      <input type="text" ref={messageRef}></input>
+                      <button type="submit"> Save</button>
+                    </form>
             
                   </div>
                 </article>

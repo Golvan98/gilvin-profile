@@ -9,29 +9,9 @@ import HamburgerMenu from './HamburgerMenu.jsx';
 import { useRef } from 'react';
 
 
-import { firestore } from "../firebase.js"
-import { addDoc,collection, } from "@firebase/firestore"
-
-
 function MainPage() { 
   
-  const messageRef = useRef();
-  const ref = collection(firestore , "messages");
-
-    const handleSave = async (e) => {
-      e.preventDefault();
-      console.log(messageRef.current.value);
-
-      let data  = {
-        message: messageRef.current.value,
-      };
-
-      try {
-        await addDoc (ref, data);
-      } catch (e) {
-        console.log(e);
-      }
-      }
+ 
 
     
 
@@ -69,13 +49,9 @@ function MainPage() {
           <div  id="shit" className="h-1/3 flex items-center justify-center text-black "> 
           
             
-          <div>
-          <form onSubmit={handleSave}>
-            <label> Enter Message</label>
-            <input type="text" ref={messageRef}></input>
-            <button type="submit"> Save</button>
-          </form>
-        </div> 
+          
+         
+      
           </div>
 
           <div className="h-auto flex items-center justify-center "> 
