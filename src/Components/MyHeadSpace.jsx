@@ -148,7 +148,9 @@ function BlankPage(){
 
     return (
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
-      
+            
+
+
       <Header/>
 
 
@@ -188,21 +190,60 @@ function BlankPage(){
                 </aside>
 
                 <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]">
-                  <div id="addAndDeleteTaskSection" className="w-full flex items-center justify-end my-4"> 
+                  <div id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
                    
                     
                   <button className="mx-4 bg-white" onClick={handleAddTaskClick}> 
-                + Add a Task
+                       + Add a Task
                  </button>
             
-
-                  {/* Conditional rendering of Modal */}
-                  {showModal && (
+                    {/* Conditional rendering of Modal */}
+                    {showModal && (
                     <Modal onClose={handleCloseModal}>
-                      <p>Hello there! test modal here</p>
-                      
+                      <form className="min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
+                        
+                        <div className="mt-4 font-bold text-lg">  Create Task </div>
+
+                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                        <p> <label> Task Name </label> </p>
+                        <p> <input type="text" className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        </div> 
+
+                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
+                          <p><label>Task Description</label></p>
+                          <p className="w-full h-36">
+                            <textarea
+                              className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
+                              placeholder="Enter task description"
+                            />
+                          </p>
+                        </div>
+
+                        <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between">
+                          
+                          <div> <input type="file"
+                           accept="image/*"/> </div>
+                          
+                          <div>
+                          <label htmlFor="priority">Category:</label>
+                          <select className="ml-1 border border-black" name="priority" id="priority">
+                            <option value="low">Personal</option>
+                            <option value="medium">Work</option>
+                            <option value="high">Gaming</option>
+                            <option value="high">Other</option>
+                          </select> 
+                          </div>
+
+                        </div>
+
+                        <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
+                          <button className="bg-blue-300">Create Task</button>
+                        </div>
+                        
+                      </form>
                     </Modal>
                   )}
+                
 
 
                      
@@ -219,6 +260,8 @@ function BlankPage(){
                    
                   </div>
                 </aside>
+
+                
 
                              
                 <aside id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
