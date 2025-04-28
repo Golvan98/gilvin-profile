@@ -7,9 +7,35 @@ import React, { useState, useEffect, useRef } from 'react';
 import { firestore } from "../firebase.js"
 import { addDoc,collection, } from "@firebase/firestore"
 import Modal from './Modal.jsx';
+import tasks from '../assets/tasks'
 
-function BlankPage(){
+function MyHeadSpace(){
 
+  const taskNameRef = useRef();
+  const descriptionRef = useRef();
+  const imageRef = useRef();
+  const categoryRef = useRef();
+  const taskRef = collection(firestore, "tasks");
+  
+  const handleTaskCreate  = async (createTask) => {
+    createTask.preventDefault();
+    console.log(taskNameRef.current.value);
+  
+  let taskData = {
+    task: taskNameRef.current.value,
+    description: descriptionRef.current.value,
+    image: "",
+    category: categoryRef.current.value,
+  };
+  
+    try {
+    await addDoc (taskRef, taskData);
+    } catch (createTask) {
+    console.log(createTask);
+    }
+  
+  }
+  
 
   const messageRef = useRef();
   const ref = collection(firestore , "messages");
@@ -42,79 +68,7 @@ function BlankPage(){
     ));
   };
 
-  const tasks = [
-    {
-      id: 1,
-      title: "lores epsm",
-      description: "This is a sample task about Roman things.",
-      image: "https://images.pexels.com/photos/3299/postit-scrabble-to-do.jpg?auto=compress&cs=tinysrgb&w=600",
-      category: "personal"
-    },
-    {
-      id: 2,
-      title: "dolores de maximum opus",
-      description: "The max power of the opus dei is within.",
-      image: "https://images.pexels.com/photos/414519/pexels-photo-414519.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: "work"
-    },
-    {
-      id: 3,
-      title: "at non este",
-      description: "Lorem ipsum dolor sit amet.",
-      image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: "gaming"
-    },
-    { id:4,
-    title: "bisaya ko nga nasalaag",
-    description: "imperialist manila huhuhuhu",
-    image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600",
-    category: "others"
-    },
-
-    {
-      id: 5,
-      title: "lores epsm personal 2",
-      description: "This is a sample task about Roman things.",
-      image: "https://images.pexels.com/photos/3299/postit-scrabble-to-do.jpg?auto=compress&cs=tinysrgb&w=600",
-      category: "personal"
-    },
-    {
-      id: 6,
-      title: "dolores de maximum opus work 2",
-      description: "The max power of the opus dei is within.",
-      image: "https://images.pexels.com/photos/414519/pexels-photo-414519.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: "work"
-    },
-    {
-      id: 7,
-      title: "at non este gaming2",
-      description: "Lorem ipsum dolor sit amet.",
-      image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: "gaming"
-    },
-    { id:8,
-    title: "bisaya ko nga nasalaag others 2",
-    description: "imperialist manila huhuhuhu",
-    image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600",
-    category: "others"
-    },
-
-    { id:9,
-      title: "bisaya ko nga nasalaag others 3",
-      description: "imperialist manila huhuhuhu",
-      image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600",
-      category: "others"
-      },
-
-      { id:10,
-        title: "bisaya ko nga nasalaag others 4",
-        description: "imperialist manila huhuhuhu",
-        image: "https://images.pexels.com/photos/356079/pexels-photo-356079.jpeg?auto=compress&cs=tinysrgb&w=600",
-        category: "others"
-        },
-
-    
-  ];
+   
 
     const personalTasks = tasks.filter(task => task.category==="personal");
     const workTasks = tasks.filter(task => task.category==="work");
@@ -200,37 +154,38 @@ function BlankPage(){
                     {/* Conditional rendering of Modal */}
                     {showModal && (
                     <Modal onClose={handleCloseModal}>
-                      <form className="min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
+                      <form onSubmit={handleTaskCreate} className="min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
                         
                         <div className="mt-4 font-bold text-lg">  Create Task </div>
 
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Name </label> </p>
-                        <p> <input type="text" className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        <p> <input type="text" ref={taskNameRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
                         </div> 
 
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
-                          <p><label>Task Description</label></p>
+                          <p><label>  Task Description</label></p>
                           <p className="w-full h-36">
                             <textarea
+                              ref={descriptionRef}
                               className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
                               placeholder="Enter task description"
                             />
                           </p>
                         </div>
 
-                        <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between">
+                        <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
                           
                           <div> <input type="file"
                            accept="image/*"/> </div>
                           
                           <div>
                           <label htmlFor="priority">Category:</label>
-                          <select className="ml-1 border border-black" name="priority" id="priority">
-                            <option value="low">Personal</option>
-                            <option value="medium">Work</option>
-                            <option value="high">Gaming</option>
-                            <option value="high">Other</option>
+                          <select className="ml-1 border border-black" ref={categoryRef}>
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="others">Other</option>
                           </select> 
                           </div>
 
@@ -328,7 +283,7 @@ function BlankPage(){
     );
 }
 
-export default BlankPage;
+export default MyHeadSpace;
 
  
    

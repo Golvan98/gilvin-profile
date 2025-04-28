@@ -6,7 +6,6 @@ import classes from './MainPage.module.css';
 function HamburgerMenu (toggled, toggle)
 {
 
-  
 
     const scrollToSection = (id) => {
         const section = document.getElementById(id);
