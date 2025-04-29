@@ -5,22 +5,35 @@ import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
 import React, { useState, useEffect, useRef } from 'react';
 import { firestore } from "../firebase.js"
-import { addDoc,collection, } from "@firebase/firestore"
+import { addDoc,collection, onSnapshot} from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
 
 function MyHeadSpace(){
+  const [firebaseTasks, setFirebaseTasks] = useState([]);
 
-
+  const titleRef = useRef();
   const taskNameRef = useRef();
   const descriptionRef = useRef();
   const imageRef = useRef();
   const categoryRef = useRef();
   const taskRef = collection(firestore, "tasks");
   const [errors, setErrors] = useState({});
-
   const [flashMessage, setFlashMessage] = useState("");
   const [showFlashMessage, setShowFlashMessage] = useState("false");
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(firestore, "tasks"), (snapshot) => {
+      const tasksData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFirebaseTasks(tasksData);
+    });
+  
+    return () => unsubscribe(); // Cleanup
+  }, []);
+  
 
   const handleTaskCreate  = async (createTask) => {
     createTask.preventDefault();
@@ -46,6 +59,7 @@ function MyHeadSpace(){
 
   
   let taskData = {
+    title: titleRef.current.value,
     task: taskNameRef.current.value,
     description: descriptionRef.current.value,
     image: "",
@@ -81,10 +95,10 @@ function MyHeadSpace(){
     ));
   };
 
-    const personalTasks = tasks.filter(task => task.category==="personal");
-    const workTasks = tasks.filter(task => task.category==="work");
-    const gamingTasks = tasks.filter(task => task.category==="gaming");
-    const otherTasks = tasks.filter(task => task.category==="others");
+    const personalTasks = firebaseTasks.filter(task => task.category === "personal");
+    const workTasks = firebaseTasks.filter(task => task.category === "work");
+    const gamingTasks = firebaseTasks.filter(task => task.category === "gaming");
+    const otherTasks = firebaseTasks.filter(task => task.category === "others");
 
     const [clickedButton, setClickedButton] =useState("all");
 
@@ -168,6 +182,15 @@ function MyHeadSpace(){
                         
                         <div className="mt-4 font-bold text-lg">  Create Task </div>
 
+
+                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                        <p> <label> Task Title </label> </p>
+                        <p> <input type="text" ref={titleRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        </div> 
+
+
+
+
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Name </label> </p>
                         <p> <input type="text" ref={taskNameRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
@@ -219,12 +242,14 @@ function MyHeadSpace(){
                   </div>
                   <div className="w-4/5 rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto ">
                     
+                  {clickedButton === "all" && renderTasks(firebaseTasks)}
                   {clickedButton === "personal" && renderTasks(personalTasks)}
                   {clickedButton === "work" && renderTasks(workTasks)}
                   {clickedButton === "others" && renderTasks(otherTasks)}
                   {clickedButton === "gaming" && renderTasks(gamingTasks)}
-                  {clickedButton === "all" && renderTasks(tasks)}
-                  
+                 
+
+          
                   </div>
                 </aside>
 
