@@ -11,15 +11,39 @@ import tasks from '../assets/tasks'
 
 function MyHeadSpace(){
 
+
   const taskNameRef = useRef();
   const descriptionRef = useRef();
   const imageRef = useRef();
   const categoryRef = useRef();
   const taskRef = collection(firestore, "tasks");
-  
+  const [errors, setErrors] = useState({});
+
+  const [flashMessage, setFlashMessage] = useState("");
+  const [showFlashMessage, setShowFlashMessage] = useState("false");
+
   const handleTaskCreate  = async (createTask) => {
     createTask.preventDefault();
     console.log(taskNameRef.current.value);
+
+    let formErrors = {};
+
+    const taskValue = taskNameRef.current.value.trim();
+    const descriptionValue = descriptionRef.current.value.trim();
+
+    if (taskValue.length < 3) {
+      formErrors.task = "Task name must be at least 3 characters long.";
+    }
+  
+    if (descriptionValue.length < 10) {
+      formErrors.description = "Description must be at least 10 characters.";
+    }
+  
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // stop submission
+    }
+
   
   let taskData = {
     task: taskNameRef.current.value,
@@ -30,31 +54,20 @@ function MyHeadSpace(){
   
     try {
     await addDoc (taskRef, taskData);
+    setShowModal(false);
+    setFlashMessage("Task successfully created");
+    setShowFlashMessage(true);
+
+    setTimeout( () => {
+      setShowFlashMessage(false);
+    } , 2000);
+
     } catch (createTask) {
+      
     console.log(createTask);
     }
   
   }
-  
-
-  const messageRef = useRef();
-  const ref = collection(firestore , "messages");
-
-    const handleSave = async (e) => {
-      e.preventDefault();
-      console.log(messageRef.current.value);
-
-      let data  = {
-        message: messageRef.current.value,
-      };
-      
-      try {
-        await addDoc (ref, data);
-      } catch (e) {
-        console.log(e);
-      }
-      }
-
 
   const renderTasks = (taskList) => {
     return taskList.map(task => (
@@ -68,14 +81,10 @@ function MyHeadSpace(){
     ));
   };
 
-   
-
     const personalTasks = tasks.filter(task => task.category==="personal");
     const workTasks = tasks.filter(task => task.category==="work");
     const gamingTasks = tasks.filter(task => task.category==="gaming");
     const otherTasks = tasks.filter(task => task.category==="others");
-
-    
 
     const [clickedButton, setClickedButton] =useState("all");
 
@@ -92,6 +101,7 @@ function MyHeadSpace(){
     const [showModal, setShowModal] = useState(false);
 
     const handleAddTaskClick = () => {
+      setErrors({ task: "", description: "" });
       setShowModal(true);  // Show modal when the button is clicked
     };
   
@@ -161,6 +171,7 @@ function MyHeadSpace(){
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Name </label> </p>
                         <p> <input type="text" ref={taskNameRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        <p className="text-red-500 text-sm">{errors.task && errors.task} </p>
                         </div> 
 
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
@@ -172,6 +183,7 @@ function MyHeadSpace(){
                               placeholder="Enter task description"
                             />
                           </p>
+                          <p className="text-red-500 text-sm"> {errors.description && errors.description} </p>
                         </div>
 
                         <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
@@ -194,7 +206,9 @@ function MyHeadSpace(){
                         <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
                           <button className="bg-blue-300">Create Task</button>
                         </div>
-                        
+                       
+                          
+                          
                       </form>
                     </Modal>
                   )}
@@ -210,9 +224,7 @@ function MyHeadSpace(){
                   {clickedButton === "others" && renderTasks(otherTasks)}
                   {clickedButton === "gaming" && renderTasks(gamingTasks)}
                   {clickedButton === "all" && renderTasks(tasks)}
-
-
-                   
+                  
                   </div>
                 </aside>
 
@@ -252,11 +264,7 @@ function MyHeadSpace(){
                     </>
                     ) : (<p> nada sir</p>)}
                     
-                    <form onSubmit={handleSave}>
-                      <label> Enter Message</label>
-                      <input type="text" ref={messageRef}></input>
-                      <button type="submit"> Save</button>
-                    </form>
+                  
             
                   </div>
                 </article>
@@ -275,7 +283,11 @@ function MyHeadSpace(){
 
 
 
-
+        {showFlashMessage && (
+          <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+            {flashMessage}
+          </div>
+        )}
         <Footer/>
         </body>
 
