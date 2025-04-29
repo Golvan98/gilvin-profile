@@ -41,8 +41,13 @@ function MyHeadSpace(){
 
     let formErrors = {};
 
+    const titleValue = titleRef.current.value.trim();
     const taskValue = taskNameRef.current.value.trim();
     const descriptionValue = descriptionRef.current.value.trim();
+    
+    if (titleValue.length == 0) {
+      formErrors.title = "Task must have a title"
+    }
 
     if (taskValue.length < 3) {
       formErrors.task = "Task name must be at least 3 characters long.";
@@ -186,6 +191,7 @@ function MyHeadSpace(){
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Title </label> </p>
                         <p> <input type="text" ref={titleRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        <p className="text-red-500 text-sm">{errors.title && errors.title} </p>
                         </div> 
 
 
