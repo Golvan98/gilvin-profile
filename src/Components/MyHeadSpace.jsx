@@ -13,6 +13,7 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon  } from '@heroicons/re
 function MyHeadSpace(){
   const [firebaseTasks, setFirebaseTasks] = useState([]);
 
+// #region Refs for Task Form
   const titleRef = useRef();
   const taskNameRef = useRef();
   const descriptionRef = useRef();
@@ -22,20 +23,9 @@ function MyHeadSpace(){
   const [errors, setErrors] = useState({});
   const [flashMessage, setFlashMessage] = useState("");
   const [showFlashMessage, setShowFlashMessage] = useState("");
+// #endregion
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(firestore, "tasks"), (snapshot) => {
-      const tasksData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setFirebaseTasks(tasksData);
-    });
-  
-    return () => unsubscribe(); // Cleanup
-  }, []);
-  
-
+// #region Create Task Handler
   const handleTaskCreate  = async (createTask) => {
     createTask.preventDefault();
     console.log(taskNameRef.current.value);
@@ -89,20 +79,48 @@ function MyHeadSpace(){
   
   }
 
-  const renderTasks = (taskList) => {
-    return taskList.map(task => ( 
-    <>
-        <button
-          onClick={() => handleTaskClick(task)}
-          key={task.id}
-          className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
-        >
-          {task.title}
-        </button>
-    </>
-     
-    ));
-  };
+  const [showModal, setShowModal] = useState(false);
+
+    const handleAddTaskClick = () => {
+      setErrors({ task: "", description: "" });
+      setShowModal(true);  // Show modal when the button is clicked
+    };
+  
+    const handleCloseModal = () => {
+      setShowModal(false);  // Close modal when clicked outside or a close button
+    };
+
+  
+
+  // #endregion
+
+// #region Read Task Handler
+    const renderTasks = (taskList) => {
+      return taskList.map(task => ( 
+      <>
+          <button
+            onClick={() => handleTaskClick(task)}
+            key={task.id}
+            className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
+          >
+            {task.title}
+          </button>
+      </>
+      
+      ));
+    };
+
+    useEffect(() => {
+      const unsubscribe = onSnapshot(collection(firestore, "tasks"), (snapshot) => {
+        const tasksData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setFirebaseTasks(tasksData);
+      });
+    
+      return () => unsubscribe(); // Cleanup
+    }, []);
 
     const personalTasks = firebaseTasks.filter(task => task.category === "personal");
     const workTasks = firebaseTasks.filter(task => task.category === "work");
@@ -121,17 +139,27 @@ function MyHeadSpace(){
       setClickedButton(buttonId);
     };
 
-    const [showModal, setShowModal] = useState(false);
-
-    const handleAddTaskClick = () => {
-      setErrors({ task: "", description: "" });
-      setShowModal(true);  // Show modal when the button is clicked
-    };
-  
-    const handleCloseModal = () => {
-      setShowModal(false);  // Close modal when clicked outside or a close button
-    };
     
+
+    // #endregion
+    
+
+// #region Edit Task Handler
+
+    const [showEditTaskModal, setShowEditTaskModal] = useState("");
+
+   const handleEditTaskClick = () => {
+    setShowEditTaskModal(true);
+    console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
+}
+
+    const handleCloseEditTaskModal = () => {
+      setShowEditTaskModal(false);
+    }
+
+
+
+// #endregion
 
     return (
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
@@ -292,12 +320,18 @@ function MyHeadSpace(){
                   { clickedTask ? (
 
                     <>
-                     <p className="justify-start mx-4"> {clickedTask.title} hah </p> 
-                     <p className="justify-start mx-4 flex">  
-                       <PencilIcon  onClick={handleAddTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
+                     <div className="justify-start mx-4"> {clickedTask.title} hah </div> 
+                     <div className="justify-start mx-4 flex">  
+                       <PencilIcon  onClick={handleEditTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
+                       { showEditTaskModal && (
+                        <Modal onClose={handleCloseEditTaskModal}> 
+                        <form onSubmit={handleTaskCreate} className="min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
+                          </form>
+                        </Modal>
+                       )}
                        <TrashIcon  className="font-bold w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
                      
-                      </p> 
+                      </div> 
                      </>
                     ) : (<p>No task selected</p>)}
                    </div>
