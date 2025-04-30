@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
 import React, { useState, useEffect, useRef } from 'react';
 import { firestore } from "../firebase.js"
-import { addDoc,collection, onSnapshot} from "@firebase/firestore"
+import { addDoc,collection, onSnapshot, doc, deleteDoc,} from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
+import { TrashIcon, ClipboardDocumentListIcon, PencilIcon  } from '@heroicons/react/24/outline';
 
 function MyHeadSpace(){
   const [firebaseTasks, setFirebaseTasks] = useState([]);
@@ -20,7 +21,7 @@ function MyHeadSpace(){
   const taskRef = collection(firestore, "tasks");
   const [errors, setErrors] = useState({});
   const [flashMessage, setFlashMessage] = useState("");
-  const [showFlashMessage, setShowFlashMessage] = useState("false");
+  const [showFlashMessage, setShowFlashMessage] = useState("");
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(firestore, "tasks"), (snapshot) => {
@@ -89,14 +90,17 @@ function MyHeadSpace(){
   }
 
   const renderTasks = (taskList) => {
-    return taskList.map(task => (
-      <button
-        onClick={() => handleTaskClick(task)}
-        key={task.id}
-        className={`my-2 bg-white w-2/5 h-10 mx-auto rounded-md flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
-      >
-        {task.title}
-      </button>
+    return taskList.map(task => ( 
+    <>
+        <button
+          onClick={() => handleTaskClick(task)}
+          key={task.id}
+          className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
+        >
+          {task.title}
+        </button>
+    </>
+     
     ));
   };
 
@@ -105,7 +109,7 @@ function MyHeadSpace(){
     const gamingTasks = firebaseTasks.filter(task => task.category === "gaming");
     const otherTasks = firebaseTasks.filter(task => task.category === "others");
 
-    const [clickedButton, setClickedButton] =useState("all");
+    const [clickedButton, setClickedButton] = useState("all");
 
     const [clickedTask, setClickedTask] = useState(null);
 
@@ -246,7 +250,7 @@ function MyHeadSpace(){
 
                      
                   </div>
-                  <div className="w-4/5 rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto ">
+                  <div className="w-full rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto  ">
                     
                   {clickedButton === "all" && renderTasks(firebaseTasks)}
                   {clickedButton === "personal" && renderTasks(personalTasks)}
@@ -268,10 +272,15 @@ function MyHeadSpace(){
 
                   <div className="w-full h-full flex items-center justify-center">  
                   {clickedTask ? (
+                    
                     <img src={clickedTask.image} className="object-contain h-4/5 w-5/6" alt={clickedTask.title} />
+                   
+                    
+                    
                     ) : 
 
                     ( <p className="text-white"> Select a task to view details </p>
+                    
                     )} 
 
                   </div>
@@ -279,11 +288,16 @@ function MyHeadSpace(){
                 </article>
 
                 <article id="thirdSectionofHeadSpace" className="h-1/2 w-full flex flex-col items-center text-white "> 
-                  <div className="h-1/4 flex w-full items-center">
+                  <div className="h-1/4 flex w-full items-center justify-between">
                   { clickedTask ? (
 
                     <>
-                     <p className="justify-start mx-4"> {clickedTask.title} </p> 
+                     <p className="justify-start mx-4"> {clickedTask.title} hah </p> 
+                     <p className="justify-start mx-4 flex">  
+                       <PencilIcon  onClick={handleAddTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
+                       <TrashIcon  className="font-bold w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
+                     
+                      </p> 
                      </>
                     ) : (<p>No task selected</p>)}
                    </div>
@@ -293,7 +307,7 @@ function MyHeadSpace(){
                     <>
                     <p className="mx-4"> {clickedTask.description}</p>
                     </>
-                    ) : (<p> nada sir</p>)}
+                    ) : (<p> select a task</p>)}
                     
                   
             
