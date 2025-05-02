@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
 import React, { useState, useEffect, useRef } from 'react';
 import { firestore } from "../firebase.js"
-import { addDoc,collection, onSnapshot, doc, deleteDoc,} from "@firebase/firestore"
+import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc} from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
 import { TrashIcon, ClipboardDocumentListIcon, PencilIcon  } from '@heroicons/react/24/outline';
@@ -146,7 +146,7 @@ function MyHeadSpace(){
 
 // #region Edit Task Handler
 
-    const [showEditTaskModal, setShowEditTaskModal] = useState("");
+   const [showEditTaskModal, setShowEditTaskModal] = useState("");
 
    const handleEditTaskClick = () => {
     setShowEditTaskModal(true);
@@ -155,6 +155,40 @@ function MyHeadSpace(){
 
     const handleCloseEditTaskModal = () => {
       setShowEditTaskModal(false);
+    }
+
+
+
+    const updatedTaskTitle = useRef();
+    const updatedTask = useRef();
+    const updatedTaskDescription = useRef();
+    const updatedTaskCategory = useRef();
+
+  
+
+    const handleEditTaskSubmit = async(editTask) => {
+      editTask.preventDefault();
+      const selectTaskRef = doc(firestore, "tasks", clickedTask.id);
+
+      let updatedData = {
+        title:updatedTaskTitle.current.value,
+        task: updatedTask.current.value,
+        description :updatedTaskDescription.current.value,
+        category: updatedTaskCategory.current.value,
+      };
+      
+      try {
+        await updateDoc(selectTaskRef, updatedData)
+        console.log("Document updated");
+        setShowEditTaskModal(false);
+        setFlashMessage("Task Edit successfully");
+        setShowFlashMessage("true");
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+      } catch (error) {
+        console.error("Error updating", error);
+      }
     }
 
 
@@ -320,13 +354,63 @@ function MyHeadSpace(){
                   { clickedTask ? (
 
                     <>
-                     <div className="justify-start mx-4"> {clickedTask.title} hah </div> 
+                     <div className="justify-start mx-4"> {clickedTask.title}  </div> 
                      <div className="justify-start mx-4 flex">  
                        <PencilIcon  onClick={handleEditTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
                        { showEditTaskModal && (
                         <Modal onClose={handleCloseEditTaskModal}> 
-                        <form onSubmit={handleTaskCreate} className="min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
-                          </form>
+                        <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
+                            <div className="mt-4 font-bold text-lg">  Edit Task </div>
+
+
+                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                        <p> <label> Task Title </label> </p>
+                        <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.title} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        <p className="text-red-500 text-sm"> error test area</p>
+                        </div> 
+
+
+
+
+                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                        <p> <label> Task Name </label> </p>
+                        <p> <input type="text" ref={updatedTask} defaultValue={clickedTask.task} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        <p className="text-red-500 text-sm"> error test area</p>
+                        </div> 
+
+                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
+                          <p><label>  Task Description</label></p>
+                          <p className="w-full h-36">
+                            <textarea
+                              ref={updatedTaskDescription}
+                              className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
+                              defaultValue={clickedTask.description}
+                            />
+                          </p>
+                          <p className="text-red-500 text-sm"> error test area </p>
+                        </div>
+
+                        <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
+                          
+                          <div> <input type="file"
+                           accept="image/*"/> </div>
+                          
+                          <div>
+                          <label htmlFor="priority">Category:</label>
+                          <select className="ml-1 border border-black"   defaultValue={clickedTask.category} ref={updatedTaskCategory}>
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="others">Other</option>
+                          </select> 
+                          </div>
+
+                        </div>
+
+                        <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
+                          <button className="bg-blue-300">Edit Task</button>
+                        </div>
+                        </form>
                         </Modal>
                        )}
                        <TrashIcon  className="font-bold w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
