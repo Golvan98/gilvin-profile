@@ -143,11 +143,8 @@ function MyHeadSpace(){
 
     // #endregion
     
-
 // #region Edit Task Handler
-
    const [showEditTaskModal, setShowEditTaskModal] = useState("");
-
    const handleEditTaskClick = () => {
     setShowEditTaskModal(true);
     console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
@@ -156,8 +153,6 @@ function MyHeadSpace(){
     const handleCloseEditTaskModal = () => {
       setShowEditTaskModal(false);
     }
-
-
 
     const updatedTaskTitle = useRef();
     const updatedTask = useRef();
@@ -199,7 +194,6 @@ function MyHeadSpace(){
         return;
       }
 
-
       try {
         await updateDoc(selectTaskRef, updatedData)
         console.log("Document updated");
@@ -213,18 +207,49 @@ function MyHeadSpace(){
         console.error("Error updating", error);
       }
     }
+// #endregion
+
+// #region Delete Task Handler
+
+const [showDeleteModal, setShowDeleteModal] = useState("");
+
+const handleDeleteTaskClick = () => {
+  setShowDeleteModal(true);
+  console.log("showdeletemodal is now:", true);
+}
+
+const handleCloseDeleteTaskModal = () =>{
+  setShowDeleteModal(false);
+}
+
+const handleConfirmDelete = async(deleteTask) => {
+  deleteTask.preventDefault();
+  const deleteTaskRef = doc(firestore, "tasks", clickedTask.id);
+
+  try {
+    await deleteDoc(deleteTaskRef);
+    console.log("deleted task with id:", clickedTask.id);
+    setShowDeleteModal(false);
+    setFlashMessage("task deleted successfully");
+    setShowFlashMessage(true);
 
 
+    setTimeout( () => {
+      setShowFlashMessage(false);
+    } , 2000);
+
+  } catch (error) {
+    console.error("Failed to delete task:", error);
+  }
+}
 
 // #endregion
 
+
     return (
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
-            
-
-
+    
       <Header/>
-
 
         <main className="flex w-full min-h-[100vh] items-center justify-center">
             <article className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit '>
@@ -330,10 +355,7 @@ function MyHeadSpace(){
                       </form>
                     </Modal>
                   )}
-                
-
-
-                     
+                       
                   </div>
                   <div className="w-full rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto  ">
                     
@@ -342,15 +364,10 @@ function MyHeadSpace(){
                   {clickedButton === "work" && renderTasks(workTasks)}
                   {clickedButton === "others" && renderTasks(otherTasks)}
                   {clickedButton === "gaming" && renderTasks(gamingTasks)}
-                 
-
-          
+                
                   </div>
                 </aside>
-
-                
-
-                             
+         
                 <aside id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
 
                 <article className="h-1/2 w-full">
@@ -359,9 +376,7 @@ function MyHeadSpace(){
                   {clickedTask ? (
                     
                     <img src={clickedTask.image} className="object-contain h-4/5 w-5/6" alt={clickedTask.title} />
-                   
-                    
-                    
+                                      
                     ) : 
 
                     ( <p className="text-white"> Select a task to view details </p>
@@ -383,61 +398,72 @@ function MyHeadSpace(){
                        { showEditTaskModal && (
                         <Modal onClose={handleCloseEditTaskModal}> 
                         <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
-                            <div className="mt-4 font-bold text-lg">  Edit Task </div>
+                          <div className="mt-4 font-bold text-lg">  Edit Task </div>
 
 
-                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
-                        <p> <label> Task Title </label> </p>
-                        <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.title} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm"> {errors.title}</p>
-                        </div> 
+                          <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                            <p> <label> Task Title </label> </p>
+                            <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.title} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                            <p className="text-red-500 text-sm"> {errors.title}</p>
+                          </div> 
 
 
 
 
-                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
-                        <p> <label> Task Name </label> </p>
-                        <p> <input type="text" ref={updatedTask} defaultValue={clickedTask.task} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm"> {errors.task}</p>
-                        </div> 
+                          <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                            <p> <label> Task Name </label> </p>
+                            <p> <input type="text" ref={updatedTask} defaultValue={clickedTask.task} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                            <p className="text-red-500 text-sm"> {errors.task}</p>
+                          </div> 
 
-                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
-                          <p><label>  Task Description</label></p>
-                          <p className="w-full h-36">
-                            <textarea
-                              ref={updatedTaskDescription}
-                              className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
-                              defaultValue={clickedTask.description}
-                            />
-                          </p>
-                          <p className="text-red-500 text-sm"> {errors.description} </p>
-                        </div>
-
-                        <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
-                          
-                          <div> <input type="file"
-                           accept="image/*"/> </div>
-                          
-                          <div>
-                          <label htmlFor="priority">Category:</label>
-                          <select className="ml-1 border border-black"   defaultValue={clickedTask.category} ref={updatedTaskCategory}>
-                            <option value="personal">Personal</option>
-                            <option value="work">Work</option>
-                            <option value="gaming">Gaming</option>
-                            <option value="others">Other</option>
-                          </select> 
+                          <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
+                            <p><label>  Task Description</label></p>
+                            <p className="w-full h-36">
+                              <textarea
+                                ref={updatedTaskDescription}
+                                className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
+                                defaultValue={clickedTask.description}
+                              />
+                            </p>
+                            <p className="text-red-500 text-sm"> {errors.description} </p>
                           </div>
 
-                        </div>
+                          <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
+                            
+                            <div> <input type="file"
+                            accept="image/*"/> 
+                            </div>
+                            
+                            <div>
+                              <label htmlFor="priority">Category:</label>
+                              <select className="ml-1 border border-black"   defaultValue={clickedTask.category} ref={updatedTaskCategory}>
+                                <option value="personal">Personal</option>
+                                <option value="work">Work</option>
+                                <option value="gaming">Gaming</option>
+                                <option value="others">Other</option>
+                              </select> 
+                            </div>
 
-                        <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
-                          <button className="bg-blue-300">Edit Task</button>
-                        </div>
+                          </div>
+
+                          <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
+                            <button className="bg-blue-300">Edit Task</button>
+                          </div>
                         </form>
                         </Modal>
                        )}
-                       <TrashIcon  className="font-bold w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
-                     
+                       <TrashIcon onClick={handleDeleteTaskClick} className="font-bold w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
+                       { showDeleteModal && (
+                        <Modal onClose={handleCloseDeleteTaskModal}>
+                        <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
+                          <div> Are you sure that you want to delete this task? </div>
+                          <div className="flex w-full justify-between mt-8">  
+                            <button className='ml-12 bg-red-500'> Yes </button>
+                            <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
+                          </div>
+                        </form>
+                        </Modal>
+                       )}
                       </div> 
                      </>
                     ) : (<p>No task selected</p>)}
@@ -460,13 +486,6 @@ function MyHeadSpace(){
          
             </article>
         </main>
-
-
-
-
-
-
-
 
 
         {showFlashMessage && (
