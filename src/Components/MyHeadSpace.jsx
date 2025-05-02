@@ -19,6 +19,7 @@ function MyHeadSpace(){
   const descriptionRef = useRef();
   const imageRef = useRef();
   const categoryRef = useRef();
+  const taskStatusRef = useRef();
   const taskRef = collection(firestore, "tasks");
   const [errors, setErrors] = useState({});
   const [flashMessage, setFlashMessage] = useState("");
@@ -60,6 +61,8 @@ function MyHeadSpace(){
     description: descriptionRef.current.value,
     image: "",
     category: categoryRef.current.value,
+    status: "incomplete",
+    
   };
   
     try {
@@ -96,7 +99,7 @@ function MyHeadSpace(){
 
 // #region Read Task Handler
     const renderTasks = (taskList) => {
-      return taskList.map(task => ( 
+      return taskList.filter(task => task.status === "incomplete").map(task => ( 
       <>
           <button
             onClick={() => handleTaskClick(task)}
@@ -207,7 +210,30 @@ function MyHeadSpace(){
         console.error("Error updating", error);
       }
     }
+
+    const handleCompleteTask = async (completeTask) => {
+      const selectTaskRef = doc(firestore, "tasks", clickedTask.id);
+
+      let settleTask = {
+        status: "complete"
+      }
+      try {
+        await updateDoc(selectTaskRef, settleTask)
+        console.log("Document updated");
+        setShowEditTaskModal(false);
+        setFlashMessage("Task Marked Completed");
+        setShowFlashMessage("true");
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+      } catch (error) {
+        console.error("Error updating", error);
+      }
+
+    }
 // #endregion
+
+
 
 // #region Delete Task Handler
 
@@ -244,7 +270,6 @@ const handleConfirmDelete = async(deleteTask) => {
 }
 
 // #endregion
-
 
     return (
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
@@ -446,8 +471,9 @@ const handleConfirmDelete = async(deleteTask) => {
 
                           </div>
 
-                          <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
+                          <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-between"> 
                             <button className="bg-blue-300">Edit Task</button>
+                            <button onClick={handleCompleteTask} className="bg-green-300">Mark as Complete</button>
                           </div>
                         </form>
                         </Modal>
