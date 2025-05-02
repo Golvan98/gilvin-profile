@@ -164,8 +164,6 @@ function MyHeadSpace(){
     const updatedTaskDescription = useRef();
     const updatedTaskCategory = useRef();
 
-  
-
     const handleEditTaskSubmit = async(editTask) => {
       editTask.preventDefault();
       const selectTaskRef = doc(firestore, "tasks", clickedTask.id);
@@ -177,6 +175,31 @@ function MyHeadSpace(){
         category: updatedTaskCategory.current.value,
       };
       
+      let formErrors = {};
+
+      const titleEditValue = updatedTaskTitle.current.value.trim();
+      const taskEditValue = updatedTask.current.value.trim();
+      const descriptionEditValue = updatedTaskDescription.current.value.trim();
+      const categoryEditValue =  updatedTaskCategory.current.value.trim();
+
+      if (titleEditValue.length < 3){
+        formErrors.title = "Title must be at least 3 characters long"
+      }
+
+      if (taskEditValue.length <3){
+        formErrors.task = "task name must be at least 3 characters long"
+      }
+
+      if (descriptionEditValue <7 ) {
+        formErrors.description = "description must be at least 7 characters long"
+      }
+
+      if (Object.keys(formErrors).length > 0){
+        setErrors(formErrors);
+        return;
+      }
+
+
       try {
         await updateDoc(selectTaskRef, updatedData)
         console.log("Document updated");
@@ -366,7 +389,7 @@ function MyHeadSpace(){
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Title </label> </p>
                         <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.title} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm"> error test area</p>
+                        <p className="text-red-500 text-sm"> {errors.title}</p>
                         </div> 
 
 
@@ -375,7 +398,7 @@ function MyHeadSpace(){
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Name </label> </p>
                         <p> <input type="text" ref={updatedTask} defaultValue={clickedTask.task} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm"> error test area</p>
+                        <p className="text-red-500 text-sm"> {errors.task}</p>
                         </div> 
 
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
@@ -387,7 +410,7 @@ function MyHeadSpace(){
                               defaultValue={clickedTask.description}
                             />
                           </p>
-                          <p className="text-red-500 text-sm"> error test area </p>
+                          <p className="text-red-500 text-sm"> {errors.description} </p>
                         </div>
 
                         <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
