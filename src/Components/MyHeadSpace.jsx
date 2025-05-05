@@ -12,22 +12,43 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon  } from '@heroicons/re
 
 function MyHeadSpace(){
   const [firebaseTasks, setFirebaseTasks] = useState([]);
-
-// #region Refs for Task Form
-  const titleRef = useRef();
-  const taskNameRef = useRef();
-  const descriptionRef = useRef();
-  const imageRef = useRef();
-  const categoryRef = useRef();
-  const taskStatusRef = useRef();
   const taskRef = collection(firestore, "tasks");
+  const projectRef = collection(firestore, "projects");
+  
+// #region Create Project
+
+  const projectNameRef = useRef();
+  const projectCategoryRef = useRef();
+  const projectStatusRef = useRef();
+  const [showAddProjectModal, setShowAddProjectModal] = useState("");
+
+  const handleAddProject = () => {
+    setShowAddProjectModal(true);
+  }
+
+  const handleCloseAddProjectModal = () => {
+    setShowAddProjectModal(false);
+  }
+
+
+// #endregion
+
+
+// #region global refs
   const [errors, setErrors] = useState({});
   const [flashMessage, setFlashMessage] = useState("");
   const [showFlashMessage, setShowFlashMessage] = useState("");
 // #endregion
 
 // #region Create Task Handler
-  const handleTaskCreate  = async (createTask) => {
+    
+    const titleRef = useRef();
+    const taskNameRef = useRef();
+    const descriptionRef = useRef();
+    const imageRef = useRef();
+    const categoryRef = useRef();
+    const taskStatusRef = useRef();
+    const handleTaskCreate  = async (createTask) => {
     createTask.preventDefault();
     console.log(taskNameRef.current.value);
 
@@ -202,7 +223,7 @@ function MyHeadSpace(){
         console.log("Document updated");
         setShowEditTaskModal(false);
         setFlashMessage("Task Edit successfully");
-        setShowFlashMessage("true");
+        setShowFlashMessage(true);
         setTimeout( () => {
           setShowFlashMessage(false);
         } , 2000);
@@ -232,8 +253,6 @@ function MyHeadSpace(){
 
     }
 // #endregion
-
-
 
 // #region Delete Task Handler
 
@@ -278,10 +297,51 @@ const handleConfirmDelete = async(deleteTask) => {
 
         <main className="flex w-full min-h-[100vh] items-center justify-center">
             <article className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit '>
-                <aside id="Categories" className={`h-full w-1/5 h-full  items-center justify-start overflow-y-auto bg-[#3498DB]  flex flex-col  rounded-l-lg`}>
+                <aside id="Projects" className={`h-full w-1/5 h-full  items-center justify-start overflow-y-auto bg-[#3498DB]  flex flex-col `}>
      
-                  <div className={`mt-10 mb-2 font-bold  ${classes.secondTaskBox}`}> 
-                    <p className="text-white text-md">Categories  {clickedButton && `- ${clickedButton}`} </p>
+                  <div className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center`}> 
+                    <div className="  w-full flex justify-center"> 
+                      <button onClick={handleAddProject}> + Add a Project  </button>
+                      { showAddProjectModal && (
+                        <Modal onClose={handleCloseAddProjectModal}>
+                          <form className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
+                              <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
+                                <p className='flex flex-col '>
+                                <label className='sm:mx-8 xs:mx-8'> Project Name: </label>
+                                <input type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
+                                </p>
+                              </div>
+
+                              <div className='w-full min-h-[15vh]  flex flex-col items-start justify-center'>
+                                <p className='flex flex-col '>
+                                <label className='sm:mx-8 xs:mx-8'> Project Description: </label>
+                                <textarea  placeholder="input project name here" className="text-md sm:mx-8 xs:mx-8 border-2 border-black p-6"/> 
+                                </p>
+                              </div>
+
+
+                              <div className='w-full min-h-[10vh]  flex flex-col items-start justify-center'>
+                                <p className='flex flex-col '>
+                                <label className='sm:mx-8 xs:mx-8'> Project Category: </label>
+                                <select className="sm:mx-8 xs:mx-8 border border-black" ref={categoryRef}>
+                                <option value="personal">Personal</option>
+                                <option value="work">Work</option>
+                                <option value="gaming">Gaming</option>
+                                <option value="others">Other</option>
+                                </select> 
+                                </p>
+                              </div>
+
+                              <div className='w-full flex items-center justify-center p-2'>
+                                <button className="bg-blue-300 hover:bg-blue-500"> Create Project</button>
+                              </div>
+
+                          </form>
+                        </Modal>
+                      ) }
+                    </div>
+                    <div className="mt-4"> Projects </div>
+                    
                   </div>
                   
                   <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center`}> 
@@ -289,23 +349,6 @@ const handleConfirmDelete = async(deleteTask) => {
                     <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center space-y-4'> 
                       <button onClick={ () =>handleButtonClick("all")} className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm'> All </button>
                     </div>
-
-                    <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center space-y-4'> 
-                      <button onClick={ () =>handleButtonClick("personal")} className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm'> Personal Projects</button>
-                    </div>
-
-                    <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center'> 
-                      <button onClick={ () =>handleButtonClick("work")} className='p-1.5 w-2/3 bg-white hover:bg-gray-300  h-full rounded-sm'> Work Reminders</button>
-                    </div>
-
-                    <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center'> 
-                      <button onClick={ () =>handleButtonClick("gaming")}  className='p-1.5 w-2/3 bg-white hover:bg-gray-300  h-full rounded-sm'> Gaming Stuff</button>
-                    </div>
-
-                    <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center'> 
-                      <button onClick={ () =>handleButtonClick("others")} className='p-1.5 w-2/3 bg-white hover:bg-gray-300  h-full rounded-sm'> Others</button>
-                    </div>
-
 
                   </section>
 
