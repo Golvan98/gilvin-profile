@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
 import React, { useState, useEffect, useRef } from 'react';
 import { firestore } from "../firebase.js"
-import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc} from "@firebase/firestore"
+import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
 import { TrashIcon, ClipboardDocumentListIcon, PencilIcon  } from '@heroicons/react/24/outline';
@@ -19,8 +19,56 @@ function MyHeadSpace(){
 
   const projectNameRef = useRef();
   const projectCategoryRef = useRef();
+  const projectDescriptionRef = useRef();
   const projectStatusRef = useRef();
   const [showAddProjectModal, setShowAddProjectModal] = useState("");
+
+  const handleCreateProjectSubmit =  async (createProject) => {
+    createProject.preventDefault();
+
+    let formErrors = {}
+
+    const projectNameValue = projectNameRef.current.value.trim();
+    const projectDescriptionValue = projectDescriptionRef.current.value.trim();
+
+    if (projectNameValue.length <= 0 )
+    {
+      formErrors.title = "project must have a name"
+    }
+    if (projectDescriptionValue.length <= 5){
+      formErrors.description = "project must have a description with more than 5 characters"
+    }
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // stop submission
+    }
+
+    let projectData = {
+      projectName: projectNameRef.current.value,
+      projectDescription: projectDescriptionRef.current.value,
+      projectCategory: projectCategoryRef.current.value,
+      status: "incomplete",
+      createdAt: serverTimestamp()
+    }
+
+    console.log(createProject)
+
+    try{
+      await addDoc (projectRef, projectData)
+      setFlashMessage("project created successfully")
+      setShowAddProjectModal(false);
+      setShowFlashMessage(true);
+
+      setTimeout (() =>{
+        setShowFlashMessage(false);
+      } , 2000)
+    } catch 
+    (error){
+      console.log("failed to add project", error);
+    } 
+    
+  
+  }
 
   const handleAddProject = () => {
     setShowAddProjectModal(true);
@@ -28,6 +76,7 @@ function MyHeadSpace(){
 
   const handleCloseAddProjectModal = () => {
     setShowAddProjectModal(false);
+    setErrors("");
   }
 
 
@@ -74,7 +123,6 @@ function MyHeadSpace(){
       setErrors(formErrors);
       return; // stop submission
     }
-
   
   let taskData = {
     title: titleRef.current.value,
@@ -304,18 +352,23 @@ const handleConfirmDelete = async(deleteTask) => {
                       <button onClick={handleAddProject}> + Add a Project  </button>
                       { showAddProjectModal && (
                         <Modal onClose={handleCloseAddProjectModal}>
-                          <form className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
+                          <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
                               <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
+                                <p className='flex w-full items-start mb-2 justify-end'> 
+                                  <button onClick={handleCloseAddProjectModal} className=''> X </button>
+                                </p>
                                 <p className='flex flex-col '>
                                 <label className='sm:mx-8 xs:mx-8'> Project Name: </label>
-                                <input type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
+                                <input ref={projectNameRef} type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
+                                <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.title && errors.title}  </p>
                                 </p>
                               </div>
 
                               <div className='w-full min-h-[15vh]  flex flex-col items-start justify-center'>
                                 <p className='flex flex-col '>
                                 <label className='sm:mx-8 xs:mx-8'> Project Description: </label>
-                                <textarea  placeholder="input project name here" className="text-md sm:mx-8 xs:mx-8 border-2 border-black p-6"/> 
+                                <textarea ref={projectDescriptionRef}  placeholder="input project name here" className="text-md sm:mx-8 xs:mx-8 border-2 border-black p-6"/> 
+                                <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.description && errors.description}  </p>
                                 </p>
                               </div>
 
@@ -323,7 +376,7 @@ const handleConfirmDelete = async(deleteTask) => {
                               <div className='w-full min-h-[10vh]  flex flex-col items-start justify-center'>
                                 <p className='flex flex-col '>
                                 <label className='sm:mx-8 xs:mx-8'> Project Category: </label>
-                                <select className="sm:mx-8 xs:mx-8 border border-black" ref={categoryRef}>
+                                <select className="sm:mx-8 xs:mx-8 border border-black" ref={projectCategoryRef}>
                                 <option value="personal">Personal</option>
                                 <option value="work">Work</option>
                                 <option value="gaming">Gaming</option>
