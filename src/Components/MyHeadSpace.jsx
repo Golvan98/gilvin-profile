@@ -83,7 +83,14 @@ function MyHeadSpace(){
 
 // #region Read Project
   const [firebaseProjects, setFireBaseProjects] = useState([]);
-  
+
+  const handleProjectClick = (clickedProject) => {
+    setProjectClicked(clickedProject)
+    console.log("project clicked is", projectClicked)
+  }
+
+
+
   useEffect (() => {
   const unsubscribe = onSnapshot(collection(firestore, "projects"), (snapshot) => {
   const projectData = snapshot.docs.map(doc => ({
@@ -98,28 +105,52 @@ function MyHeadSpace(){
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
-          <div key={project.id} className="project-item"> {project.projectName}</div>
+      <div onClick={() => handleProjectClick(project)} className="text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
+      
+      { projectClicked.id == project.id  
+      ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
+      : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
+      }
+     </div>
     ));
   }
 
   const renderWorkProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "work").map(project => (
-          <div key={project.id} className="project-item"> {project.projectName}</div>
+      <div onClick={() => handleProjectClick(project)}  key={project.id} className="text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
+      { projectClicked.id == project.id  
+      ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
+      : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
+      }
+     </div>
     ));
   }
 
   const renderGamingProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "gaming").map(project => (
-          <div key={project.id} className="project-item"> {project.projectName}</div>
+          <div onClick={() => handleProjectClick(project)}  key={project.id} className=" text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
+           { projectClicked.id == project.id  
+            ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
+            : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
+           }
+          </div>
     ));
   }
 
   const renderOtherProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "others").map(project => (
-          <div key={project.id} className="project-item"> {project.projectName}</div>
+          <div onClick={() => handleProjectClick(project)}  key={project.id} className="text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
+          { projectClicked.id == project.id  
+          ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
+          : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
+          }
+          </div>
     ));
   }
 
+  const [projectClicked, setProjectClicked] = useState("");
+
+ 
 
   const [personalIsExpanded, setPersonalIsExpanded] = useState(false);
   const [workIsExpanded, setWorkIsExpanded] = useState(false);
@@ -412,7 +443,7 @@ const handleConfirmDelete = async(deleteTask) => {
       <Header/>
 
         <main className="flex w-full min-h-[100vh] items-center justify-center">
-            <article className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit '>
+            <article className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit'>
                 <aside id="Projects" className={`h-full w-1/5 h-full  items-center justify-start overflow-y-auto bg-[#3498DB]  flex flex-col `}>
      
                   <div className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center`}> 
@@ -465,7 +496,7 @@ const handleConfirmDelete = async(deleteTask) => {
                     
                   </div>
                   
-                <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center`}> 
+                <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center `}> 
 
                     <aside id="personal" className="flex flex-col w-full">
                       <div className="w-full flex items-center justify-center">
@@ -477,13 +508,13 @@ const handleConfirmDelete = async(deleteTask) => {
                             className="w-5 h-5 hover:cursor-pointer text-black"
                           />
                         )}
-                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={togglePersonal}> Personal </div>
+                        <div className="w-1/2 items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={togglePersonal}> Personal </div>
                       </div>
 
                       {/* Drop-down animation */}
                       <div className={`overflow-hidden transition-all duration-300 transform ${personalIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
-                          <div> {renderPersonalProjects(firebaseProjects)}</div>
+                        <div className="w-full space-y-2 mt-2 flex flex-col items-center justify-center ">
+                          <div className="w-full"> {renderPersonalProjects(firebaseProjects)}</div>
                         </div>
                       </div>
                     </aside>    
@@ -498,13 +529,13 @@ const handleConfirmDelete = async(deleteTask) => {
                             className="w-5 h-5 hover:cursor-pointer text-black"
                           />
                         )}
-                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleWork}> Work </div>
+                        <div className="w-1/2  items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleWork}> Work </div>
                       </div>
 
                       {/* Drop-down animation */}
                       <div className={`overflow-hidden transition-all duration-300 transform ${workIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
-                          <div> {renderWorkProjects(firebaseProjects)}</div>
+                        <div className="w-full space-y-2 mt-4 flex flex-col items-center justify-center">
+                          <div className="w-full"> {renderWorkProjects(firebaseProjects)}</div>
                         </div>
                       </div>
                     </aside>             
@@ -519,13 +550,13 @@ const handleConfirmDelete = async(deleteTask) => {
                             className="w-5 h-5 hover:cursor-pointer text-black"
                           />
                         )}
-                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleGaming}> Gaming </div>
+                        <div className="w-1/2  items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleGaming}> Gaming </div>
                       </div>
 
                       {/* Drop-down animation */}
                       <div className={`overflow-hidden transition-all duration-300 transform ${gamingIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
-                          <div> {renderGamingProjects(firebaseProjects)}</div>
+                        <div className="w-full space-y-2 mt-4 flex flex-col items-center justify-center">
+                          <div className="w-full"> {renderGamingProjects(firebaseProjects)}</div>
                         </div>
                       </div>
                     </aside>     
@@ -540,13 +571,13 @@ const handleConfirmDelete = async(deleteTask) => {
                             className="w-5 h-5 hover:cursor-pointer text-black"
                           />
                         )}
-                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleOther}> Others </div>
+                        <div className="w-1/2  items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleOther}> Others </div>
                       </div>
 
                       {/* Drop-down animation */}
                       <div className={`overflow-hidden transition-all duration-300 transform ${otherIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
-                          <div> {renderOtherProjects(firebaseProjects)}</div>
+                        <div className="w-full space-y-2 mt-4 flex flex-col items-center justify-center">
+                          <div className="w-full"> {renderOtherProjects(firebaseProjects)}</div>
                         </div>
                       </div>
                     </aside>   
