@@ -8,7 +8,7 @@ import { firestore } from "../firebase.js"
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
-import { TrashIcon, ClipboardDocumentListIcon, PencilIcon  } from '@heroicons/react/24/outline';
+import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 function MyHeadSpace(){
   const [firebaseTasks, setFirebaseTasks] = useState([]);
@@ -51,23 +51,22 @@ function MyHeadSpace(){
       createdAt: serverTimestamp()
     }
 
-    console.log(createProject)
+   
 
     try{
       await addDoc (projectRef, projectData)
       setFlashMessage("project created successfully")
       setShowAddProjectModal(false);
       setShowFlashMessage(true);
-
       setTimeout (() =>{
         setShowFlashMessage(false);
       } , 2000)
-    } catch 
-    (error){
+    } 
+
+    catch (error){
       console.log("failed to add project", error);
     } 
     
-  
   }
 
   const handleAddProject = () => {
@@ -81,6 +80,75 @@ function MyHeadSpace(){
 
 
 // #endregion
+
+// #region Read Project
+  const [firebaseProjects, setFireBaseProjects] = useState([]);
+  
+  useEffect (() => {
+  const unsubscribe = onSnapshot(collection(firestore, "projects"), (snapshot) => {
+  const projectData = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+    setFireBaseProjects(projectData);
+  });
+  
+  return () => unsubscribe(); // Cleanup
+    }, []);
+
+  const renderPersonalProjects = (projectList) => {
+    return projectList.filter(project => project.projectCategory === "personal").map(project => (
+          <div key={project.id} className="project-item"> {project.projectName}</div>
+    ));
+  }
+
+  const renderWorkProjects = (projectList) => {
+    return projectList.filter(project => project.projectCategory === "work").map(project => (
+          <div key={project.id} className="project-item"> {project.projectName}</div>
+    ));
+  }
+
+  const renderGamingProjects = (projectList) => {
+    return projectList.filter(project => project.projectCategory === "gaming").map(project => (
+          <div key={project.id} className="project-item"> {project.projectName}</div>
+    ));
+  }
+
+  const renderOtherProjects = (projectList) => {
+    return projectList.filter(project => project.projectCategory === "others").map(project => (
+          <div key={project.id} className="project-item"> {project.projectName}</div>
+    ));
+  }
+
+
+  const [personalIsExpanded, setPersonalIsExpanded] = useState(false);
+  const [workIsExpanded, setWorkIsExpanded] = useState(false);
+  const [gamingIsExpanded, setGamingIsExpanded] = useState(false);
+  const [otherIsExpanded, setOtherIsExpanded] = useState(false);
+  
+  const CategorySection = () => {
+    const [expandedCategories, setExpandedCategories] = useState({});
+  }
+
+  const togglePersonal = () => {
+    setPersonalIsExpanded(!personalIsExpanded)
+  }
+
+  const toggleWork = () => { 
+    setWorkIsExpanded(!workIsExpanded)
+  }
+
+  const toggleGaming = () => {
+    setGamingIsExpanded(!gamingIsExpanded)
+  }
+
+  const toggleOther = () => {
+    setOtherIsExpanded(!otherIsExpanded)
+  }
+
+
+   //#endregion
+//
 
 
 // #region global refs
@@ -351,7 +419,7 @@ const handleConfirmDelete = async(deleteTask) => {
                     <div className="  w-full flex justify-center"> 
                       <button onClick={handleAddProject}> + Add a Project  </button>
                       { showAddProjectModal && (
-                        <Modal onClose={handleCloseAddProjectModal}>
+                        <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
                           <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
                               <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
                                 <p className='flex w-full items-start mb-2 justify-end'> 
@@ -393,21 +461,101 @@ const handleConfirmDelete = async(deleteTask) => {
                         </Modal>
                       ) }
                     </div>
-                    <div className="mt-4"> Projects </div>
+                    <div className="mt-4"> Projects {personalIsExpanded} </div>
                     
                   </div>
                   
-                  <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center`}> 
+                <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center`}> 
 
-                    <div className='p-1 text-center bg-inherit  w-full flex items-center justify-center space-y-4'> 
-                      <button onClick={ () =>handleButtonClick("all")} className='p-1.5 w-2/3 bg-white h-full hover:bg-gray-300 rounded-sm'> All </button>
-                    </div>
+                    <aside id="personal" className="flex flex-col w-full">
+                      <div className="w-full flex items-center justify-center">
+                        {personalIsExpanded ? (
+                          <ChevronDownIcon  onClick={togglePersonal} className="w-5 h-5 hover:cursor-pointer text-black" />
+                          ) : (
+                          <ChevronRightIcon
+                            onClick={togglePersonal}
+                            className="w-5 h-5 hover:cursor-pointer text-black"
+                          />
+                        )}
+                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={togglePersonal}> Personal </div>
+                      </div>
 
-                  </section>
+                      {/* Drop-down animation */}
+                      <div className={`overflow-hidden transition-all duration-300 transform ${personalIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
+                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
+                          <div> {renderPersonalProjects(firebaseProjects)}</div>
+                        </div>
+                      </div>
+                    </aside>    
+
+                    <aside id="work" className="flex flex-col w-full mt-3">
+                      <div className="w-full flex items-center justify-center">
+                        {workIsExpanded ? (
+                          <ChevronDownIcon  onClick={toggleWork} className="w-5 h-5 hover:cursor-pointer text-black" />
+                          ) : (
+                          <ChevronRightIcon
+                            onClick={toggleWork}
+                            className="w-5 h-5 hover:cursor-pointer text-black"
+                          />
+                        )}
+                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleWork}> Work </div>
+                      </div>
+
+                      {/* Drop-down animation */}
+                      <div className={`overflow-hidden transition-all duration-300 transform ${workIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
+                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
+                          <div> {renderWorkProjects(firebaseProjects)}</div>
+                        </div>
+                      </div>
+                    </aside>             
+
+                    <aside id="gaming" className="flex flex-col w-full mt-3">
+                      <div className="w-full flex items-center justify-center">
+                        {gamingIsExpanded ? (
+                          <ChevronDownIcon  onClick={toggleGaming} className="w-5 h-5 hover:cursor-pointer text-black" />
+                          ) : (
+                          <ChevronRightIcon
+                            onClick={toggleGaming}
+                            className="w-5 h-5 hover:cursor-pointer text-black"
+                          />
+                        )}
+                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleGaming}> Gaming </div>
+                      </div>
+
+                      {/* Drop-down animation */}
+                      <div className={`overflow-hidden transition-all duration-300 transform ${gamingIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
+                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
+                          <div> {renderGamingProjects(firebaseProjects)}</div>
+                        </div>
+                      </div>
+                    </aside>     
+
+                    <aside id="other" className="flex flex-col w-full mt-3">
+                      <div className="w-full flex items-center justify-center">
+                        {otherIsExpanded ? (
+                          <ChevronDownIcon  onClick={toggleOther} className="w-5 h-5 hover:cursor-pointer text-black" />
+                          ) : (
+                          <ChevronRightIcon
+                            onClick={toggleOther}
+                            className="w-5 h-5 hover:cursor-pointer text-black"
+                          />
+                        )}
+                        <div className="w-full items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleOther}> Others </div>
+                      </div>
+
+                      {/* Drop-down animation */}
+                      <div className={`overflow-hidden transition-all duration-300 transform ${otherIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
+                        <div className="w-full space-y-2 mt-4 flex flex-col px-2 items-center justify-center">
+                          <div> {renderOtherProjects(firebaseProjects)}</div>
+                        </div>
+                      </div>
+                    </aside>   
+
+                </section>
 
                 </aside>
 
-                <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]">
+                <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]"> { /* task area */}
                   <div id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
                    
                     
