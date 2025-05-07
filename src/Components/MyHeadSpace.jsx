@@ -12,7 +12,6 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, Chev
 
 function MyHeadSpace(){
   const [firebaseTasks, setFirebaseTasks] = useState([]);
-  const taskRef = collection(firestore, "tasks");
   const projectRef = collection(firestore, "projects");
   
 // #region Create Project
@@ -85,7 +84,7 @@ function MyHeadSpace(){
   const [firebaseProjects, setFireBaseProjects] = useState([]);
 
   const handleProjectClick = (clickedProject) => {
-    setProjectClicked(clickedProject)
+    setProjectClicked(clickedProject);
     console.log("project clicked is", projectClicked)
   }
 
@@ -102,6 +101,8 @@ function MyHeadSpace(){
   
   return () => unsubscribe(); // Cleanup
     }, []);
+
+    
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
@@ -196,9 +197,13 @@ function MyHeadSpace(){
     const imageRef = useRef();
     const categoryRef = useRef();
     const taskStatusRef = useRef();
+
+
     const handleTaskCreate  = async (createTask) => {
     createTask.preventDefault();
     console.log(taskNameRef.current.value);
+    const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
+
 
     let formErrors = {};
 
@@ -232,6 +237,7 @@ function MyHeadSpace(){
     status: "incomplete",
     
   };
+
   
     try {
     await addDoc (taskRef, taskData);
@@ -249,7 +255,7 @@ function MyHeadSpace(){
     }
   
   }
-
+  
   const [showModal, setShowModal] = useState(false);
 
     const handleAddTaskClick = () => {
@@ -281,18 +287,23 @@ function MyHeadSpace(){
       ));
     };
 
-    useEffect(() => {
-      const unsubscribe = onSnapshot(collection(firestore, "tasks"), (snapshot) => {
-        const tasksData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setFirebaseTasks(tasksData);
+    useEffect (() => {
+      if (!projectClicked?.id) return;
+    
+    
+      const taskRef = collection(firestore, "projects" , projectClicked.id, "tasks");
+      const unsubscribe = onSnapshot(taskRef, (snapshot) => {
+      const projectTasks = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+      }));
+      setFirebaseTasks(projectTasks);
       });
     
-      return () => unsubscribe(); // Cleanup
-    }, []);
-
+      return () => unsubscribe();
+    
+    
+    }, [projectClicked]);
     const personalTasks = firebaseTasks.filter(task => task.category === "personal");
     const workTasks = firebaseTasks.filter(task => task.category === "work");
     const gamingTasks = firebaseTasks.filter(task => task.category === "gaming");
@@ -589,10 +600,12 @@ const handleConfirmDelete = async(deleteTask) => {
                 <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]"> { /* task area */}
                   <div id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
                    
-                    
+                  {projectClicked ?
                   <button className="mx-4 bg-white" onClick={handleAddTaskClick}> 
                        + Add a Task
                  </button>
+                  : <p className='mr-5 text-white'> Please select a project... </p>
+                 }
             
                     {/* Conditional rendering of Modal */}
                     {showModal && (
@@ -660,10 +673,6 @@ const handleConfirmDelete = async(deleteTask) => {
                   <div className="w-full rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto  ">
                     
                   {clickedButton === "all" && renderTasks(firebaseTasks)}
-                  {clickedButton === "personal" && renderTasks(personalTasks)}
-                  {clickedButton === "work" && renderTasks(workTasks)}
-                  {clickedButton === "others" && renderTasks(otherTasks)}
-                  {clickedButton === "gaming" && renderTasks(gamingTasks)}
                 
                   </div>
                 </aside>
