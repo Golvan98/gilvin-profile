@@ -752,15 +752,7 @@ const handleConfirmDelete = async(deleteTask) => {
                             accept="image/*"/> 
                             </div>
                             
-                            <div>
-                              <label htmlFor="priority">Category:</label>
-                              <select className="ml-1 border border-black"   defaultValue={clickedTask.category} ref={updatedTaskCategory}>
-                                <option value="personal">Personal</option>
-                                <option value="work">Work</option>
-                                <option value="gaming">Gaming</option>
-                                <option value="others">Other</option>
-                              </select> 
-                            </div>
+                           
 
                           </div>
 
