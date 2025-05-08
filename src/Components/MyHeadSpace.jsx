@@ -18,6 +18,8 @@ function MyHeadSpace(){
   const [projectClicked, setProjectClicked] = useState("");
   const handleProjectClick = (clickedProject) => {
     setProjectClicked(clickedProject);
+    setClickedTask(null);
+
     console.log("project clicked is", clickedProject); 
   }
   const [errors, setErrors] = useState({});
@@ -44,7 +46,7 @@ function MyHeadSpace(){
 
     if (projectNameValue.length <= 0 )
     {
-      formErrors.title = "project must have a name"
+      formErrors.name = "project must have a name"
     }
     if (projectDescriptionValue.length <= 5){
       formErrors.description = "project must have a description with more than 5 characters"
@@ -193,12 +195,10 @@ function MyHeadSpace(){
 
 
 // #region Create Task Handler
-    
-    const titleRef = useRef();
+  
     const taskNameRef = useRef();
     const descriptionRef = useRef();
     const imageRef = useRef();
-    const categoryRef = useRef();
     const taskStatusRef = useRef();
 
 
@@ -210,16 +210,12 @@ function MyHeadSpace(){
 
     let formErrors = {};
 
-    const titleValue = titleRef.current.value.trim();
     const taskValue = taskNameRef.current.value.trim();
     const descriptionValue = descriptionRef.current.value.trim();
     
-    if (titleValue.length == 0) {
-      formErrors.title = "Task must have a title"
-    }
 
     if (taskValue.length < 3) {
-      formErrors.task = "Task name must be at least 3 characters long.";
+      formErrors.name = "Task name must be at least 3 characters long.";
     }
   
     if (descriptionValue.length < 10) {
@@ -232,11 +228,9 @@ function MyHeadSpace(){
     }
   
   let taskData = {
-    title: titleRef.current.value,
-    task: taskNameRef.current.value,
+    name: taskNameRef.current.value,
     description: descriptionRef.current.value,
     image: "",
-    category: categoryRef.current.value,
     status: "incomplete",
     
   };
@@ -277,13 +271,13 @@ function MyHeadSpace(){
 // #region Read Task Handler
     const renderTasks = (taskList) => {
       return taskList.filter(task => task.status === "incomplete").map(task => ( 
-      <>
+      <>  
           <button
             onClick={() => handleTaskClick(task)}
             key={task.id}
             className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
           >
-            {task.title}
+            {task.name}
           </button>
       </>
       
@@ -307,10 +301,7 @@ function MyHeadSpace(){
     
     
     }, [projectClicked]);
-    const personalTasks = firebaseTasks.filter(task => task.category === "personal");
-    const workTasks = firebaseTasks.filter(task => task.category === "work");
-    const gamingTasks = firebaseTasks.filter(task => task.category === "gaming");
-    const otherTasks = firebaseTasks.filter(task => task.category === "others");
+ 
 
     const [clickedButton, setClickedButton] = useState("all");
 
@@ -357,7 +348,6 @@ function MyHeadSpace(){
         title:updatedTaskTitle.current.value,
         task: updatedTask.current.value,
         description :updatedTaskDescription.current.value,
-        category: updatedTaskCategory.current.value,
       };
       
       let formErrors = {};
@@ -365,7 +355,6 @@ function MyHeadSpace(){
       const titleEditValue = updatedTaskTitle.current.value.trim();
       const taskEditValue = updatedTask.current.value.trim();
       const descriptionEditValue = updatedTaskDescription.current.value.trim();
-      const categoryEditValue =  updatedTaskCategory.current.value.trim();
 
       if (titleEditValue.length < 3){
         formErrors.title = "Title must be at least 3 characters long"
@@ -400,13 +389,14 @@ function MyHeadSpace(){
     }
 
     const handleCompleteTask = async (completeTask) => {
-      const selectTaskRef = doc(firestore, "tasks", clickedTask.id);
+     
 
       let settleTask = {
         status: "complete"
       }
       try {
-        await updateDoc(selectTaskRef, settleTask)
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", clickedTask.id);
+        await updateDoc(taskEditRef, settleTask)
         console.log("Document updated");
         setShowEditTaskModal(false);
         setFlashMessage("Task Marked Completed");
@@ -479,7 +469,7 @@ const handleConfirmDelete = async(deleteTask) => {
                                 <p className='flex flex-col '>
                                 <label className='sm:mx-8 xs:mx-8'> Project Name: </label>
                                 <input ref={projectNameRef} type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
-                                <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.title && errors.title}  </p>
+                                <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.name && errors.name}  </p>
                                 </p>
                               </div>
 
@@ -624,19 +614,11 @@ const handleConfirmDelete = async(deleteTask) => {
                         <div className="mt-4 font-bold text-lg">  Create Task </div>
 
 
-                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
-                        <p> <label> Task Title </label> </p>
-                        <p> <input type="text" ref={titleRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm">{errors.title && errors.title} </p>
-                        </div> 
-
-
-
-
+                    
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                         <p> <label> Task Name </label> </p>
-                        <p> <input type="text" ref={taskNameRef} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm">{errors.task && errors.task} </p>
+                        <p> <input type="text" ref={taskNameRef} placeholder="enter task name" className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                        <p className="text-red-500 text-sm">{errors.name && errors.name} </p>
                         </div> 
 
                         <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
@@ -655,16 +637,6 @@ const handleConfirmDelete = async(deleteTask) => {
                           
                           <div> <input type="file"
                            accept="image/*"/> </div>
-                          
-                          <div>
-                          <label htmlFor="priority">Category:</label>
-                          <select className="ml-1 border border-black" ref={categoryRef}>
-                            <option value="personal">Personal</option>
-                            <option value="work">Work</option>
-                            <option value="gaming">Gaming</option>
-                            <option value="others">Other</option>
-                          </select> 
-                          </div>
 
                         </div>
 
@@ -681,8 +653,8 @@ const handleConfirmDelete = async(deleteTask) => {
                   </div>
                   <div className="w-full rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto  ">
                     
-                  {clickedButton === "all" && renderTasks(firebaseTasks)}
-                
+                  {clickedButton === "all" && (firebaseTasks.length > 0 ? renderTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
+
                   </div>
                 </aside>
          
@@ -693,7 +665,7 @@ const handleConfirmDelete = async(deleteTask) => {
                   <div className="w-full h-full flex items-center justify-center">  
                   {clickedTask ? (
                     
-                    <img src={clickedTask.image} className="object-contain h-4/5 w-5/6" alt={clickedTask.title} />
+                    <img src={clickedTask.image} className="object-contain h-4/5 w-5/6" alt={clickedTask.name} />
                                       
                     ) : 
 
@@ -710,7 +682,7 @@ const handleConfirmDelete = async(deleteTask) => {
                   { clickedTask ? (
 
                     <>
-                     <div className="justify-start mx-4"> {clickedTask.title}  </div> 
+                     <div className="justify-start mx-4"> {clickedTask.name}  </div> 
                      <div className="justify-start mx-4 flex">  
                        <PencilIcon  onClick={handleEditTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
                        { showEditTaskModal && (
@@ -720,19 +692,11 @@ const handleConfirmDelete = async(deleteTask) => {
 
 
                           <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
-                            <p> <label> Task Title </label> </p>
-                            <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.title} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                            <p className="text-red-500 text-sm"> {errors.title}</p>
-                          </div> 
-
-
-
-
-                          <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                             <p> <label> Task Name </label> </p>
-                            <p> <input type="text" ref={updatedTask} defaultValue={clickedTask.task} className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                            <p className="text-red-500 text-sm"> {errors.task}</p>
+                            <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.name}  className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                            <p className="text-red-500 text-sm"> {errors.name}</p>
                           </div> 
+
 
                           <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
                             <p><label>  Task Description</label></p>
