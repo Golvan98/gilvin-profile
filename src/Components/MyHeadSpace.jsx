@@ -11,9 +11,21 @@ import tasks from '../assets/tasks'
 import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 function MyHeadSpace(){
+
+// #region global refs and declarations
   const [firebaseTasks, setFirebaseTasks] = useState([]);
   const projectRef = collection(firestore, "projects");
-  
+  const [projectClicked, setProjectClicked] = useState("");
+  const handleProjectClick = (clickedProject) => {
+    setProjectClicked(clickedProject);
+    console.log("project clicked is", clickedProject); 
+  }
+  const [errors, setErrors] = useState({});
+  const [flashMessage, setFlashMessage] = useState("");
+  const [showFlashMessage, setShowFlashMessage] = useState("");
+
+// #endregion
+
 // #region Create Project
 
   const projectNameRef = useRef();
@@ -83,10 +95,7 @@ function MyHeadSpace(){
 // #region Read Project
   const [firebaseProjects, setFireBaseProjects] = useState([]);
 
-  const handleProjectClick = (clickedProject) => {
-    setProjectClicked(clickedProject);
-    console.log("project clicked is", projectClicked)
-  }
+  
 
 
 
@@ -149,7 +158,7 @@ function MyHeadSpace(){
     ));
   }
 
-  const [projectClicked, setProjectClicked] = useState("");
+  
 
  
 
@@ -182,12 +191,6 @@ function MyHeadSpace(){
    //#endregion
 //
 
-
-// #region global refs
-  const [errors, setErrors] = useState({});
-  const [flashMessage, setFlashMessage] = useState("");
-  const [showFlashMessage, setShowFlashMessage] = useState("");
-// #endregion
 
 // #region Create Task Handler
     
@@ -315,10 +318,12 @@ function MyHeadSpace(){
 
     const handleTaskClick = (taskId) => {
       setClickedTask(taskId);
+      
     }
 
     const handleButtonClick = (buttonId) => {
       setClickedButton(buttonId);
+      
     };
 
     
@@ -341,9 +346,12 @@ function MyHeadSpace(){
     const updatedTaskDescription = useRef();
     const updatedTaskCategory = useRef();
 
+    
+
     const handleEditTaskSubmit = async(editTask) => {
       editTask.preventDefault();
-      const selectTaskRef = doc(firestore, "tasks", clickedTask.id);
+
+      
 
       let updatedData = {
         title:updatedTaskTitle.current.value,
@@ -367,7 +375,7 @@ function MyHeadSpace(){
         formErrors.task = "task name must be at least 3 characters long"
       }
 
-      if (descriptionEditValue <7 ) {
+      if (descriptionEditValue.length <7 ) {
         formErrors.description = "description must be at least 7 characters long"
       }
 
@@ -377,7 +385,8 @@ function MyHeadSpace(){
       }
 
       try {
-        await updateDoc(selectTaskRef, updatedData)
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", clickedTask.id);
+        await updateDoc(taskEditRef, updatedData)
         console.log("Document updated");
         setShowEditTaskModal(false);
         setFlashMessage("Task Edit successfully");
@@ -427,10 +436,10 @@ const handleCloseDeleteTaskModal = () =>{
 
 const handleConfirmDelete = async(deleteTask) => {
   deleteTask.preventDefault();
-  const deleteTaskRef = doc(firestore, "tasks", clickedTask.id);
+  const taskDeleteRef = doc(firestore, "projects", projectClicked.id, "tasks", clickedTask.id);;
 
   try {
-    await deleteDoc(deleteTaskRef);
+    await deleteDoc(taskDeleteRef);
     console.log("deleted task with id:", clickedTask.id);
     setShowDeleteModal(false);
     setFlashMessage("task deleted successfully");
