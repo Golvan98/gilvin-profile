@@ -193,6 +193,14 @@ function MyHeadSpace(){
    //#endregion
 //
 
+// #region Edit Project
+
+
+
+
+
+// #endregion
+
 
 // #region Create Task Handler
   
@@ -275,7 +283,7 @@ function MyHeadSpace(){
           <button
             onClick={() => handleTaskClick(task)}
             key={task.id}
-            className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center ${classes.secondTaskBox}`}
+            className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center shadow-md hover:shadow-xl rounded-2xl transition-transform hover:scale-105 ${classes.secondTaskBox}`}
           >
             {task.name}
           </button>
@@ -332,7 +340,7 @@ function MyHeadSpace(){
       setShowEditTaskModal(false);
     }
 
-    const updatedTaskTitle = useRef();
+    const updatedTaskName= useRef();
     const updatedTask = useRef();
     const updatedTaskDescription = useRef();
     const updatedTaskCategory = useRef();
@@ -343,26 +351,21 @@ function MyHeadSpace(){
       editTask.preventDefault();
 
       
-
       let updatedData = {
-        title:updatedTaskTitle.current.value,
-        task: updatedTask.current.value,
+        name: updatedTaskName.current.value,
         description :updatedTaskDescription.current.value,
       };
       
       let formErrors = {};
 
-      const titleEditValue = updatedTaskTitle.current.value.trim();
-      const taskEditValue = updatedTask.current.value.trim();
+      const titleEditValue = updatedTaskName.current.value.trim();
       const descriptionEditValue = updatedTaskDescription.current.value.trim();
 
       if (titleEditValue.length < 3){
-        formErrors.title = "Title must be at least 3 characters long"
+        formErrors.name = "Title must be at least 3 characters long"
       }
 
-      if (taskEditValue.length <3){
-        formErrors.task = "task name must be at least 3 characters long"
-      }
+   
 
       if (descriptionEditValue.length <7 ) {
         formErrors.description = "description must be at least 7 characters long"
@@ -693,7 +696,7 @@ const handleConfirmDelete = async(deleteTask) => {
 
                           <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
                             <p> <label> Task Name </label> </p>
-                            <p> <input type="text" ref={updatedTaskTitle}  defaultValue={clickedTask.name}  className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                            <p> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
                             <p className="text-red-500 text-sm"> {errors.name}</p>
                           </div> 
 
