@@ -8,7 +8,7 @@ import { firestore } from "../firebase.js"
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
-import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CheckIcon  } from '@heroicons/react/24/outline';
 
 function MyHeadSpace(){
 
@@ -383,6 +383,7 @@ function MyHeadSpace(){
         setShowEditTaskModal(false);
         setFlashMessage("Task Edit successfully");
         setShowFlashMessage(true);
+        setClickedTask(null);
         setTimeout( () => {
           setShowFlashMessage(false);
         } , 2000);
@@ -599,7 +600,7 @@ const handleConfirmDelete = async(deleteTask) => {
 
                 </aside>
 
-                <aside id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]"> { /* task area */}
+                <nav id="nav2" className="h-full w-2/5  flex flex-col items-center justify-center text-black bg-[#2980B9]"> { /* task area */}
                   <div id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
                    
                   {projectClicked ?
@@ -659,24 +660,24 @@ const handleConfirmDelete = async(deleteTask) => {
                   {clickedButton === "all" && (firebaseTasks.length > 0 ? renderTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
 
                   </div>
-                </aside>
+                </nav>
          
-                <aside id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
+                <nav id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
 
                 <article className="h-1/2 w-full">
 
-                  <div className="w-full h-full flex items-center justify-center">  
-                  {clickedTask ? (
-                    
-                    <img src={clickedTask.image} className="object-contain h-4/5 w-5/6" alt={clickedTask.name} />
-                                      
-                    ) : 
-
-                    ( <p className="text-white"> Select a task to view details </p>
-                    
-                    )} 
-
-                  </div>
+                  <aside className="w-full h-full flex items-center justify-center overflow-y-auto flex-col">  
+                      <div className='w-full  flex'>
+                        <p className='w-2/6'> Task Name </p>
+                        <p className='w-3/6'> Task Name </p>
+                        <p className='w-1/6 flex'> 
+                          <PencilIcon> hehe</PencilIcon> 
+                          <TrashIcon> hehe</TrashIcon> 
+                          <CheckIcon> hehe</CheckIcon> 
+                        </p>
+                      </div>
+                      
+                  </aside>
 
                 </article>
 
@@ -759,7 +760,7 @@ const handleConfirmDelete = async(deleteTask) => {
                   </div>
                 </article>
 
-                </aside>
+                </nav>
 
          
             </article>
