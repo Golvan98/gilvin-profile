@@ -219,16 +219,12 @@ function MyHeadSpace(){
     let formErrors = {};
 
     const taskValue = taskNameRef.current.value.trim();
-    const descriptionValue = descriptionRef.current.value.trim();
     
 
     if (taskValue.length < 3) {
       formErrors.name = "Task name must be at least 3 characters long.";
     }
   
-    if (descriptionValue.length < 10) {
-      formErrors.description = "Description must be at least 10 characters.";
-    }
   
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
@@ -237,10 +233,7 @@ function MyHeadSpace(){
   
   let taskData = {
     name: taskNameRef.current.value,
-    description: descriptionRef.current.value,
-    image: "",
     status: "incomplete",
-    
   };
 
   
@@ -270,6 +263,7 @@ function MyHeadSpace(){
   
     const handleCloseModal = () => {
       setShowModal(false);  // Close modal when clicked outside or a close button
+      setErrors("");
     };
 
   
@@ -287,6 +281,8 @@ function MyHeadSpace(){
           >
             {task.name}
           </button>
+                          
+          
       </>
       
       ));
@@ -332,12 +328,14 @@ function MyHeadSpace(){
 // #region Edit Task Handler
    const [showEditTaskModal, setShowEditTaskModal] = useState("");
    const handleEditTaskClick = () => {
+    setErrors("");
     setShowEditTaskModal(true);
     console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
 }
 
     const handleCloseEditTaskModal = () => {
       setShowEditTaskModal(false);
+      setErrors("");
     }
 
     const updatedTaskName= useRef();
@@ -353,23 +351,18 @@ function MyHeadSpace(){
       
       let updatedData = {
         name: updatedTaskName.current.value,
-        description :updatedTaskDescription.current.value,
       };
       
       let formErrors = {};
 
       const titleEditValue = updatedTaskName.current.value.trim();
-      const descriptionEditValue = updatedTaskDescription.current.value.trim();
+      
 
       if (titleEditValue.length < 3){
         formErrors.name = "Title must be at least 3 characters long"
       }
 
-   
-
-      if (descriptionEditValue.length <7 ) {
-        formErrors.description = "description must be at least 7 characters long"
-      }
+  
 
       if (Object.keys(formErrors).length > 0){
         setErrors(formErrors);
@@ -426,6 +419,7 @@ const handleDeleteTaskClick = () => {
 
 const handleCloseDeleteTaskModal = () =>{
   setShowDeleteModal(false);
+  setErrors("");
 }
 
 const handleConfirmDelete = async(deleteTask) => {
@@ -466,6 +460,7 @@ const handleConfirmDelete = async(deleteTask) => {
                       { showAddProjectModal && (
                         <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
                           <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
+
                               <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
                                 <p className='flex w-full items-start mb-2 justify-end'> 
                                   <button onClick={handleCloseAddProjectModal} className=''> X </button>
@@ -484,7 +479,6 @@ const handleConfirmDelete = async(deleteTask) => {
                                 <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.description && errors.description}  </p>
                                 </p>
                               </div>
-
 
                               <div className='w-full min-h-[10vh]  flex flex-col items-start justify-center'>
                                 <p className='flex flex-col '>
@@ -613,43 +607,22 @@ const handleConfirmDelete = async(deleteTask) => {
                     {/* Conditional rendering of Modal */}
                     {showModal && (
                     <Modal onClose={handleCloseModal}>
-                      <form onSubmit={handleTaskCreate} className="min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
+                      <form onSubmit={handleTaskCreate} className="min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
                         
                         <div className="mt-4 font-bold text-lg">  Create Task </div>
-
-
-                    
-                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
-                        <p> <label> Task Name </label> </p>
-                        <p> <input type="text" ref={taskNameRef} placeholder="enter task name" className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                        <p className="text-red-500 text-sm">{errors.name && errors.name} </p>
+                
+                        <div className=" mx-auto p-2 rounded-sm mt-4 flex flex-col w-full items-start justify-center "> 
+                      
+                          <span className='text-center w-full'> <label> Task Name </label> </span>
+                          <span className="w-full flex items-center justify-center"> <input type="text" ref={taskNameRef} placeholder="enter task name" className="border-2 border-black w-1/2 bg-white text-black placeholder-gray-500 p-1"/> </span>
+                          <span className="text-red-500 text-sm">{errors.name && errors.name} </span>
+                         
                         </div> 
-
-                        <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
-                          <p><label>  Task Description</label></p>
-                          <p className="w-full h-36">
-                            <textarea
-                              ref={descriptionRef}
-                              className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
-                              placeholder="Enter task description"
-                            />
-                          </p>
-                          <p className="text-red-500 text-sm"> {errors.description && errors.description} </p>
-                        </div>
-
-                        <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
-                          
-                          <div> <input type="file"
-                           accept="image/*"/> </div>
-
-                        </div>
 
                         <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
                           <button className="bg-blue-300">Create Task</button>
                         </div>
-                       
-                          
-                          
+                                                
                       </form>
                     </Modal>
                   )}
@@ -664,20 +637,25 @@ const handleConfirmDelete = async(deleteTask) => {
          
                 <nav id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
 
-                <article className="h-1/2 w-full">
+                <article className="h-1/2 w-full flex flex-col items-start justify-start ">
 
-                  <aside className="w-full h-full flex items-center justify-center overflow-y-auto flex-col">  
-                      <div className='w-full  flex'>
-                        <p className='w-2/6'> Task Name </p>
-                        <p className='w-3/6'> Task Name </p>
-                        <p className='w-1/6 flex'> 
-                          <PencilIcon> hehe</PencilIcon> 
-                          <TrashIcon> hehe</TrashIcon> 
-                          <CheckIcon> hehe</CheckIcon> 
+                  <aside className='text-center w-full mt-4 text-white'> Tasks in Progress </aside>
+
+                  <aside className="w-full h-full flex items-start justify-start  flex-col mt-4 text-white">  
+                      <div className='w-full flex'>
+                        <p className='w-full mx-4 flex'>
+                          <span className='w-auto flex-1 items-center justify-center'> Task Name</span>
+                          <span className='w-1/6 flex'> 
+                            <PencilIcon className='text-yellow-300'> </PencilIcon> 
+                            <CheckIcon className='text-green-500'> </CheckIcon> 
+                            <TrashIcon className='text-red-500'> </TrashIcon>
+                          </span>
                         </p>
                       </div>
-                      
                   </aside>
+                  
+                  
+                  
 
                 </article>
 
@@ -691,42 +669,19 @@ const handleConfirmDelete = async(deleteTask) => {
                        <PencilIcon  onClick={handleEditTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
                        { showEditTaskModal && (
                         <Modal onClose={handleCloseEditTaskModal}> 
-                        <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[30vw] min-h-[50vh] flex flex-col items-center justify-start rounded-sm">
+                        <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
                           <div className="mt-4 font-bold text-lg">  Edit Task </div>
 
 
-                          <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start "> 
+                          <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
                             <p> <label> Task Name </label> </p>
-                            <p> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-48 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                            <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
                             <p className="text-red-500 text-sm"> {errors.name}</p>
                           </div> 
 
-
-                          <div className="ml-12 p-2 rounded-sm mt-4 flex flex-col w-full items-start"> 
-                            <p><label>  Task Description</label></p>
-                            <p className="w-full h-36">
-                              <textarea
-                                ref={updatedTaskDescription}
-                                className="border-2 border-black w-5/6 h-full bg-white text-black placeholder-gray-500 p-1 resize-none"
-                                defaultValue={clickedTask.description}
-                              />
-                            </p>
-                            <p className="text-red-500 text-sm"> {errors.description} </p>
-                          </div>
-
-                          <div className=" p-2 rounded-sm mt-4 flex  w-full items-start  justify-between  mx-4">
-                            
-                            <div> <input type="file"
-                            accept="image/*"/> 
-                            </div>
-                            
-                           
-
-                          </div>
-
-                          <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-between"> 
-                            <button className="bg-blue-300">Edit Task</button>
-                            <button onClick={handleCompleteTask} className="bg-green-300">Mark as Complete</button>
+                          <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
+                            <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
+                            <button onClick={handleCompleteTask} className={`text-xs py-2 ${classes.smallFontSetting} bg-green-300 ml-2` }>Mark as Complete</button>
                           </div>
                         </form>
                         </Modal>

@@ -33,3 +33,11 @@
      color:inherit;
     }
 }
+
+@media (max-width:760px) {
+    .smallFontSetting{
+        font-size:.5rem;
+        
+    }
+
+}
