@@ -8,7 +8,7 @@ import { firestore } from "../firebase.js"
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
-import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CheckIcon  } from '@heroicons/react/24/outline';
+import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CheckIcon, ArrowPathIcon, ArrowUturnLeftIcon  } from '@heroicons/react/24/outline';
 
 function MyHeadSpace(){
 
@@ -271,26 +271,9 @@ function MyHeadSpace(){
   // #endregion
 
 // #region Read Task Handler
-    const renderTasks = (taskList) => {
-      return taskList.filter(task => task.status === "incomplete").map(task => ( 
-      <>  
-          <button
-            onClick={() => handleTaskClick(task)}
-            key={task.id}
-            className={`my-2 bg-white w-2/5  mx-auto rounded-md  flex items-center justify-center break-all px-2 text-center shadow-md hover:shadow-xl rounded-2xl transition-transform hover:scale-105 ${classes.secondTaskBox}`}
-          >
-            {task.name}
-          </button>
-                          
-          
-      </>
-      
-      ));
-    };
 
     useEffect (() => {
       if (!projectClicked?.id) return;
-    
     
       const taskRef = collection(firestore, "projects" , projectClicked.id, "tasks");
       const unsubscribe = onSnapshot(taskRef, (snapshot) => {
@@ -299,12 +282,114 @@ function MyHeadSpace(){
       ...doc.data()
       }));
       setFirebaseTasks(projectTasks);
+
+      console.log(firebaseTasks);
       });
-    
+
       return () => unsubscribe();
-    
-    
+
     }, [projectClicked]);
+
+
+    const renderCompleteTasks = (taskList) => {
+      return taskList.filter(task => task.status === "complete").map(task => (
+        <nav className='w-full flex'>
+        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border mx-1">  
+                      <div className='w-full flex'>
+                        <p className='w-full mx-4 flex'>
+                          <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} {task.status}</span>
+                          <span className='w-1/6 flex'> 
+                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
+                            { showEditTaskModal && (
+                              <Modal onClose={handleCloseEditTaskModal}> 
+                              <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
+                                <div className="mt-4 font-bold text-lg">  Edit Task </div>
+
+
+                                <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
+                                  <p> <label> Task Name </label> </p>
+                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                                  <p className="text-red-500 text-sm"> {errors.name}</p>
+                                </div> 
+
+                                <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
+                                  <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
+                                </div>
+                              </form>
+                              </Modal>
+                            )}
+                            <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='text-blue-500 hover:cursor-pointer'/>
+                            
+                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                              { showDeleteModal && (
+                              <Modal onClose={handleCloseDeleteTaskModal}>
+                              <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
+                                <div> Are you sure that you want to delete this task? </div>
+                                <div className="flex w-full justify-between mt-8">  
+                                  <button className='ml-12 bg-red-500'> Yes </button>
+                                  <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
+                                </div>
+                              </form>
+                              </Modal>
+                            )}
+                          </span>
+                        </p>
+                      </div>
+          </aside>
+          </nav>
+      ));
+    };
+
+    const renderIncompleteTasks = (taskList) => {
+      return taskList.filter(task => task.status === "incomplete").map(task => (
+        <nav className='w-full flex'>
+        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border mx-1">  
+                      <div className='w-full flex'>
+                        <p className='w-full mx-4 flex'>
+                          <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} {task.status}</span>
+                          <span className='w-1/6 flex'> 
+                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
+                            { showEditTaskModal && (
+                              <Modal onClose={handleCloseEditTaskModal}> 
+                              <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
+                                <div className="mt-4 font-bold text-lg">  Edit Task </div>
+
+
+                                <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
+                                  <p> <label> Task Name </label> </p>
+                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                                  <p className="text-red-500 text-sm"> {errors.name}</p>
+                                </div> 
+
+                                <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
+                                  <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
+                                </div>
+                              </form>
+                              </Modal>
+                            )}
+                            <CheckIcon onClick={ () => handleCompleteTask(task)} className='text-green-500 hover:cursor-pointer'/>
+                            
+                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                              { showDeleteModal && (
+                              <Modal onClose={handleCloseDeleteTaskModal}>
+                              <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
+                                <div> Are you sure that you want to delete this task? </div>
+                                <div className="flex w-full justify-between mt-8">  
+                                  <button className='ml-12 bg-red-500'> Yes </button>
+                                  <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
+                                </div>
+                              </form>
+                              </Modal>
+                            )}
+                          </span>
+                        </p>
+                      </div>
+          </aside>
+          </nav>
+      ));
+    };
+
+    
  
 
     const [clickedButton, setClickedButton] = useState("all");
@@ -327,7 +412,10 @@ function MyHeadSpace(){
     
 // #region Edit Task Handler
    const [showEditTaskModal, setShowEditTaskModal] = useState("");
-   const handleEditTaskClick = () => {
+   const handleEditTaskClick = (taskId) => {
+    
+    setClickedTask(taskId);
+    console.log("clickedTask is now:" ,taskId.name);
     setErrors("");
     setShowEditTaskModal(true);
     console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
@@ -384,15 +472,16 @@ function MyHeadSpace(){
         console.error("Error updating", error);
       }
     }
-
-    const handleCompleteTask = async (completeTask) => {
+    const handleCompleteTask = async (taskId) => {
+      setClickedTask(taskId);
+      console.log("haha ta", taskId)
      
 
       let settleTask = {
         status: "complete"
       }
       try {
-        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", clickedTask.id);
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
         await updateDoc(taskEditRef, settleTask)
         console.log("Document updated");
         setShowEditTaskModal(false);
@@ -406,13 +495,38 @@ function MyHeadSpace(){
       }
 
     }
+
+    const handleReturnTask = async (taskId) => {
+      setClickedTask(taskId);
+
+
+      let returnTask = {
+      status: "incomplete"
+      }
+
+
+ try {
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
+        await updateDoc(taskEditRef, returnTask);
+        setShowEditTaskModal(false);
+        setFlashMessage(`Task "${taskId.name}" is now marked as incomplete`);
+        setShowFlashMessage("true");
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+      } catch (error) {
+        console.error("Error updating", error);
+      }
+
+}
 // #endregion
 
 // #region Delete Task Handler
 
 const [showDeleteModal, setShowDeleteModal] = useState("");
 
-const handleDeleteTaskClick = () => {
+const handleDeleteTaskClick = (taskId) => {
+  setClickedTask(taskId)  
   setShowDeleteModal(true);
   console.log("showdeletemodal is now:", true);
 }
@@ -628,91 +742,33 @@ const handleConfirmDelete = async(deleteTask) => {
                   )}
                        
                   </div>
-                  <div className="w-full rounded-sm h-5/6 flex-wrap justify-between flex items-start justify-center overflow-y-auto  ">
+                  <div className="w-full h-full flex flex-col items-start justify-start overflow-y-auto">
                     
-                  {clickedButton === "all" && (firebaseTasks.length > 0 ? renderTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
+                  {projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
 
                   </div>
                 </nav>
          
                 <nav id="nav3" className="h-full w-2/5 flex flex-col bg-[#1F618D] rounded-r-lg">
 
-                <article className="h-1/2 w-full flex flex-col items-start justify-start ">
+                <article className="h-1/2 w-full flex flex-col items-start justify-start overflow-y-auto">
 
-                  <aside className='text-center w-full mt-4 text-white'> Tasks in Progress </aside>
+                  <aside className='text-center w-full mt-4 text-white '> Tasks in Progress </aside>
 
-                  <aside className="w-full h-full flex items-start justify-start  flex-col mt-4 text-white">  
-                      <div className='w-full flex'>
-                        <p className='w-full mx-4 flex'>
-                          <span className='w-auto flex-1 items-center justify-center'> Task Name</span>
-                          <span className='w-1/6 flex'> 
-                            <PencilIcon className='text-yellow-300'> </PencilIcon> 
-                            <CheckIcon className='text-green-500'> </CheckIcon> 
-                            <TrashIcon className='text-red-500'> </TrashIcon>
-                          </span>
-                        </p>
-                      </div>
-                  </aside>
+                  {projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
                   
                   
                   
 
                 </article>
 
-                <article id="thirdSectionofHeadSpace" className="h-1/2 w-full flex flex-col items-center text-white "> 
-                  <div className="h-1/4 flex w-full items-center justify-between">
-                  { clickedTask ? (
-
-                    <>
-                     <div className="justify-start mx-4"> {clickedTask.name}  </div> 
-                     <div className="justify-start mx-4 flex">  
-                       <PencilIcon  onClick={handleEditTaskClick} className="font-bold w-5 h-5 text-orange-300 cursor-pointer mr-2" />
-                       { showEditTaskModal && (
-                        <Modal onClose={handleCloseEditTaskModal}> 
-                        <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
-                          <div className="mt-4 font-bold text-lg">  Edit Task </div>
-
-
-                          <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
-                            <p> <label> Task Name </label> </p>
-                            <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                            <p className="text-red-500 text-sm"> {errors.name}</p>
-                          </div> 
-
-                          <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
-                            <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
-                            <button onClick={handleCompleteTask} className={`text-xs py-2 ${classes.smallFontSetting} bg-green-300 ml-2` }>Mark as Complete</button>
-                          </div>
-                        </form>
-                        </Modal>
-                       )}
-                       <TrashIcon onClick={handleDeleteTaskClick} className="font-bold w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
-                       { showDeleteModal && (
-                        <Modal onClose={handleCloseDeleteTaskModal}>
-                        <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
-                          <div> Are you sure that you want to delete this task? </div>
-                          <div className="flex w-full justify-between mt-8">  
-                            <button className='ml-12 bg-red-500'> Yes </button>
-                            <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
-                          </div>
-                        </form>
-                        </Modal>
-                       )}
-                      </div> 
-                     </>
-                    ) : (<p>No task selected</p>)}
-                   </div>
-
-                  <div className="h-3/4 w-full flex justify-start mt-2 items-start"> 
-                  { clickedTask ? (
-                    <>
-                    <p className="mx-4"> {clickedTask.description}</p>
-                    </>
-                    ) : (<p> select a task</p>)}
-                    
+                <article className="h-1/2 w-full flex flex-col items-start justify-start overflow-y-auto">
+                  <aside className='text-center w-full mt-4 text-white '> Tasks Completed </aside>
                   
+                    
+                   {projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
             
-                  </div>
+                  
                 </article>
 
                 </nav>
