@@ -18,7 +18,7 @@
     }
 }
 
-@media (min-width:769px) {
+@media (min-width:761px) {
     .myHeadSpaceSetting{
         font-size:1rem;
     }
@@ -32,12 +32,24 @@
     .categoriesText{
      color:inherit;
     }
+
+    .bigCategorySetting{
+        padding:1.5rem;
+        
+        display: flex;
+    }
 }
 
 @media (max-width:760px) {
     .smallFontSetting{
         font-size:.5rem;
+
+    }
+    .smallCategorySetting{
+        display: flex; 
+        padding: 1rem; 
         
+     
     }
 
 }

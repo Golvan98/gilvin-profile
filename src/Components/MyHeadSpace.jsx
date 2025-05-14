@@ -96,7 +96,25 @@ function MyHeadSpace(){
 
 // #region Read Project
   const [firebaseProjects, setFireBaseProjects] = useState([]);
+  const [clickedCategory, setClickedCategory] = useState("");
 
+  const handlePersonalClick = () => {
+    setClickedCategory("personal");
+    console.log("clicked category is", clickedCategory)
+  }
+  const handleWorkClick = () => {
+    setClickedCategory("work");
+    console.log("clicked category is", clickedCategory)
+  }
+
+  const handleGamingClick = () => {
+    setClickedCategory("gaming");
+    console.log("clicked category is", clickedCategory)
+  }
+  const handleOthersClick = () => {
+    setClickedCategory("others");
+    console.log("clicked category is", clickedCategory)
+  }
   
 
 
@@ -570,8 +588,52 @@ const handleConfirmDelete = async(deleteTask) => {
                   <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}>
       
                     <aside className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center `}> 
-                      <div className="  w-full flex justify-center"> 
-                        <button className='bg-white hover:bg-indigo-400 hover:text-white' onClick={handleAddProject}> + Add a Project  </button>
+                      <div className=" w-full flex justify-center mx-4"> 
+                        <div className={`items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-inherit  mx-4 rounded-md`}> Project Categories  </div>
+                        
+                      </div>
+                      <div className="mt-4"> 
+                        
+                      </div>
+                      
+                    </aside>
+                    
+                  <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center `}> 
+
+                    <aside id="personal" className="flex flex-col w-full">
+                      <div className="w-full flex items-center justify-center">
+                          <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handlePersonalClick}> Personal </button>
+                      </div>
+
+                    </aside>    
+
+                    <aside id="work" className="flex flex-col w-full mt-3">
+                        <div className="w-full flex items-center justify-center">
+                          <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleWorkClick}> Work </button>
+                        </div>
+                    </aside>             
+          
+                     <aside id="gaming" className="flex flex-col w-full mt-3">
+                        <div className="w-full flex items-center justify-center">
+                          <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleGamingClick}> Gaming </button>
+                        </div>
+                    </aside> 
+
+                    <aside id="others" className="flex flex-col w-full mt-3">
+                        <div className="w-full flex items-center justify-center">
+                          <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleOthersClick}> Others </button>
+                        </div>
+                    </aside> 
+
+                </section>
+
+                </nav>
+                </article>
+
+                <article id="2ndColumn" className="h-5/6 w-2/5  flex flex-col items-center justify-center text-black bg-indigo-500 mr-20"> { /* task area */}
+
+                  <nav id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
+                        <button className='bg-white hover:bg-indigo-400 hover:text-white mx-2' onClick={handleAddProject}> + Add a Project  </button>
                         { showAddProjectModal && (
                           <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
                             <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
@@ -613,145 +675,42 @@ const handleConfirmDelete = async(deleteTask) => {
 
                             </form>
                           </Modal>
-                        ) }
-                      </div>
-                      <div className="mt-4"> 
-                        Projects {personalIsExpanded} 
-                      </div>
-                      
-                    </aside>
-                    
-                  <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center `}> 
-
-                    <aside id="personal" className="flex flex-col w-full">
-                      <div className="w-full flex items-center justify-center">
-                          {personalIsExpanded ? (
-                            <ChevronDownIcon  onClick={togglePersonal} className="w-5 h-5 hover:cursor-pointer text-black" />
-                            ) : (
-                            <ChevronRightIcon
-                              onClick={togglePersonal}
-                              className="w-5 h-5 hover:cursor-pointer text-black"
-                            />
-                          )}
-                          <div className="w-2/3 items-center justify-center text-center bg-white h-full hover:bg-gray-300 p-2 mr-2 rounded-lg" onClick={togglePersonal}> Personal </div>
-                      </div>
-
-                        {/* Drop-down animation */}
-                      <div className={`overflow-hidden transition-all duration-300 transform ${personalIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                        <div className="w-full space-y-2 mt-2 flex flex-col items-center justify-center ">
-                            <div className="w-full"> 
-                              {renderPersonalProjects(firebaseProjects)}
-                            </div>
-                        </div>
-                      </div>
-                    </aside>    
-
-                    <aside id="work" className="flex flex-col w-full mt-3">
-                        <div className="w-full flex items-center justify-center">
-                          {workIsExpanded ? (
-                            <ChevronDownIcon  onClick={toggleWork} className="w-5 h-5 hover:cursor-pointer text-black" />
-                            ) : (
-                            <ChevronRightIcon
-                              onClick={toggleWork}
-                              className="w-5 h-5 hover:cursor-pointer text-black"
-                            />
-                          )}
-                          <div className="w-1/2  items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleWork}> Work </div>
-                        </div>
-
-                        {/* Drop-down animation */}
-                        <div className={`overflow-hidden transition-all duration-300 transform ${workIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                          <div className="w-full space-y-2 mt-4 flex flex-col items-center justify-center">
-                            <div className="w-full"> {renderWorkProjects(firebaseProjects)}</div>
-                          </div>
-                        </div>
-                    </aside>             
-
-                    <aside id="gaming" className="flex flex-col w-full mt-3">
-                        <div className="w-full flex items-center justify-center">
-                          {gamingIsExpanded ? (
-                            <ChevronDownIcon  onClick={toggleGaming} className="w-5 h-5 hover:cursor-pointer text-black" />
-                            ) : (
-                            <ChevronRightIcon
-                              onClick={toggleGaming}
-                              className="w-5 h-5 hover:cursor-pointer text-black"
-                            />
-                          )}
-                          <div className="w-1/2  items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleGaming}> Gaming </div>
-                        </div>
-
-                        {/* Drop-down animation */}
-                        <div className={`overflow-hidden transition-all duration-300 transform ${gamingIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                          <div className="w-full space-y-2 mt-4 flex flex-col items-center justify-center">
-                            <div className="w-full"> {renderGamingProjects(firebaseProjects)}</div>
-                          </div>
-                        </div>
-                    </aside>     
-
-                    <aside id="other" className="flex flex-col w-full mt-3">
-                        <div className="w-full flex items-center justify-center">
-                          {otherIsExpanded ? (
-                            <ChevronDownIcon  onClick={toggleOther} className="w-5 h-5 hover:cursor-pointer text-black" />
-                            ) : (
-                            <ChevronRightIcon
-                              onClick={toggleOther}
-                              className="w-5 h-5 hover:cursor-pointer text-black"
-                            />
-                          )}
-                          <div className="w-1/2  items-center justify-center text-center bg-white h-full hover:bg-gray-300 rounded-sm p-2 mr-2" onClick={toggleOther}> Others </div>
-                        </div>
-
-                        {/* Drop-down animation */}
-                        <div className={`overflow-hidden transition-all duration-300 transform ${otherIsExpanded? 'max-h-auto opacity-100 translate-y-0': 'max-h-0 opacity-0 -translate-y-2'}`}>
-                          <div className="w-full space-y-2 mt-4 flex flex-col items-center justify-center">
-                            <div className="w-full"> {renderOtherProjects(firebaseProjects)}</div>
-                          </div>
-                        </div>
-                    </aside>   
-
-                </section>
-
-                </nav>
-                </article>
-
-                <article id="2ndColumn" className="h-5/6 w-2/5  flex flex-col items-center justify-center text-black bg-indigo-500 mr-20"> { /* task area */}
-                  <nav id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
-                        
-                        {projectClicked ?
-                        <button className="mx-4 bg-white" onClick={handleAddTaskClick}> 
-                            + Add a Project2
-                        </button>
-                        : <p className='mr-5 text-white'> Please select a project... </p>
-                        }
-                  
-                          {/* Conditional rendering of Modal */}
-                          {showModal && (
-                          <Modal onClose={handleCloseModal}>
-                            <form onSubmit={handleTaskCreate} className="min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
-                              
-                              <div className="mt-4 font-bold text-lg">  Create Task </div>
-                      
-                              <div className=" mx-auto p-2 rounded-sm mt-4 flex flex-col w-full items-start justify-center "> 
-                            
-                                <span className='text-center w-full'> <label> Task Name </label> </span>
-                                <span className="w-full flex items-center justify-center"> <input type="text" ref={taskNameRef} placeholder="enter task name" className="border-2 border-black w-1/2 bg-white text-black placeholder-gray-500 p-1"/> </span>
-                                <span className="text-red-500 text-sm">{errors.name && errors.name} </span>
-                              
-                              </div> 
-
-                              <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
-                                <button className="bg-blue-300">Create Task</button>
-                              </div>
-                                                      
-                            </form>
-                          </Modal>
-                        )}
-                            
+                        ) }   
                   </nav>
 
                   <nav className="w-full h-full flex flex-col items-start justify-start overflow-y-auto">
-                          
-                        
+                
+
+                    {clickedCategory === "personal" ? (
+                      renderPersonalProjects(firebaseProjects)
+                    ) : (
+
+                       clickedCategory.length <1 ? (
+                        <p>  select a category to view projects</p>) :( null)
+                    )}
+
+
+                    
+
+                    {clickedCategory === "work" ? (
+                      renderWorkProjects(firebaseProjects)
+                    ) : (
+                      null
+                    )}
+
+                    {clickedCategory === "gaming" ? (
+                      renderGamingProjects(firebaseProjects)
+                    ) : (
+                      null
+                    )}
+
+                    {clickedCategory === "others" ? (
+                      renderOtherProjects(firebaseProjects)
+                    ) : (
+                      null
+                    )}
+
+                    
 
                   </nav>
 
@@ -764,11 +723,12 @@ const handleConfirmDelete = async(deleteTask) => {
                         <aside className='text-center w-full p-4 text-white flex justify-center items-center  '> 
                           <div className="w-1/3">  </div>
                           <div className="w-1/3"> Tasks in Progress </div>
+                       
                             {projectClicked ?
                             <button className="bg-white text-black p-2" onClick={handleAddTaskClick}> 
                                 + Add a Task
                             </button>
-                            : <p className='mr-5 text-white'> Please select a project... </p>
+                            :    <div className="w-1/3">  </div>
                             }
                       
                               {/* Conditional rendering of Modal */}
