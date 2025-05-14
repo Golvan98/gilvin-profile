@@ -135,11 +135,9 @@ function MyHeadSpace(){
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
-      <div onClick={() => handleProjectClick(project)} className="text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
-      
-      { projectClicked.id == project.id  
-      ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
-      : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
+      <div onClick={() => handleProjectClick(project)} className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white p-8 flex items-center justify-center"> 
+      { projectClicked.id  ? ( <p className='bg-white text-indigo-900  w-full p-2 flex text-center justify-center items-center mx-2'>{project.projectName} </p> ) 
+      : ( null )
       }
      </div>
     ));
@@ -584,7 +582,7 @@ const handleConfirmDelete = async(deleteTask) => {
 
         <main className="flex w-full min-h-[100vh] items-center justify-center">
             <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white'>
-                <article id="first column wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 '>
+                <article id="first column wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2  '>
                   <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}>
       
                     <aside className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center `}> 
@@ -598,7 +596,7 @@ const handleConfirmDelete = async(deleteTask) => {
                       
                     </aside>
                     
-                  <section id="categoryContainer" className={`h-full w-full flex-col items-center  justify-center `}> 
+                  <section id="categoryContainer" className={`h-full w-full flex-col items-center text-indigo-900  justify-center `}> 
 
                     <aside id="personal" className="flex flex-col w-full">
                       <div className="w-full flex items-center justify-center">
@@ -630,93 +628,96 @@ const handleConfirmDelete = async(deleteTask) => {
                 </nav>
                 </article>
 
-                <article id="2ndColumn" className="h-5/6 w-2/5  flex flex-col items-center justify-center text-black bg-indigo-500 mr-20"> { /* task area */}
+                <section className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md">
+                  <article id="2ndColumn" className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> { /* task area */}
 
-                  <nav id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
-                        <button className='bg-white hover:bg-indigo-400 hover:text-white mx-2' onClick={handleAddProject}> + Add a Project  </button>
-                        { showAddProjectModal && (
-                          <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
-                            <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
+                    <nav id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
+                          <button className='bg-white hover:bg-indigo-400 hover:text-white mx-2' onClick={handleAddProject}> + Add a Project  </button>
+                          { showAddProjectModal && (
+                            <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
+                              <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
 
-                                <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
-                                  <p className='flex w-full items-start mb-2 justify-end'> 
-                                    <button onClick={handleCloseAddProjectModal} className=''> X </button>
-                                  </p>
-                                  <p className='flex flex-col '>
-                                  <label className='sm:mx-8 xs:mx-8'> Project Name: </label>
-                                  <input ref={projectNameRef} type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
-                                  <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.name && errors.name}  </p>
-                                  </p>
-                                </div>
+                                  <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
+                                    <p className='flex w-full items-start mb-2 justify-end'> 
+                                      <button onClick={handleCloseAddProjectModal} className=''> X </button>
+                                    </p>
+                                    <p className='flex flex-col '>
+                                    <label className='sm:mx-8 xs:mx-8'> Project Name: </label>
+                                    <input ref={projectNameRef} type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
+                                    <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.name && errors.name}  </p>
+                                    </p>
+                                  </div>
 
-                                <div className='w-full min-h-[15vh]  flex flex-col items-start justify-center'>
-                                  <p className='flex flex-col '>
-                                  <label className='sm:mx-8 xs:mx-8'> Project Description: </label>
-                                  <textarea ref={projectDescriptionRef}  placeholder="input project name here" className="text-md sm:mx-8 xs:mx-8 border-2 border-black p-6"/> 
-                                  <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.description && errors.description}  </p>
-                                  </p>
-                                </div>
+                                  <div className='w-full min-h-[15vh]  flex flex-col items-start justify-center'>
+                                    <p className='flex flex-col '>
+                                    <label className='sm:mx-8 xs:mx-8'> Project Description: </label>
+                                    <textarea ref={projectDescriptionRef}  placeholder="input project name here" className="text-md sm:mx-8 xs:mx-8 border-2 border-black p-6"/> 
+                                    <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.description && errors.description}  </p>
+                                    </p>
+                                  </div>
 
-                                <div className='w-full min-h-[10vh]  flex flex-col items-start justify-center'>
-                                  <p className='flex flex-col '>
-                                  <label className='sm:mx-8 xs:mx-8'> Project Category: </label>
-                                  <select className="sm:mx-8 xs:mx-8 border border-black" ref={projectCategoryRef}>
-                                  <option value="personal">Personal</option>
-                                  <option value="work">Work</option>
-                                  <option value="gaming">Gaming</option>
-                                  <option value="others">Other</option>
-                                  </select> 
-                                  </p>
-                                </div>
+                                  <div className='w-full min-h-[10vh]  flex flex-col items-start justify-center'>
+                                    <p className='flex flex-col '>
+                                    <label className='sm:mx-8 xs:mx-8'> Project Category: </label>
+                                    <select className="sm:mx-8 xs:mx-8 border border-black" ref={projectCategoryRef}>
+                                    <option value="personal">Personal</option>
+                                    <option value="work">Work</option>
+                                    <option value="gaming">Gaming</option>
+                                    <option value="others">Other</option>
+                                    </select> 
+                                    </p>
+                                  </div>
 
-                                <div className='w-full flex items-center justify-center p-2'>
-                                  <button className="bg-blue-300 hover:bg-blue-500"> Create Project</button>
-                                </div>
+                                  <div className='w-full flex items-center justify-center p-2'>
+                                    <button className="bg-blue-300 hover:bg-blue-500"> Create Project</button>
+                                  </div>
 
-                            </form>
-                          </Modal>
-                        ) }   
-                  </nav>
+                              </form>
+                            </Modal>
+                          ) }   
+                    </nav>
 
-                  <nav className="w-full h-full flex flex-col items-start justify-start overflow-y-auto">
-                
+                    <nav className="w-full h-full flex flex-col items-center justify-start overflow-y-auto">
+                  
 
-                    {clickedCategory === "personal" ? (
-                      renderPersonalProjects(firebaseProjects)
-                    ) : (
+                      {clickedCategory === "personal" ? (
+                        renderPersonalProjects(firebaseProjects)
+                      ) : (
 
-                       clickedCategory.length <1 ? (
-                        <p>  select a category to view projects</p>) :( null)
-                    )}
+                        clickedCategory.length <1 ? (
+                          <p>  select a category to view projects</p>) :( null)
+                      )}
 
 
-                    
+                      
 
-                    {clickedCategory === "work" ? (
-                      renderWorkProjects(firebaseProjects)
-                    ) : (
-                      null
-                    )}
+                      {clickedCategory === "work" ? (
+                        renderWorkProjects(firebaseProjects)
+                      ) : (
+                        null
+                      )}
 
-                    {clickedCategory === "gaming" ? (
-                      renderGamingProjects(firebaseProjects)
-                    ) : (
-                      null
-                    )}
+                      {clickedCategory === "gaming" ? (
+                        renderGamingProjects(firebaseProjects)
+                      ) : (
+                        null
+                      )}
 
-                    {clickedCategory === "others" ? (
-                      renderOtherProjects(firebaseProjects)
-                    ) : (
-                      null
-                    )}
+                      {clickedCategory === "others" ? (
+                        renderOtherProjects(firebaseProjects)
+                      ) : (
+                        null
+                      )}
 
-                    
+                      
 
-                  </nav>
+                    </nav>
 
-                </article>
-         
-                <article id="3rdColumn" className="h-5/6 w-2/5 flex flex-col bg-indigo-500  mr-10">
+                  </article>
+                </section>  
+
+                <section className="h-5/6 w-2/5 mr-10 p-2 bg-indigo-300 rounded-md">
+                <article id="3rdColumn" className="h-full w-full flex flex-col bg-indigo-500 rounded-md ">
 
                       <nav id="inProgressTasks" className="h-1/2 w-full  flex-1 flex-col items-start justify-start overflow-y-auto">
 
@@ -773,6 +774,7 @@ const handleConfirmDelete = async(deleteTask) => {
                       </nav>
 
                 </article>
+                </section>  
                 
 
          
