@@ -135,44 +135,33 @@ function MyHeadSpace(){
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
-      <div onClick={() => handleProjectClick(project)} className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white p-8 flex items-center justify-center"> 
-      { projectClicked.id  ? ( <p className='bg-white text-indigo-900  w-full p-2 flex text-center justify-center items-center mx-2'>{project.projectName} </p> ) 
-      : ( null )
-      }
+      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
+      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p>  
      </div>
     ));
   }
 
   const renderWorkProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "work").map(project => (
-      <div onClick={() => handleProjectClick(project)}  key={project.id} className="text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
-      { projectClicked.id == project.id  
-      ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
-      : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
-      }
+      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
+      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
      </div>
     ));
   }
 
   const renderGamingProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "gaming").map(project => (
-          <div onClick={() => handleProjectClick(project)}  key={project.id} className=" text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
-           { projectClicked.id == project.id  
-            ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
-            : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
-           }
-          </div>
+      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
+      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
+     </div>
     ));
   }
 
   const renderOtherProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "others").map(project => (
-          <div onClick={() => handleProjectClick(project)}  key={project.id} className="text-center project-item hover:cursor-pointer w-full mt-2 rounded-md whitespace-nowrap"> 
-          { projectClicked.id == project.id  
-          ?  ( <p className='bg-blue-800 text-white w-full p-2'>{project.projectName} </p> ) 
-          : ( <p className='bg-blue-100 text-blue-900 w-full p-2'>{project.projectName} </p> )
-          }
-          </div>
+      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
+      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
+     </div>
     ));
   }
 
