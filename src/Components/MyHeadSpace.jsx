@@ -97,6 +97,20 @@ function MyHeadSpace(){
 // #region Read Project
   const [firebaseProjects, setFireBaseProjects] = useState([]);
   const [clickedCategory, setClickedCategory] = useState("");
+  const [ expandProject, setExpandProject] = useState(false);
+
+  const [toggleProjectExpand, SetToggleProjectExpand] = useState(false);
+
+  const [expandedProjects, setExpandedProjects] = useState();
+
+  const handleToggleProjectExpand = () => {
+
+  }
+
+  const handleExpandProject = (project) => {
+    setExpandProject(true);
+    console.log("hi, Project is expanded" , true);
+  }
 
   const handlePersonalClick = () => {
     setClickedCategory("personal");
@@ -135,8 +149,21 @@ function MyHeadSpace(){
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
-      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
-      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p>  
+      <div onClick={() => handleProjectClick(project)} key={project.id}className="hover:bg-indigo-100 text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-start rounded-md"> 
+      <p onClick={(e) => {
+        e.stopPropagation();
+        handleExpandProject(project);}} 
+        className='w-1/6 h-full px-1 flex justify-center items-center'> <ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon></p>
+
+      <p className={`text-indigo-900 w-5/6 flex flex-col justify-center items-start rounded-md }`}>
+        <span> {project.projectName}  </span>
+        { expandProject == true ? ( <span> {project.projectDescription}</span>)
+        : (null)
+          
+        }
+      
+      </p>  
+      
      </div>
     ));
   }
@@ -163,35 +190,6 @@ function MyHeadSpace(){
       <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
      </div>
     ));
-  }
-
-  
-
- 
-
-  const [personalIsExpanded, setPersonalIsExpanded] = useState(false);
-  const [workIsExpanded, setWorkIsExpanded] = useState(false);
-  const [gamingIsExpanded, setGamingIsExpanded] = useState(false);
-  const [otherIsExpanded, setOtherIsExpanded] = useState(false);
-  
-  const CategorySection = () => {
-    const [expandedCategories, setExpandedCategories] = useState({});
-  }
-
-  const togglePersonal = () => {
-    setPersonalIsExpanded(!personalIsExpanded)
-  }
-
-  const toggleWork = () => { 
-    setWorkIsExpanded(!workIsExpanded)
-  }
-
-  const toggleGaming = () => {
-    setGamingIsExpanded(!gamingIsExpanded)
-  }
-
-  const toggleOther = () => {
-    setOtherIsExpanded(!otherIsExpanded)
   }
 
 
