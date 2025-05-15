@@ -98,19 +98,26 @@ function MyHeadSpace(){
   const [firebaseProjects, setFireBaseProjects] = useState([]);
   const [clickedCategory, setClickedCategory] = useState("");
   const [ expandProject, setExpandProject] = useState(false);
+  const [expandedProjects, setExpandedProjects] = useState(new Set());
 
-  const [toggleProjectExpand, SetToggleProjectExpand] = useState(false);
 
-  const [expandedProjects, setExpandedProjects] = useState();
 
-  const handleToggleProjectExpand = () => {
-
-  }
-
+  
   const handleExpandProject = (project) => {
-    setExpandProject(true);
-    console.log("hi, Project is expanded" , true);
+    console.log("hi, expanded projects are", expandedProjects);
+   setExpandedProjects(prev => {
+    const newSet = new Set(prev);
+    if (newSet.has(project.id)){
+      newSet.delete(project.id);
+    } else{
+      newSet.add(project.id);
+    }
+    return newSet;
+   })
+
   }
+
+ 
 
   const handlePersonalClick = () => {
     setClickedCategory("personal");
@@ -150,20 +157,32 @@ function MyHeadSpace(){
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
       <div onClick={() => handleProjectClick(project)} key={project.id}className="hover:bg-indigo-100 text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-start rounded-md"> 
+      
       <p onClick={(e) => {
         e.stopPropagation();
         handleExpandProject(project);}} 
-        className='w-1/6 h-full px-1 flex justify-center items-center'> <ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon></p>
+        className='w-1/6 h-full px-1 flex justify-center items-center'> 
+        
+        {expandedProjects.has(project.id) 
+        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
+
+
+        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
+        
+        }
+        
+        </p>
 
       <p className={`text-indigo-900 w-5/6 flex flex-col justify-center items-start rounded-md }`}>
         <span> {project.projectName}  </span>
-        { expandProject == true ? ( <span> {project.projectDescription}</span>)
-        : (null)
-          
-        }
-      
+        {expandedProjects.has(project.id) ? (<span> {project.projectDescription}</span> ) : ( null )}
+        
       </p>  
       
+
+        
+
+
      </div>
     ));
   }
