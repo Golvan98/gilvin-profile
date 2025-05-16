@@ -173,14 +173,21 @@ function MyHeadSpace(){
         
         </p>
 
-      <p className={`text-indigo-900 w-5/6 flex flex-col justify-center items-start rounded-md }`}>
-        <span> {project.projectName}  </span>
-        {expandedProjects.has(project.id) ? (<span> {project.projectDescription}</span> ) : ( null )}
-        
-      </p>  
+    
       
-
-        
+      <p className="text-indigo-900 w-5/6 flex flex-col justify-center items-start rounded-md">
+        <span>{project.projectName}</span>
+        <span
+          className={`overflow-hidden duration-500 transform transition-all ${
+            expandedProjects.has(project.id)
+              ? 'max-h-40 opacity-100 translate-y-0'
+              : 'max-h-0 opacity-55 -translate-y-2'
+          }`}
+        >
+          {project.projectDescription}
+        </span>
+      </p>
+    
 
 
      </div>
