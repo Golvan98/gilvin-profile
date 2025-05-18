@@ -156,12 +156,12 @@ function MyHeadSpace(){
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
-      <div onClick={() => handleProjectClick(project)} key={project.id}className="hover:bg-indigo-100 text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-start rounded-md"> 
+      <aside onClick={() => handleProjectClick(project)} key={project.id}className="hover:bg-indigo-100 text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-start rounded-md"> 
       
-      <p onClick={(e) => {
+      <div onClick={(e) => {
         e.stopPropagation();
         handleExpandProject(project);}} 
-        className='w-1/6 h-full px-1 flex justify-center items-center'> 
+        className='flex justify-start items-start'> 
         
         {expandedProjects.has(project.id) 
         ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
@@ -171,26 +171,49 @@ function MyHeadSpace(){
         
         }
         
-        </p>
+        </div>
 
     
       
-      <p className="text-indigo-900 w-5/6 flex flex-col justify-center items-start rounded-md">
-        <span>{project.projectName}</span>
-        <span
-          className={`overflow-hidden duration-500 transform transition-all ${
+      <div className="text-indigo-900 w-full flex flex-col justify-start items-start rounded-md">
+        <p className='flex w-full justify-start '>
+          <span className='w-4/6 text-start'> {project.projectName} </span>
+          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
+          <PencilIcon className='w-1/3 w-5 h-5'></PencilIcon> 
+          <TrashIcon className='w-1/3 w-5 h-5'></TrashIcon> 
+          <CheckIcon className='w-1/3 w-5 h-5'></CheckIcon> 
+          </span>
+       
+        </p>
+        <p
+          className={` text-start overflow-hidden  duration-500 transform transition-all ${
             expandedProjects.has(project.id)
-              ? 'max-h-40 opacity-100 translate-y-0'
+              ? 'max-h-40 opacity-100 translate-y-2'
               : 'max-h-0 opacity-55 -translate-y-2'
-          }`}
+          } whitespace-normal break-words leading-snug `}
         >
           {project.projectDescription}
-        </span>
-      </p>
+        </p>
+
+        
+
+        
+        <p
+          className={`whitespace-normal break-words leading-snug text-start  overflow-hidden duration-500 transform transition-all ${
+          expandedProjects.has(project.id)
+            ? 'max-h-40 opacity-100 translate-y-2'
+            : 'max-h-0 opacity-55 -translate-y-2'
+            }`}
+          > {project.createdAt?.toDate
+          ? `Created at ${project.createdAt.toDate().toLocaleString()}`
+          : 'Created at (date not available)'}
+        </p>
+
+      </div>
     
 
 
-     </div>
+     </aside>
     ));
   }
 
