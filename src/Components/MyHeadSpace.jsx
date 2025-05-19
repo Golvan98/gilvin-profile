@@ -156,7 +156,10 @@ function MyHeadSpace(){
 
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
-      <aside onClick={() => handleProjectClick(project)} key={project.id}className="hover:bg-indigo-100 text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-start rounded-md"> 
+      <aside onClick={() => handleProjectClick(project)} 
+      key={project.id}
+      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
+      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
       
       <div onClick={(e) => {
         e.stopPropagation();
@@ -175,18 +178,55 @@ function MyHeadSpace(){
 
     
       
-      <div className="text-indigo-900 w-full flex flex-col justify-start items-start rounded-md">
+      <div className=" w-full flex flex-col justify-start items-start rounded-md">
         <p className='flex w-full justify-start '>
-          <span className='w-4/6 text-start'> {project.projectName} </span>
+          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
           <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-          <PencilIcon className='w-1/3 w-5 h-5'></PencilIcon> 
-          <TrashIcon className='w-1/3 w-5 h-5'></TrashIcon> 
-          <CheckIcon className='w-1/3 w-5 h-5'></CheckIcon> 
+            <PencilIcon onClick={handleEditProjectClick} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
+            </PencilIcon> 
+              { showEditProjectModal && (
+                <Modal onClose={closeEditProjectModal}>
+                  <form className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
+                    <div className='w-full h-1/3 flex items-center justify-center flex flex-col'> 
+                      <p className='w-full h-1/3 flex items-center justify-center '> Project Name </p>
+                      <p className='w-full h-2/3'>
+                        <input className="w-2/3 h-1/2 border border-indigo-700" defaultValue={project.projectName} type="text"/> 
+                       </p>
+                    </div>
+
+                    <div className='w-full h-1/3'> 
+                      <p className='w-full h-1/4'> Project Description</p>
+                      <p className='w-full h-3/4 mb-8'> <textarea defaultValue={project.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
+                    </div>
+                    
+                    <div className='w-full h-1/3 flex flex-col'> 
+                      <p className='w-full h-1/3 flex items-center justify-center'>   
+                        <label> Project Category: </label>
+                        <select>  
+                          <option> Personal</option>
+                          <option> Gaming</option>
+                          <option> Work</option>
+                          <option> Others</option>
+                        </select>
+                      </p>
+
+                      <p className="w-full h-2/3 flex items-center justify-center ">
+                        <button className="w-1/4 bg-indigo-700 text-white"> Edit Project  </button>
+                      </p>
+
+                    </div>  
+                  </form>
+                </Modal>
+              )
+
+              }
+            <TrashIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'></TrashIcon> 
+            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
           </span>
        
         </p>
         <p
-          className={` text-start overflow-hidden  duration-500 transform transition-all ${
+          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
             expandedProjects.has(project.id)
               ? 'max-h-40 opacity-100 translate-y-2'
               : 'max-h-0 opacity-55 -translate-y-2'
@@ -199,20 +239,24 @@ function MyHeadSpace(){
 
         
         <p
-          className={`whitespace-normal break-words leading-snug text-start  overflow-hidden duration-500 transform transition-all ${
+          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
           expandedProjects.has(project.id)
             ? 'max-h-40 opacity-100 translate-y-2'
             : 'max-h-0 opacity-55 -translate-y-2'
             }`}
           > {project.createdAt?.toDate
-          ? `Created at ${project.createdAt.toDate().toLocaleString()}`
+          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`
           : 'Created at (date not available)'}
         </p>
 
       </div>
     
-
-
      </aside>
     ));
   }
@@ -247,6 +291,16 @@ function MyHeadSpace(){
 
 // #region Edit Project
 
+const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+
+const handleEditProjectClick = () => {
+  setShowEditProjectModal(true);
+  console.log("project edit modal is now", true);
+}
+
+const closeEditProjectModal = () =>{
+  setShowEditProjectModal(false);
+}
 
 
 
