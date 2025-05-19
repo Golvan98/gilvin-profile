@@ -213,14 +213,27 @@ function MyHeadSpace(){
                       <p className="w-full h-2/3 flex items-center justify-center ">
                         <button className="w-1/4 bg-indigo-700 text-white"> Edit Project  </button>
                       </p>
-
                     </div>  
                   </form>
                 </Modal>
-              )
+              )}
+            <TrashIcon onClick={handleDeleteProjectClick} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'>
+            </TrashIcon> 
+            { showDeleteProjectModal && (
+              <Modal onClose={closeDeleteProjectModal}>
+                <form  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
+                  <div className="w-full h-1/2 flex items-end justify-center"> 
+                    Are you sure you want to delete this project? 
+                  </div>
+                  <div className="w-full h-1/2 flex justify-between items-center ">    
+                      <button className="bg-red-300 ml-12"> Yes</button>
+                      <button className="bg-green-300 mr-12"> No</button>
+                    </div>
+                </form>
+              </Modal>
 
-              }
-            <TrashIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'></TrashIcon> 
+
+            )}
             <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
           </span>
        
@@ -292,6 +305,17 @@ function MyHeadSpace(){
 // #region Edit Project
 
 const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
+
+
+const closeDeleteProjectModal = () => {
+  setShowDeleteProjectModal(false);
+}
+
+const handleDeleteProjectClick = ()  => {
+  setShowDeleteProjectModal(true);
+}
+
 
 const handleEditProjectClick = () => {
   setShowEditProjectModal(true);
