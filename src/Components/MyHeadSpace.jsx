@@ -12,15 +12,138 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, Chev
 
 function MyHeadSpace(){
 
+  // #region Edit Task Handler
+    const [clickedButton, setClickedButton] = useState("all");
+    const [clickedTask, setClickedTask] = useState(null);
+
+    const handleTaskClick = (taskId) => 
+    {
+      setClickedTask(taskId);
+    }
+
+    const handleButtonClick = (buttonId) => 
+    {
+      setClickedButton(buttonId);
+    };
+
+   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+   const handleEditTaskClick = (task) => {
+    
+    setClickedTask(task);
+    console.log("clickedTask is now:" ,task.name);
+    setErrors("");
+    setShowEditTaskModal(true);
+    console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
+}
+
+    const handleCloseEditTaskModal = () => {
+      setShowEditTaskModal(false);
+      setErrors("");
+    }
+
+    const updatedTaskName= useRef();
+    const updatedTask = useRef();
+    const updatedTaskDescription = useRef();
+    const updatedTaskCategory = useRef();
+
+    
+
+    const handleEditTaskSubmit = async(editTask) => {
+      editTask.preventDefault();
+
+      
+      let updatedData = {
+        name: updatedTaskName.current.value,
+      };
+      
+      let formErrors = {};
+
+      const titleEditValue = updatedTaskName.current.value.trim();
+      
+
+      if (titleEditValue.length < 3){
+        formErrors.name = "Title must be at least 3 characters long"
+      }
+
+  
+
+      if (Object.keys(formErrors).length > 0){
+        setErrors(formErrors);
+        return;
+      }
+
+      try {
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", clickedTask.id);
+        await updateDoc(taskEditRef, updatedData)
+        console.log("Document updated");
+        setShowEditTaskModal(false);
+        setFlashMessage("Task Edit successfully");
+        setShowFlashMessage(true);
+        setClickedTask(null);
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+      } catch (error) {
+        console.error("Error updating", error);
+      }
+    }
+
+    const handleCompleteTask = async (taskId) => {
+      setClickedTask(taskId);
+      console.log("haha ta", taskId)
+     
+
+      let settleTask = {
+        status: "complete"
+      }
+      try {
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
+        await updateDoc(taskEditRef, settleTask)
+        console.log("Document updated");
+        setShowEditTaskModal(false);
+        setFlashMessage(`Task  "${taskId.name}" Marked as Complete`);
+        setShowFlashMessage("true");
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+      } catch (error) {
+        console.error("Error updating", error);
+      }
+
+    }
+
+    const handleReturnTask = async (taskId) => {
+      setClickedTask(taskId);
+
+
+      let returnTask = {
+      status: "incomplete"
+      }
+
+
+ try {
+        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
+        await updateDoc(taskEditRef, returnTask);
+        setShowEditTaskModal(false);
+        setFlashMessage(`Task "${taskId.name}" is now marked as incomplete`);
+        setShowFlashMessage("true");
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+      } catch (error) {
+        console.error("Error updating", error);
+      }
+
+}
+// #endregion
+
 // #region global refs and declarations
   const [firebaseTasks, setFirebaseTasks] = useState([]);
   const projectRef = collection(firestore, "projects");
-  const [projectClicked, setProjectClicked] = useState("");
-  const handleProjectClick = (clickedProject) => {
-    setProjectClicked(clickedProject);
+  const [projectClicked, setProjectClicked] = useState(1);
+  const handleProjectClick = (project) => {
+    setProjectClicked(project);
     setClickedTask(null);
-
-    console.log("project clicked is", clickedProject); 
   }
   const [errors, setErrors] = useState({});
   const [flashMessage, setFlashMessage] = useState("");
@@ -165,16 +288,11 @@ function MyHeadSpace(){
         e.stopPropagation();
         handleExpandProject(project);}} 
         className='flex justify-start items-start'> 
-        
         {expandedProjects.has(project.id) 
         ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
-
-
         : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
-        
         }
-        
-        </div>
+      </div>
 
     
       
@@ -182,57 +300,54 @@ function MyHeadSpace(){
         <p className='flex w-full justify-start '>
           <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
           <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-            <PencilIcon onClick={handleEditProjectClick} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
+            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
             </PencilIcon> 
-              { showEditProjectModal && (
+              { showEditProjectModal &&  (
                 <Modal onClose={closeEditProjectModal}>
-                  <form className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
+                  <form onSubmit={handleConfirmEditProject }className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
                     <div className='w-full h-1/3 flex items-center justify-center flex flex-col'> 
-                      <p className='w-full h-1/3 flex items-center justify-center '> Project Name </p>
+                      <p className='w-full h-1/3 flex items-center justify-center '> Project Name {project.projectName} {projectClicked.projectName} </p>
                       <p className='w-full h-2/3'>
-                        <input className="w-2/3 h-1/2 border border-indigo-700" defaultValue={project.projectName} type="text"/> 
+                        <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectEditNameRef } defaultValue={projectClicked.projectName} type="text"/> 
                        </p>
                     </div>
 
                     <div className='w-full h-1/3'> 
                       <p className='w-full h-1/4'> Project Description</p>
-                      <p className='w-full h-3/4 mb-8'> <textarea defaultValue={project.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
+                      <p className='w-full h-3/4 mb-8'> <textarea ref={projectEditDescriptionRef } defaultValue={projectClicked.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
                     </div>
                     
                     <div className='w-full h-1/3 flex flex-col'> 
                       <p className='w-full h-1/3 flex items-center justify-center'>   
                         <label> Project Category: </label>
-                        <select>  
-                          <option> Personal</option>
-                          <option> Gaming</option>
-                          <option> Work</option>
-                          <option> Others</option>
+                        <select ref={projectEditCategoryRef }>  
+                          <option value="personal"> Personal</option>
+                          <option value="gaming"> Gaming</option>
+                          <option value="work"> Work</option>
+                          <option value="others"> Others</option>
                         </select>
                       </p>
 
                       <p className="w-full h-2/3 flex items-center justify-center ">
-                        <button className="w-1/4 bg-indigo-700 text-white"> Edit Project  </button>
+                        <button type="submit" className="w-1/4 bg-indigo-700 text-white"> Edit Project  </button>
                       </p>
                     </div>  
                   </form>
                 </Modal>
               )}
-            <TrashIcon onClick={handleDeleteProjectClick} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'>
-            </TrashIcon> 
+            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
             { showDeleteProjectModal && (
               <Modal onClose={closeDeleteProjectModal}>
-                <form  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
+                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
                   <div className="w-full h-1/2 flex items-end justify-center"> 
-                    Are you sure you want to delete this project? 
+                    Are you sure you want to delete this project {projectClicked.projectName}? 
                   </div>
                   <div className="w-full h-1/2 flex justify-between items-center ">    
-                      <button className="bg-red-300 ml-12"> Yes</button>
-                      <button className="bg-green-300 mr-12"> No</button>
+                      <button type="submit" className="bg-red-300 ml-12"> Yes</button>
+                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12"> No</button>
                     </div>
                 </form>
               </Modal>
-
-
             )}
             <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
           </span>
@@ -304,28 +419,95 @@ function MyHeadSpace(){
 
 // #region Edit Project
 
-const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+const [showEditProjectModal, setShowEditProjectModal] = useState("");
 const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
 
-
-const closeDeleteProjectModal = () => {
-  setShowDeleteProjectModal(false);
-}
-
-const handleDeleteProjectClick = ()  => {
-  setShowDeleteProjectModal(true);
-}
+const projectEditNameRef = useRef();
+const projectEditDescriptionRef = useRef();
+const projectEditCategoryRef = useRef();
 
 
-const handleEditProjectClick = () => {
+
+const handleEditProjectClick = (project) => {
+  setProjectClicked(project)
   setShowEditProjectModal(true);
-  console.log("project edit modal is now", true);
+
+  console.log("project project", project.projectName);
 }
 
 const closeEditProjectModal = () =>{
   setShowEditProjectModal(false);
 }
 
+const handleConfirmEditProject = async (editProject) =>{
+editProject.preventDefault();
+console.log(projectClicked.projectName);
+
+
+  let projectEditData = {
+    projectName: projectEditNameRef.current.value,
+    projectDescription: projectEditDescriptionRef.current.value,
+    projectCategory:projectEditCategoryRef.current.value,
+  }
+  try 
+  {
+       
+ const projectToEditRef = doc(firestore, "projects", projectClicked.id);
+        await updateDoc(projectToEditRef, projectEditData)
+        console.log("Document updated");
+        setShowEditProjectModal(false);
+        setFlashMessage("Project Edit successfully");
+        setShowFlashMessage(true);
+        setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+        console.log(projectClicked.projectName);
+      } catch (error) {
+        console.error("Error updating", error);
+
+  }
+
+
+}
+
+
+
+
+// #endregion
+
+// #region Delete Project
+
+const closeDeleteProjectModal = () => {
+  setShowDeleteProjectModal(false);
+}
+
+
+
+const handleDeleteProjectClick = (project)  => {
+  setProjectClicked(project)
+  setShowDeleteProjectModal(true);
+ 
+}
+
+
+
+ const handleConfirmProjectDelete = async (deleteProject) => {
+   const projectToDeleteRef = doc(firestore, "projects", projectClicked.id);;
+  deleteProject.preventDefault();
+
+  
+  try{
+    await deleteDoc(projectToDeleteRef);
+    setShowDeleteProjectModal(false);
+    setFlashMessage(`project ${projectClicked.projectName} deleted`);
+    setShowFlashMessage(true);
+    setTimeout( () => { setShowFlashMessage(false); } , 2000);
+    
+  } catch  (error) {
+    console.log("error deleting project", error);
+  }
+
+ }
 
 
 
@@ -397,6 +579,8 @@ const closeEditProjectModal = () =>{
     };
 
   
+    
+
 
   // #endregion
 
@@ -404,7 +588,7 @@ const closeEditProjectModal = () =>{
 
     useEffect (() => {
       if (!projectClicked?.id) return;
-    
+     // const projectRef = doc(firestore, "projects", projectClicked.id);
       const taskRef = collection(firestore, "projects" , projectClicked.id, "tasks");
       const unsubscribe = onSnapshot(taskRef, (snapshot) => {
       const projectTasks = snapshot.docs.map(doc => ({
@@ -430,24 +614,7 @@ const closeEditProjectModal = () =>{
                           <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} </span>
                           <span className='w-1/6 flex'> 
                             <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
-                            { showEditTaskModal && (
-                              <Modal onClose={handleCloseEditTaskModal}> 
-                              <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
-                                <div className="mt-4 font-bold text-lg">  Edit Task </div>
-
-
-                                <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
-                                  <p> <label> Task Name </label> </p>
-                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                                  <p className="text-red-500 text-sm"> {errors.name}</p>
-                                </div> 
-
-                                <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
-                                  <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
-                                </div>
-                              </form>
-                              </Modal>
-                            )}
+                            
                             <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='text-blue-500 hover:cursor-pointer'/>
                             
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
@@ -469,6 +636,7 @@ const closeEditProjectModal = () =>{
           </nav>
       ));
     };
+   
 
     const renderIncompleteTasks = (taskList) => {
       return taskList.filter(task => task.status === "incomplete").map(task => (
@@ -479,38 +647,11 @@ const closeEditProjectModal = () =>{
                           <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} </span>
                           <span className='w-1/6 flex'> 
                             <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
-                            { showEditTaskModal && (
-                              <Modal onClose={handleCloseEditTaskModal}> 
-                              <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
-                                <div className="mt-4 font-bold text-lg">  Edit Task </div>
-
-
-                                <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
-                                  <p> <label> Task Name </label> </p>
-                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
-                                  <p className="text-red-500 text-sm"> {errors.name}</p>
-                                </div> 
-
-                                <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
-                                  <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
-                                </div>
-                              </form>
-                              </Modal>
-                            )}
+                            
                             <CheckIcon onClick={ () => handleCompleteTask(task)} className='text-green-500 hover:cursor-pointer'/>
                             
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                              { showDeleteModal && (
-                              <Modal onClose={handleCloseDeleteTaskModal}>
-                              <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
-                                <div> Are you sure that you want to delete this task? </div>
-                                <div className="flex w-full justify-between mt-8">  
-                                  <button className='ml-12 bg-red-500'> Yes </button>
-                                  <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
-                                </div>
-                              </form>
-                              </Modal>
-                            )}
+                             
                           </span>
                         </p>
                       </div>
@@ -518,138 +659,17 @@ const closeEditProjectModal = () =>{
           </nav>
       ));
     };
+    
 
     
  
 
-    const [clickedButton, setClickedButton] = useState("all");
-
-    const [clickedTask, setClickedTask] = useState(null);
-
-    const handleTaskClick = (taskId) => {
-      setClickedTask(taskId);
-      
-    }
-
-    const handleButtonClick = (buttonId) => {
-      setClickedButton(buttonId);
-      
-    };
-
+    
     
 
     // #endregion
     
-// #region Edit Task Handler
-   const [showEditTaskModal, setShowEditTaskModal] = useState("");
-   const handleEditTaskClick = (taskId) => {
-    
-    setClickedTask(taskId);
-    console.log("clickedTask is now:" ,taskId.name);
-    setErrors("");
-    setShowEditTaskModal(true);
-    console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
-}
 
-    const handleCloseEditTaskModal = () => {
-      setShowEditTaskModal(false);
-      setErrors("");
-    }
-
-    const updatedTaskName= useRef();
-    const updatedTask = useRef();
-    const updatedTaskDescription = useRef();
-    const updatedTaskCategory = useRef();
-
-    
-
-    const handleEditTaskSubmit = async(editTask) => {
-      editTask.preventDefault();
-
-      
-      let updatedData = {
-        name: updatedTaskName.current.value,
-      };
-      
-      let formErrors = {};
-
-      const titleEditValue = updatedTaskName.current.value.trim();
-      
-
-      if (titleEditValue.length < 3){
-        formErrors.name = "Title must be at least 3 characters long"
-      }
-
-  
-
-      if (Object.keys(formErrors).length > 0){
-        setErrors(formErrors);
-        return;
-      }
-
-      try {
-        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", clickedTask.id);
-        await updateDoc(taskEditRef, updatedData)
-        console.log("Document updated");
-        setShowEditTaskModal(false);
-        setFlashMessage("Task Edit successfully");
-        setShowFlashMessage(true);
-        setClickedTask(null);
-        setTimeout( () => {
-          setShowFlashMessage(false);
-        } , 2000);
-      } catch (error) {
-        console.error("Error updating", error);
-      }
-    }
-    const handleCompleteTask = async (taskId) => {
-      setClickedTask(taskId);
-      console.log("haha ta", taskId)
-     
-
-      let settleTask = {
-        status: "complete"
-      }
-      try {
-        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
-        await updateDoc(taskEditRef, settleTask)
-        console.log("Document updated");
-        setShowEditTaskModal(false);
-        setFlashMessage(`Task  "${taskId.name}" Marked as Complete`);
-        setShowFlashMessage("true");
-        setTimeout( () => {
-          setShowFlashMessage(false);
-        } , 2000);
-      } catch (error) {
-        console.error("Error updating", error);
-      }
-
-    }
-
-    const handleReturnTask = async (taskId) => {
-      setClickedTask(taskId);
-
-
-      let returnTask = {
-      status: "incomplete"
-      }
-
-
- try {
-        const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
-        await updateDoc(taskEditRef, returnTask);
-        setShowEditTaskModal(false);
-        setFlashMessage(`Task "${taskId.name}" is now marked as incomplete`);
-        setShowFlashMessage("true");
-        setTimeout( () => {
-          setShowFlashMessage(false);
-        } , 2000);
-      } catch (error) {
-        console.error("Error updating", error);
-      }
-
-}
-// #endregion
 
 // #region Delete Task Handler
 
@@ -756,7 +776,7 @@ const handleConfirmDelete = async(deleteTask) => {
                                       <button onClick={handleCloseAddProjectModal} className=''> X </button>
                                     </p>
                                     <p className='flex flex-col '>
-                                    <label className='sm:mx-8 xs:mx-8'> Project Name: </label>
+                                    <label className='sm:mx-8 xs:mx-8'> Project Name:  </label>
                                     <input ref={projectNameRef} type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
                                     <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.name && errors.name}  </p>
                                     </p>
@@ -774,10 +794,10 @@ const handleConfirmDelete = async(deleteTask) => {
                                     <p className='flex flex-col '>
                                     <label className='sm:mx-8 xs:mx-8'> Project Category: </label>
                                     <select className="sm:mx-8 xs:mx-8 border border-black" ref={projectCategoryRef}>
-                                    <option value="personal">Personal</option>
-                                    <option value="work">Work</option>
-                                    <option value="gaming">Gaming</option>
-                                    <option value="others">Other</option>
+                                    <option value="personal">personal</option>
+                                    <option value="work">work</option>
+                                    <option value="gaming">gaming</option>
+                                    <option value="others">other</option>
                                     </select> 
                                     </p>
                                   </div>
@@ -902,6 +922,24 @@ const handleConfirmDelete = async(deleteTask) => {
           </div>
         )}
         <Footer/>
+         { showEditTaskModal &&   (
+                              <Modal onClose={handleCloseEditTaskModal}> 
+                              <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
+                                <div className="mt-4 font-bold text-lg">  Edit Task </div>
+
+
+                                <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
+                                  <p> <label> Task Name </label> </p>
+                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                                  <p className="text-red-500 text-sm"> {errors.name}</p>
+                                </div> 
+
+                                <div className={`p-2 rounded-sm mt-4  ${classes.smallFontSetting} flex w-full items-start justify-center mx-2`}> 
+                                  <button className={`text-xs py-2 ${classes.smallFontSetting} bg-blue-500 text-white mr-2` }>Edit Task</button>
+                                </div>
+                              </form>
+                              </Modal>
+      )}
         </body>
 
        
