@@ -20,12 +20,10 @@ function MyHeadSpace(){
     {
       setClickedTask(taskId);
     }
-
     const handleButtonClick = (buttonId) => 
     {
       setClickedButton(buttonId);
     };
-
    const [showEditTaskModal, setShowEditTaskModal] = useState(false);
    const handleEditTaskClick = (task) => {
     
@@ -46,12 +44,9 @@ function MyHeadSpace(){
     const updatedTaskDescription = useRef();
     const updatedTaskCategory = useRef();
 
-    
-
     const handleEditTaskSubmit = async(editTask) => {
       editTask.preventDefault();
 
-      
       let updatedData = {
         name: updatedTaskName.current.value,
       };
@@ -60,12 +55,9 @@ function MyHeadSpace(){
 
       const titleEditValue = updatedTaskName.current.value.trim();
       
-
       if (titleEditValue.length < 3){
         formErrors.name = "Title must be at least 3 characters long"
       }
-
-  
 
       if (Object.keys(formErrors).length > 0){
         setErrors(formErrors);
@@ -92,7 +84,6 @@ function MyHeadSpace(){
       setClickedTask(taskId);
       console.log("haha ta", taskId)
      
-
       let settleTask = {
         status: "complete"
       }
@@ -115,11 +106,9 @@ function MyHeadSpace(){
     const handleReturnTask = async (taskId) => {
       setClickedTask(taskId);
 
-
       let returnTask = {
       status: "incomplete"
       }
-
 
  try {
         const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
@@ -302,53 +291,8 @@ function MyHeadSpace(){
           <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
             <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
             </PencilIcon> 
-              { showEditProjectModal &&  (
-                <Modal onClose={closeEditProjectModal}>
-                  <form onSubmit={handleConfirmEditProject }className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
-                    <div className='w-full h-1/3 flex items-center justify-center flex flex-col'> 
-                      <p className='w-full h-1/3 flex items-center justify-center '> Project Name {project.projectName} {projectClicked.projectName} </p>
-                      <p className='w-full h-2/3'>
-                        <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectEditNameRef } defaultValue={projectClicked.projectName} type="text"/> 
-                       </p>
-                    </div>
-
-                    <div className='w-full h-1/3'> 
-                      <p className='w-full h-1/4'> Project Description</p>
-                      <p className='w-full h-3/4 mb-8'> <textarea ref={projectEditDescriptionRef } defaultValue={projectClicked.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
-                    </div>
-                    
-                    <div className='w-full h-1/3 flex flex-col'> 
-                      <p className='w-full h-1/3 flex items-center justify-center'>   
-                        <label> Project Category: </label>
-                        <select ref={projectEditCategoryRef }>  
-                          <option value="personal"> Personal</option>
-                          <option value="gaming"> Gaming</option>
-                          <option value="work"> Work</option>
-                          <option value="others"> Others</option>
-                        </select>
-                      </p>
-
-                      <p className="w-full h-2/3 flex items-center justify-center ">
-                        <button type="submit" className="w-1/4 bg-indigo-700 text-white"> Edit Project  </button>
-                      </p>
-                    </div>  
-                  </form>
-                </Modal>
-              )}
+              
             <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
-            { showDeleteProjectModal && (
-              <Modal onClose={closeDeleteProjectModal}>
-                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
-                  <div className="w-full h-1/2 flex items-end justify-center"> 
-                    Are you sure you want to delete this project {projectClicked.projectName}? 
-                  </div>
-                  <div className="w-full h-1/2 flex justify-between items-center ">    
-                      <button type="submit" className="bg-red-300 ml-12"> Yes</button>
-                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12"> No</button>
-                    </div>
-                </form>
-              </Modal>
-            )}
             <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
           </span>
        
@@ -477,25 +421,18 @@ console.log(projectClicked.projectName);
 
 // #region Delete Project
 
-const closeDeleteProjectModal = () => {
-  setShowDeleteProjectModal(false);
-}
-
-
-
-const handleDeleteProjectClick = (project)  => {
-  setProjectClicked(project)
-  setShowDeleteProjectModal(true);
- 
-}
-
-
-
- const handleConfirmProjectDelete = async (deleteProject) => {
+  const closeDeleteProjectModal = () => {
+    setShowDeleteProjectModal(false);
+  }
+  const handleDeleteProjectClick = (project)  => {
+    setProjectClicked(project)
+    setShowDeleteProjectModal(true);
+  }
+ const handleConfirmProjectDelete = async (deleteProject) => 
+  {
    const projectToDeleteRef = doc(firestore, "projects", projectClicked.id);;
   deleteProject.preventDefault();
 
-  
   try{
     await deleteDoc(projectToDeleteRef);
     setShowDeleteProjectModal(false);
@@ -506,13 +443,9 @@ const handleDeleteProjectClick = (project)  => {
   } catch  (error) {
     console.log("error deleting project", error);
   }
-
  }
 
-
-
 // #endregion
-
 
 // #region Create Task Handler
   
@@ -521,17 +454,14 @@ const handleDeleteProjectClick = (project)  => {
     const imageRef = useRef();
     const taskStatusRef = useRef();
 
-
-    const handleTaskCreate  = async (createTask) => {
+    const handleTaskCreate  = async (createTask) => 
+    {
     createTask.preventDefault();
     console.log(taskNameRef.current.value);
     const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
-
-
     let formErrors = {};
 
     const taskValue = taskNameRef.current.value.trim();
-    
 
     if (taskValue.length < 3) {
       formErrors.name = "Task name must be at least 3 characters long.";
@@ -548,7 +478,6 @@ const handleDeleteProjectClick = (project)  => {
     status: "incomplete",
   };
 
-  
     try {
     await addDoc (taskRef, taskData);
     setShowModal(false);
@@ -614,21 +543,8 @@ const handleDeleteProjectClick = (project)  => {
                           <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} </span>
                           <span className='w-1/6 flex'> 
                             <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
-                            
                             <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='text-blue-500 hover:cursor-pointer'/>
-                            
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                              { showDeleteModal && (
-                              <Modal onClose={handleCloseDeleteTaskModal}>
-                              <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
-                                <div> Are you sure that you want to delete this task? </div>
-                                <div className="flex w-full justify-between mt-8">  
-                                  <button className='ml-12 bg-red-500'> Yes </button>
-                                  <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
-                                </div>
-                              </form>
-                              </Modal>
-                            )}
                           </span>
                         </p>
                       </div>
@@ -637,7 +553,6 @@ const handleDeleteProjectClick = (project)  => {
       ));
     };
    
-
     const renderIncompleteTasks = (taskList) => {
       return taskList.filter(task => task.status === "incomplete").map(task => (
         <nav className='w-full flex'>
@@ -647,11 +562,8 @@ const handleDeleteProjectClick = (project)  => {
                           <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} </span>
                           <span className='w-1/6 flex'> 
                             <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
-                            
                             <CheckIcon onClick={ () => handleCompleteTask(task)} className='text-green-500 hover:cursor-pointer'/>
-                            
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                             
                           </span>
                         </p>
                       </div>
@@ -659,12 +571,6 @@ const handleDeleteProjectClick = (project)  => {
           </nav>
       ));
     };
-    
-
-    
- 
-
-    
     
 
     // #endregion
@@ -715,7 +621,7 @@ const handleConfirmDelete = async(deleteTask) => {
       <Header/>
 
         <main className="flex w-full min-h-[100vh] items-center justify-center">
-            <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white'>
+          <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white'>
                 <article id="first column wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2  '>
                   <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}>
       
@@ -813,7 +719,6 @@ const handleConfirmDelete = async(deleteTask) => {
 
                     <nav className="w-full h-full flex flex-col items-center justify-start overflow-y-auto">
                   
-
                       {clickedCategory === "personal" ? (
                         renderPersonalProjects(firebaseProjects)
                       ) : (
@@ -822,8 +727,6 @@ const handleConfirmDelete = async(deleteTask) => {
                           <p>  select a category to view projects</p>) :( null)
                       )}
 
-
-                      
 
                       {clickedCategory === "work" ? (
                         renderWorkProjects(firebaseProjects)
@@ -842,8 +745,6 @@ const handleConfirmDelete = async(deleteTask) => {
                       ) : (
                         null
                       )}
-
-                      
 
                     </nav>
 
@@ -890,31 +791,22 @@ const handleConfirmDelete = async(deleteTask) => {
                             )}
                         </aside>
                         
-
                         {projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
-                        
-                        
-                        
-
+  
                       </nav>
 
                       <nav id="completeTasks" className="h-1/2 w-full flex  flex-1 flex-col items-start justify-start overflow-y-auto bg-indigo-500">
                         <aside className='text-center w-full p-4 text-white '> Tasks Completed </aside>
-                        
-                          
+                             
                         {projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
-                  
-                        
+                             
                       </nav>
 
                 </article>
                 </section>  
                 
-
-         
           </section>
         </main>
-
 
         {showFlashMessage && (
           <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
@@ -922,11 +814,12 @@ const handleConfirmDelete = async(deleteTask) => {
           </div>
         )}
         <Footer/>
-         { showEditTaskModal &&   (
+         { /* All Modals */ }
+        { showEditTaskModal &&   
+        (
                               <Modal onClose={handleCloseEditTaskModal}> 
                               <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
                                 <div className="mt-4 font-bold text-lg">  Edit Task </div>
-
 
                                 <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
                                   <p> <label> Task Name </label> </p>
@@ -939,13 +832,70 @@ const handleConfirmDelete = async(deleteTask) => {
                                 </div>
                               </form>
                               </Modal>
-      )}
-        </body>
+        )}
+        { showDeleteModal && (
+                              <Modal onClose={handleCloseDeleteTaskModal}>
+                              <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
+                                <div> Are you sure that you want to delete this task? </div>
+                                <div className="flex w-full justify-between mt-8">  
+                                  <button className='ml-12 bg-red-500'> Yes </button>
+                                  <button onClick={handleCloseDeleteTaskModal} className='mr-12 bg-green-400'> No </button>
+                                </div>
+                              </form>
+                              </Modal>
+        )}
 
-       
+        { showEditProjectModal &&  (
+                <Modal onClose={closeEditProjectModal}>
+                  <form onSubmit={handleConfirmEditProject } className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
+                    <div className='w-full h-1/3 flex items-center justify-center flex flex-col '> 
+                      <p className='w-full h-1/3 flex items-center justify-center '> Project Name  </p>
+                      <p className='w-full h-2/3 flex items-start justify-center'>
+                        <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectEditNameRef } defaultValue={projectClicked.projectName} type="text"/> 
+                       </p>
+                    </div>
+
+                    <div className='w-full h-1/3'> 
+                      <p className='w-full h-1/4 flex justify-center'> Project Description</p>
+                      <p className='w-full h-3/4 mb-8 flex justify-center'> <textarea ref={projectEditDescriptionRef } defaultValue={projectClicked.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
+                    </div>
+                    
+                    <div className='w-full h-1/3 flex flex-col'> 
+                      <p className='w-full h-1/3 flex items-center justify-center'>   
+                        <label> Project Category: </label>
+                        <select ref={projectEditCategoryRef }>  
+                          <option value="personal"> Personal</option>
+                          <option value="gaming"> Gaming</option>
+                          <option value="work"> Work</option>
+                          <option value="others"> Others</option>
+                        </select>
+                      </p>
+
+                      <p className="w-full h-2/3 flex items-center justify-center ">
+                        <button type="submit" className="w-1/3 bg-indigo-700 text-white"> Edit Project  </button>
+                      </p>
+                    </div>  
+                  </form>
+                </Modal>
+        )}
+
+        { showDeleteProjectModal && (
+              <Modal onClose={closeDeleteProjectModal}>
+                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
+                  <div className="w-full h-1/2 flex items-end justify-center mx-4"> 
+                    <p className="mx-4"> Are you sure you want to delete  project {projectClicked.projectName}? </p>
+                  </div>
+                  <div className="w-full h-1/2 flex justify-between items-center mx-4 ">    
+                      <button type="submit" className="bg-red-300 ml-12"> Yes</button>
+                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12"> No</button>
+                    </div>
+                </form>
+              </Modal>
+        )}
+        </body>
+ 
     );
 }
-
 export default MyHeadSpace;
 
  
