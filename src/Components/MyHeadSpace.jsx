@@ -264,8 +264,6 @@ function MyHeadSpace(){
   return () => unsubscribe(); // Cleanup
     }, []);
 
-    
-
   const renderPersonalProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "personal").map(project => (
       <aside onClick={() => handleProjectClick(project)} 
@@ -282,8 +280,6 @@ function MyHeadSpace(){
         : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
         }
       </div>
-
-    
       
       <div className=" w-full flex flex-col justify-start items-start rounded-md">
         <p className='flex w-full justify-start '>
@@ -307,9 +303,6 @@ function MyHeadSpace(){
           {project.projectDescription}
         </p>
 
-        
-
-        
         <p
           className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
           expandedProjects.has(project.id)
@@ -335,25 +328,187 @@ function MyHeadSpace(){
 
   const renderWorkProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "work").map(project => (
-      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
-      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
-     </div>
+      <aside onClick={() => handleProjectClick(project)} 
+      key={project.id}
+      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
+      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
+      
+      <div onClick={(e) => {
+        e.stopPropagation();
+        handleExpandProject(project);}} 
+        className='flex justify-start items-start'> 
+        {expandedProjects.has(project.id) 
+        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
+        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
+        }
+      </div>
+
+      <div className=" w-full flex flex-col justify-start items-start rounded-md">
+        <p className='flex w-full justify-start '>
+          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
+          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
+            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
+            </PencilIcon> 
+              
+            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
+            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
+          </span>
+       
+        </p>
+        <p
+          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
+            expandedProjects.has(project.id)
+              ? 'max-h-40 opacity-100 translate-y-2'
+              : 'max-h-0 opacity-55 -translate-y-2'
+          } whitespace-normal break-words leading-snug `}
+        >
+          {project.projectDescription}
+        </p>
+
+        <p
+          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
+          expandedProjects.has(project.id)
+            ? 'max-h-40 opacity-100 translate-y-2'
+            : 'max-h-0 opacity-55 -translate-y-2'
+            }`}
+          > {project.createdAt?.toDate
+          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`
+          : 'Created at (date not available)'}
+        </p>
+
+      </div>
+    
+     </aside>
     ));
   }
 
   const renderGamingProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "gaming").map(project => (
-      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
-      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
-     </div>
+      <aside onClick={() => handleProjectClick(project)} 
+      key={project.id}
+      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
+      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
+      
+      <div onClick={(e) => {
+        e.stopPropagation();
+        handleExpandProject(project);}} 
+        className='flex justify-start items-start'> 
+        {expandedProjects.has(project.id) 
+        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
+        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
+        }
+      </div>
+
+      <div className=" w-full flex flex-col justify-start items-start rounded-md">
+        <p className='flex w-full justify-start '>
+          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
+          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
+            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
+            </PencilIcon> 
+              
+            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
+            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
+          </span>
+       
+        </p>
+        <p
+          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
+            expandedProjects.has(project.id)
+              ? 'max-h-40 opacity-100 translate-y-2'
+              : 'max-h-0 opacity-55 -translate-y-2'
+          } whitespace-normal break-words leading-snug `}
+        >
+          {project.projectDescription}
+        </p>
+
+        <p
+          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
+          expandedProjects.has(project.id)
+            ? 'max-h-40 opacity-100 translate-y-2'
+            : 'max-h-0 opacity-55 -translate-y-2'
+            }`}
+          > {project.createdAt?.toDate
+          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`
+          : 'Created at (date not available)'}
+        </p>
+
+      </div>
+    
+     </aside>
     ));
   }
 
   const renderOtherProjects = (projectList) => {
     return projectList.filter(project => project.projectCategory === "others").map(project => (
-      <div onClick={() => handleProjectClick(project)} key={project.id}className="text-center project-item hover:cursor-pointer w-1/2 mt-2 rounded-md whitespace-nowrap bg-white flex items-center justify-center rounded-md"> 
-      <p className={`hover:bg-indigo-100 text-indigo-900 p-8 w-full flex text-center justify-center items-center rounded-md ${projectClicked?.id === project.id ? 'bg-indigo-700 text-white' : ''}`}>{project.projectName} </p> 
-     </div>
+      <aside onClick={() => handleProjectClick(project)} 
+      key={project.id}
+      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
+      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
+      
+      <div onClick={(e) => {
+        e.stopPropagation();
+        handleExpandProject(project);}} 
+        className='flex justify-start items-start'> 
+        {expandedProjects.has(project.id) 
+        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
+        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
+        }
+      </div>
+
+      <div className=" w-full flex flex-col justify-start items-start rounded-md">
+        <p className='flex w-full justify-start '>
+          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
+          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
+            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
+            </PencilIcon> 
+              
+            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
+            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
+          </span>
+       
+        </p>
+        <p
+          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
+            expandedProjects.has(project.id)
+              ? 'max-h-40 opacity-100 translate-y-2'
+              : 'max-h-0 opacity-55 -translate-y-2'
+          } whitespace-normal break-words leading-snug `}
+        >
+          {project.projectDescription}
+        </p>
+
+        <p
+          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
+          expandedProjects.has(project.id)
+            ? 'max-h-40 opacity-100 translate-y-2'
+            : 'max-h-0 opacity-55 -translate-y-2'
+            }`}
+          > {project.createdAt?.toDate
+          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`
+          : 'Created at (date not available)'}
+        </p>
+
+      </div>
+    
+     </aside>
     ));
   }
 
@@ -400,7 +555,7 @@ console.log(projectClicked.projectName);
         await updateDoc(projectToEditRef, projectEditData)
         console.log("Document updated");
         setShowEditProjectModal(false);
-        setFlashMessage("Project Edit successfully");
+        setFlashMessage("Project Edited successfully");
         setShowFlashMessage(true);
         setTimeout( () => {
           setShowFlashMessage(false);
@@ -410,8 +565,6 @@ console.log(projectClicked.projectName);
         console.error("Error updating", error);
 
   }
-
-
 }
 
 
@@ -675,43 +828,40 @@ const handleConfirmDelete = async(deleteTask) => {
                           <button className='bg-white hover:bg-indigo-400 hover:text-white mx-2' onClick={handleAddProject}> + Add a Project  </button>
                           { showAddProjectModal && (
                             <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
-                              <form onSubmit={handleCreateProjectSubmit} className="min-w-[20vw] min-h-[30vh] flex flex-col items-center justify-center"> 
-
-                                  <div className='w-full min-h-[10vh] flex flex-col items-start justify-center '>
-                                    <p className='flex w-full items-start mb-2 justify-end'> 
-                                      <button onClick={handleCloseAddProjectModal} className=''> X </button>
-                                    </p>
-                                    <p className='flex flex-col '>
-                                    <label className='sm:mx-8 xs:mx-8'> Project Name:  </label>
-                                    <input ref={projectNameRef} type="text" placeholder="input project name here" className="sm:mx-8 xs:mx-8 border-2 border-black"/> 
-                                    <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.name && errors.name}  </p>
-                                    </p>
+                              <form onSubmit={handleCreateProjectSubmit} className="w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700">
+                                  {/* Close Button */}
+                                  <aside className="flex flex-col h-1/3 w-full"> 
+                                  <div className='w-full flex justify-end items-center pr-4 h-1/5 mt-1 '>
+                                    <button type="button" onClick={handleCloseAddProjectModal} className="text-black text-xs">✕</button>
+                                  </div>
+                                  {/* Project Name */}
+                                  <div className='w-full h-4/5 flex items-center justify-center flex-col'>
+                                    <label className='w-2/3 text-sm font-semibold'>Project Name</label>
+                                    <input ref={projectNameRef} type="text" placeholder="Input project name here" className="w-2/3 h-1/2 border border-indigo-700 text-black"/>
+                                     {errors.name && ( <p className="text-red-500 text-xs mt-1">{errors.name}</p>  )}
+                                  </div>
+                                  </aside>
+                                  {/* Project Description */}
+                                  <div className='w-full h-1/3 flex flex-col items-center justify-center'>
+                                    <label className='w-2/3 text-sm font-semibold'>Project Description</label>
+                                    <textarea ref={projectDescriptionRef} placeholder="Input project description here" className="text-xs border border-indigo-700 w-2/3 h-[60%] text-black p-1"/>
+                                   {errors.description && ( <p className="text-red-500 text-xs mt-1">{errors.description}</p> )}
                                   </div>
 
-                                  <div className='w-full min-h-[15vh]  flex flex-col items-start justify-center'>
-                                    <p className='flex flex-col '>
-                                    <label className='sm:mx-8 xs:mx-8'> Project Description: </label>
-                                    <textarea ref={projectDescriptionRef}  placeholder="input project name here" className="text-md sm:mx-8 xs:mx-8 border-2 border-black p-6"/> 
-                                    <p className="text-red-500 text-sm sm:mx-8 xs:mx-8"> {errors.description && errors.description}  </p>
-                                    </p>
-                                  </div>
+                                  {/* Project Category & Submit */}
+                                  <div className='w-full h-1/3 flex flex-col items-center justify-start'>
+                                    <label className='text-sm font-semibold'>Project Category:</label>
+                                    <select ref={projectCategoryRef} defaultValue={clickedCategory} className="border border-indigo-700 w-2/3 text-black mt-1" >
+                                      <option value="personal">Personal</option>
+                                      <option value="work">Work</option>
+                                      <option value="gaming">Gaming</option>
+                                      <option value="others">Others</option>
+                                    </select>
 
-                                  <div className='w-full min-h-[10vh]  flex flex-col items-start justify-center'>
-                                    <p className='flex flex-col '>
-                                    <label className='sm:mx-8 xs:mx-8'> Project Category: </label>
-                                    <select className="sm:mx-8 xs:mx-8 border border-black" ref={projectCategoryRef}>
-                                    <option value="personal">personal</option>
-                                    <option value="work">work</option>
-                                    <option value="gaming">gaming</option>
-                                    <option value="others">other</option>
-                                    </select> 
-                                    </p>
+                                    <button type="submit"className="mt-4 w-1/3 bg-indigo-700 hover:bg-indigo-800 text-white text-sm py-1 rounded" >
+                                      Create Project
+                                    </button>
                                   </div>
-
-                                  <div className='w-full flex items-center justify-center p-2'>
-                                    <button className="bg-blue-300 hover:bg-blue-500"> Create Project</button>
-                                  </div>
-
                               </form>
                             </Modal>
                           ) }   
@@ -863,7 +1013,7 @@ const handleConfirmDelete = async(deleteTask) => {
                     <div className='w-full h-1/3 flex flex-col'> 
                       <p className='w-full h-1/3 flex items-center justify-center'>   
                         <label> Project Category: </label>
-                        <select ref={projectEditCategoryRef }>  
+                        <select ref={projectEditCategoryRef } defaultValue={projectClicked.projectCategory}>  
                           <option value="personal"> Personal</option>
                           <option value="gaming"> Gaming</option>
                           <option value="work"> Work</option>
