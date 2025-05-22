@@ -147,6 +147,7 @@ function MyHeadSpace(){
   const projectDescriptionRef = useRef();
   const projectStatusRef = useRef();
   const [showAddProjectModal, setShowAddProjectModal] = useState("");
+  
 
   const handleCreateProjectSubmit =  async (createProject) => {
     createProject.preventDefault();
@@ -211,6 +212,7 @@ function MyHeadSpace(){
   const [clickedCategory, setClickedCategory] = useState("");
   const [ expandProject, setExpandProject] = useState(false);
   const [expandedProjects, setExpandedProjects] = useState(new Set());
+  const [showCompleteProjects, setShowCompleteProjects] = useState(false);
 
 
 
@@ -525,7 +527,24 @@ const projectEditNameRef = useRef();
 const projectEditDescriptionRef = useRef();
 const projectEditCategoryRef = useRef();
 
+const handleCompleteProject = (project) => {
+  setProjectClicked(project)
+  const projectToCompleteRef = doc(firestore, "projects", projectClicked.id);
+  let Data = {
+    status: "complete"
+  }
+try {
+  updateDoc(projectToCompleteRef, Data);
+  setShowEditProjectModal(false);
+  setFlashMessage("project marked as complete");
+  setShowFlashMessage(true);
+  setTimeout ( () => {setShowFlashMessage(false)}, 2000);
+  console.log("attempt for", projectClicked.projectName)
+} catch (error) {
+  console.error("unable to complete project", error);
+}
 
+}
 
 const handleEditProjectClick = (project) => {
   setProjectClicked(project)
@@ -839,7 +858,7 @@ const handleConfirmDelete = async(deleteTask) => {
                                     <label className='w-2/3 text-sm font-semibold'>Project Name</label>
                                     <input ref={projectNameRef} type="text" placeholder="Input project name here" className="w-2/3 h-1/2 border border-indigo-700 text-black"/>
                                      {errors.name && ( <p className="text-red-500 text-xs mt-1">{errors.name}</p>  )}
-                                  </div>
+                                  </div>  
                                   </aside>
                                   {/* Project Description */}
                                   <div className='w-full h-1/3 flex flex-col items-center justify-center'>
@@ -1021,9 +1040,19 @@ const handleConfirmDelete = async(deleteTask) => {
                         </select>
                       </p>
 
-                      <p className="w-full h-2/3 flex items-center justify-center ">
-                        <button type="submit" className="w-1/3 bg-indigo-700 text-white"> Edit Project  </button>
+                      <p className="w-full h-2/3 flex items-center justify-between">
+                        <button type="submit" className="w-1/3 bg-indigo-700 text-white ml-4 mr-0.5 text-xs py-4 text-center"  >
+                          Edit Project
+                        </button>
+                        <button onClick={(e) => {
+  e.stopPropagation();     // Prevents the event from bubbling up to the form
+  e.preventDefault();   
+  handleCompleteProject(projectClicked.id);
+}}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
+                          Mark as Complete
+                        </button>
                       </p>
+
                     </div>  
                   </form>
                 </Modal>
