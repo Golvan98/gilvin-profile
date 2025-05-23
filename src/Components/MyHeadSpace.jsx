@@ -212,7 +212,13 @@ function MyHeadSpace(){
   const [clickedCategory, setClickedCategory] = useState("");
   const [ expandProject, setExpandProject] = useState(false);
   const [expandedProjects, setExpandedProjects] = useState(new Set());
-  const [showCompleteProjects, setShowCompleteProjects] = useState(false);
+  const [showCompleteProjects, setShowCompleteProjects] = useState(true);
+
+  const toggleViewProjects = () => {
+    setShowCompleteProjects(prev => !prev);
+    console.log(showCompleteProjects);
+  }
+
 
 
 
@@ -267,7 +273,11 @@ function MyHeadSpace(){
     }, []);
 
   const renderPersonalProjects = (projectList) => {
-    return projectList.filter(project => project.projectCategory === "personal").map(project => (
+    return (
+  (showCompleteProjects
+    ? projectList.filter(project => project.projectCategory === "personal" && project.status === "incomplete")
+    : projectList.filter(project => project.projectCategory === "personal" && project.status === "complete")
+  ).map(project => (
       <aside onClick={() => handleProjectClick(project)} 
       key={project.id}
       className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
@@ -287,11 +297,8 @@ function MyHeadSpace(){
         <p className='flex w-full justify-start '>
           <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
           <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
-            </PencilIcon> 
-              
+            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>  </PencilIcon> 
             <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
-            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
           </span>
        
         </p>
@@ -325,7 +332,7 @@ function MyHeadSpace(){
       </div>
     
      </aside>
-    ));
+    )));
   }
 
   const renderWorkProjects = (projectList) => {
@@ -543,7 +550,24 @@ try {
 } catch (error) {
   console.error("unable to complete project", error);
 }
+}
 
+const handleUndoCompleteProject = (project) => {
+  setProjectClicked(project)
+  const projectToCompleteRef = doc(firestore, "projects", projectClicked.id);
+  let Data = {
+    status: "incomplete"
+  }
+try {
+  updateDoc(projectToCompleteRef, Data);
+  setShowEditProjectModal(false);
+  setFlashMessage("project marked as complete");
+  setShowFlashMessage(true);
+  setTimeout ( () => {setShowFlashMessage(false)}, 2000);
+  console.log("attempt for", projectClicked.projectName)
+} catch (error) {
+  console.error("unable to complete project", error);
+}
 }
 
 const handleEditProjectClick = (project) => {
@@ -843,8 +867,12 @@ const handleConfirmDelete = async(deleteTask) => {
                 <section className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md">
                   <article id="2ndColumn" className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> { /* task area */}
 
-                    <nav id="addTaskSection" className="w-full flex items-center justify-end my-4"> 
-                          <button className='bg-white hover:bg-indigo-400 hover:text-white mx-2' onClick={handleAddProject}> + Add a Project  </button>
+                    <nav id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
+                          <button onClick={toggleViewProjects} className='ml-4 mr-4'> 
+                            { showCompleteProjects ? ('View Completed Projects') : ('View Incomplete Projects') }
+                            </button>
+                          <button className='bg-white hover:bg-indigo-400 hover:text-white mr-4' onClick={handleAddProject}> + Add a Project  </button>
+                        
                           { showAddProjectModal && (
                             <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
                               <form onSubmit={handleCreateProjectSubmit} className="w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700">
@@ -1044,13 +1072,16 @@ const handleConfirmDelete = async(deleteTask) => {
                         <button type="submit" className="w-1/3 bg-indigo-700 text-white ml-4 mr-0.5 text-xs py-4 text-center"  >
                           Edit Project
                         </button>
-                        <button onClick={(e) => {
-  e.stopPropagation();     // Prevents the event from bubbling up to the form
-  e.preventDefault();   
-  handleCompleteProject(projectClicked.id);
-}}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
+                        {showCompleteProjects  ? (  <button onClick={(e) => { handleCompleteProject(projectClicked.id); }}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
                           Mark as Complete
+                        </button> )
+
+                        : ( <button onClick={(e) => { handleUndoCompleteProject(projectClicked.id); }}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
+                          Mark as Incomplete
                         </button>
+
+                        )
+                        }
                       </p>
 
                     </div>  
