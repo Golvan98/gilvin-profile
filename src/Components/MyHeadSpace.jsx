@@ -336,7 +336,11 @@ function MyHeadSpace(){
   }
 
   const renderWorkProjects = (projectList) => {
-    return projectList.filter(project => project.projectCategory === "work").map(project => (
+    return ( (showCompleteProjects 
+      ? projectList.filter(project => project.projectCategory === "work").filter(project => project.status ==="incomplete")
+      : projectList.filter(project => project.projectCategory === "work").filter(project => project.status ==="complete")
+    )
+    .map(project => (
       <aside onClick={() => handleProjectClick(project)} 
       key={project.id}
       className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
@@ -394,11 +398,15 @@ function MyHeadSpace(){
       </div>
     
      </aside>
-    ));
+    )));
   }
 
   const renderGamingProjects = (projectList) => {
-    return projectList.filter(project => project.projectCategory === "gaming").map(project => (
+    return ( (showCompleteProjects 
+      ? projectList.filter(project => project.projectCategory === "gaming").filter(project => project.status ==="incomplete")
+      : projectList.filter(project => project.projectCategory === "gaming").filter(project => project.status ==="complete")
+    )
+    .map(project => (
       <aside onClick={() => handleProjectClick(project)} 
       key={project.id}
       className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
@@ -456,11 +464,15 @@ function MyHeadSpace(){
       </div>
     
      </aside>
-    ));
+    )));
   }
 
   const renderOtherProjects = (projectList) => {
-    return projectList.filter(project => project.projectCategory === "others").map(project => (
+    return ( (showCompleteProjects 
+      ? projectList.filter(project => project.projectCategory === "others").filter(project => project.status ==="incomplete")
+      : projectList.filter(project => project.projectCategory === "others").filter(project => project.status ==="complete")
+    )
+    .map(project => (
       <aside onClick={() => handleProjectClick(project)} 
       key={project.id}
       className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
@@ -518,7 +530,7 @@ function MyHeadSpace(){
       </div>
     
      </aside>
-    ));
+    )));
   }
 
 
@@ -1075,15 +1087,12 @@ const handleConfirmDelete = async(deleteTask) => {
                         {showCompleteProjects  ? (  <button onClick={(e) => { handleCompleteProject(projectClicked.id); }}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
                           Mark as Complete
                         </button> )
-
                         : ( <button onClick={(e) => { handleUndoCompleteProject(projectClicked.id); }}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
                           Mark as Incomplete
                         </button>
-
                         )
                         }
                       </p>
-
                     </div>  
                   </form>
                 </Modal>
