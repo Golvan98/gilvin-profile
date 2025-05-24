@@ -12,6 +12,54 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, Chev
 
 function MyHeadSpace(){
 
+  // #region Create Task Handler
+    const taskNameRef = useRef();
+    const taskStatusRef = useRef();
+
+    const handleTaskCreate  = async (createTask) => 
+    {
+    createTask.preventDefault();
+    const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
+    let formErrors = {};
+    const taskValue = taskNameRef.current.value.trim();
+    if (taskValue.length < 3) {
+      formErrors.name = "Task name must be at least 3 characters long.";
+    }
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // stop submission
+    }
+  let taskData = {
+    name: taskNameRef.current.value,
+    status: "incomplete",
+  };
+
+    try {
+    await addDoc (taskRef, taskData);
+    setShowModal(false);
+    setFlashMessage("Task successfully created");
+    setShowFlashMessage(true);
+    setTimeout( () => {
+      setShowFlashMessage(false);
+    } , 2000);
+    } catch (createTask) {
+    console.log(createTask);
+    }
+  
+  }
+  
+  const [showModal, setShowModal] = useState(false);
+
+    const handleAddTaskClick = () => {
+      setErrors({ task: "", description: "" });
+      setShowModal(true);  // Show modal when the button is clicked
+    };
+    const handleCloseModal = () => {
+      setShowModal(false);  // Close modal when clicked outside or a close button
+      setErrors("");
+    };
+  // #endregion
+
   // #region Edit Task Handler
     const [clickedButton, setClickedButton] = useState("all");
     const [clickedTask, setClickedTask] = useState(null);
@@ -31,7 +79,6 @@ function MyHeadSpace(){
     console.log("clickedTask is now:" ,task.name);
     setErrors("");
     setShowEditTaskModal(true);
-    console.log("showEditTaskModal is now:", true); // or log it in a useEffect below
 }
 
     const handleCloseEditTaskModal = () => {
@@ -39,26 +86,19 @@ function MyHeadSpace(){
       setErrors("");
     }
 
-    const updatedTaskName= useRef();
-    const updatedTask = useRef();
-    const updatedTaskDescription = useRef();
-    const updatedTaskCategory = useRef();
-
     const handleEditTaskSubmit = async(editTask) => {
       editTask.preventDefault();
 
       let updatedData = {
-        name: updatedTaskName.current.value,
+        name: taskNameRef .current.value,
       };
       
       let formErrors = {};
-
-      const titleEditValue = updatedTaskName.current.value.trim();
+      const titleEditValue = taskNameRef.current.value.trim();
       
       if (titleEditValue.length < 3){
         formErrors.name = "Title must be at least 3 characters long"
       }
-
       if (Object.keys(formErrors).length > 0){
         setErrors(formErrors);
         return;
@@ -82,8 +122,6 @@ function MyHeadSpace(){
 
     const handleCompleteTask = async (taskId) => {
       setClickedTask(taskId);
-      console.log("haha ta", taskId)
-     
       let settleTask = {
         status: "complete"
       }
@@ -105,11 +143,9 @@ function MyHeadSpace(){
 
     const handleReturnTask = async (taskId) => {
       setClickedTask(taskId);
-
       let returnTask = {
       status: "incomplete"
       }
-
  try {
         const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
         await updateDoc(taskEditRef, returnTask);
@@ -148,12 +184,9 @@ function MyHeadSpace(){
   const projectStatusRef = useRef();
   const [showAddProjectModal, setShowAddProjectModal] = useState("");
   
-
   const handleCreateProjectSubmit =  async (createProject) => {
     createProject.preventDefault();
-
     let formErrors = {}
-
     const projectNameValue = projectNameRef.current.value.trim();
     const projectDescriptionValue = projectDescriptionRef.current.value.trim();
 
@@ -168,7 +201,6 @@ function MyHeadSpace(){
       setErrors(formErrors);
       return; // stop submission
     }
-
     let projectData = {
       projectName: projectNameRef.current.value,
       projectDescription: projectDescriptionRef.current.value,
@@ -176,9 +208,6 @@ function MyHeadSpace(){
       status: "incomplete",
       createdAt: serverTimestamp()
     }
-
-   
-
     try{
       await addDoc (projectRef, projectData)
       setFlashMessage("project created successfully")
@@ -188,22 +217,18 @@ function MyHeadSpace(){
         setShowFlashMessage(false);
       } , 2000)
     } 
-
     catch (error){
       console.log("failed to add project", error);
-    } 
-    
+    }  
   }
 
   const handleAddProject = () => {
     setShowAddProjectModal(true);
   }
-
   const handleCloseAddProjectModal = () => {
     setShowAddProjectModal(false);
     setErrors("");
   }
-
 
 // #endregion
 
@@ -217,13 +242,14 @@ function MyHeadSpace(){
   const toggleViewProjects = () => {
     setShowCompleteProjects(prev => !prev);
     console.log(showCompleteProjects);
-  }
+  } 
 
+  const renderProjects = () => {
+    return renderProjectsByCategory(firebaseProjects, clickedCategory);
+  };
 
-
-
-  
-  const handleExpandProject = (project) => {
+  const handleExpandProject = (project) => 
+  {
     console.log("hi, expanded projects are", expandedProjects);
    setExpandedProjects(prev => {
     const newSet = new Set(prev);
@@ -234,10 +260,7 @@ function MyHeadSpace(){
     }
     return newSet;
    })
-
   }
-
- 
 
   const handlePersonalClick = () => {
     setClickedCategory("personal");
@@ -247,7 +270,6 @@ function MyHeadSpace(){
     setClickedCategory("work");
     console.log("clicked category is", clickedCategory)
   }
-
   const handleGamingClick = () => {
     setClickedCategory("gaming");
     console.log("clicked category is", clickedCategory)
@@ -256,295 +278,103 @@ function MyHeadSpace(){
     setClickedCategory("others");
     console.log("clicked category is", clickedCategory)
   }
-  
-
-
 
   useEffect (() => {
   const unsubscribe = onSnapshot(collection(firestore, "projects"), (snapshot) => {
-  const projectData = snapshot.docs.map(doc => ({
+  const allProjects = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
   }));
-    setFireBaseProjects(projectData);
+    setFireBaseProjects(allProjects);
   });
   
   return () => unsubscribe(); // Cleanup
     }, []);
+ // yawa
 
-  const renderPersonalProjects = (projectList) => {
-    return (
-  (showCompleteProjects
-    ? projectList.filter(project => project.projectCategory === "personal" && project.status === "incomplete")
-    : projectList.filter(project => project.projectCategory === "personal" && project.status === "complete")
-  ).map(project => (
-      <aside onClick={() => handleProjectClick(project)} 
+    const renderProjectsByCategory = (projectList, category) => {
+    const filteredProjects = projectList.filter(
+      (project) =>
+        project.projectCategory === category &&
+        project.status === (showCompleteProjects ? "incomplete" : "complete")
+    );
+
+  return filteredProjects.map((project) => (
+    <aside
+      onClick={() => handleProjectClick(project)}
       key={project.id}
-      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
-      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
-      
-      <div onClick={(e) => {
-        e.stopPropagation();
-        handleExpandProject(project);}} 
-        className='flex justify-start items-start'> 
-        {expandedProjects.has(project.id) 
-        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
-        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
-        }
+      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start 
+      ${projectClicked.id === project.id ? "bg-indigo-600 text-white" : "bg-white text-black"}`}
+    >
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          handleExpandProject(project);
+        }}
+        className="flex justify-start items-start"
+      >
+        {expandedProjects.has(project.id) ? (
+          <ChevronDownIcon className="w-5 h-5 text-red-500" />
+        ) : (
+          <ChevronRightIcon className="w-5 h-5 text-red-500" />
+        )}
       </div>
-      
-      <div className=" w-full flex flex-col justify-start items-start rounded-md">
-        <p className='flex w-full justify-start '>
-          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
-          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>  </PencilIcon> 
-            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
+
+      <div className="w-full flex flex-col justify-start items-start rounded-md">
+        <p className="flex w-full justify-start">
+          <span className="capitalize font-bold text-lg w-4/6 text-start">
+            {project.projectName}
           </span>
-       
+          <span className="w-2/6 flex justify-end mx-1 space-x-2">
+            <PencilIcon
+              onClick={() => handleEditProjectClick(project)}
+              className="w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold"
+            />
+            <TrashIcon
+              onClick={() => handleDeleteProjectClick(project)}
+              className="w-5 h-5 hover:cursor-pointer text-red-500 font-bold"
+            />
+          </span>
         </p>
+
         <p
-          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
+          className={`text-start overflow-hidden text-md duration-500 transform transition-all ${
             expandedProjects.has(project.id)
-              ? 'max-h-40 opacity-100 translate-y-2'
-              : 'max-h-0 opacity-55 -translate-y-2'
-          } whitespace-normal break-words leading-snug `}
+              ? "max-h-40 opacity-100 translate-y-2"
+              : "max-h-0 opacity-55 -translate-y-2"
+          } whitespace-normal break-words leading-snug`}
         >
           {project.projectDescription}
         </p>
 
         <p
           className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
-          expandedProjects.has(project.id)
-            ? 'max-h-40 opacity-100 translate-y-2'
-            : 'max-h-0 opacity-55 -translate-y-2'
-            }`}
-          > {project.createdAt?.toDate
-          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}`
-          : 'Created at (date not available)'}
-        </p>
-
-      </div>
-    
-     </aside>
-    )));
-  }
-
-  const renderWorkProjects = (projectList) => {
-    return ( (showCompleteProjects 
-      ? projectList.filter(project => project.projectCategory === "work").filter(project => project.status ==="incomplete")
-      : projectList.filter(project => project.projectCategory === "work").filter(project => project.status ==="complete")
-    )
-    .map(project => (
-      <aside onClick={() => handleProjectClick(project)} 
-      key={project.id}
-      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
-      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
-      
-      <div onClick={(e) => {
-        e.stopPropagation();
-        handleExpandProject(project);}} 
-        className='flex justify-start items-start'> 
-        {expandedProjects.has(project.id) 
-        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
-        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
-        }
-      </div>
-
-      <div className=" w-full flex flex-col justify-start items-start rounded-md">
-        <p className='flex w-full justify-start '>
-          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
-          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
-            </PencilIcon> 
-              
-            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
-            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
-          </span>
-       
-        </p>
-        <p
-          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
             expandedProjects.has(project.id)
-              ? 'max-h-40 opacity-100 translate-y-2'
-              : 'max-h-0 opacity-55 -translate-y-2'
-          } whitespace-normal break-words leading-snug `}
+              ? "max-h-40 opacity-100 translate-y-2"
+              : "max-h-0 opacity-55 -translate-y-2"
+          }`}
         >
-          {project.projectDescription}
+          {project.createdAt?.toDate
+            ? `Created at ${project.createdAt.toDate().toLocaleString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}`
+            : "Created at (date not available)"}
         </p>
-
-        <p
-          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
-          expandedProjects.has(project.id)
-            ? 'max-h-40 opacity-100 translate-y-2'
-            : 'max-h-0 opacity-55 -translate-y-2'
-            }`}
-          > {project.createdAt?.toDate
-          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}`
-          : 'Created at (date not available)'}
-        </p>
-
       </div>
-    
-     </aside>
-    )));
-  }
-
-  const renderGamingProjects = (projectList) => {
-    return ( (showCompleteProjects 
-      ? projectList.filter(project => project.projectCategory === "gaming").filter(project => project.status ==="incomplete")
-      : projectList.filter(project => project.projectCategory === "gaming").filter(project => project.status ==="complete")
-    )
-    .map(project => (
-      <aside onClick={() => handleProjectClick(project)} 
-      key={project.id}
-      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
-      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
-      
-      <div onClick={(e) => {
-        e.stopPropagation();
-        handleExpandProject(project);}} 
-        className='flex justify-start items-start'> 
-        {expandedProjects.has(project.id) 
-        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
-        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
-        }
-      </div>
-
-      <div className=" w-full flex flex-col justify-start items-start rounded-md">
-        <p className='flex w-full justify-start '>
-          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
-          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
-            </PencilIcon> 
-              
-            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
-            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
-          </span>
-       
-        </p>
-        <p
-          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
-            expandedProjects.has(project.id)
-              ? 'max-h-40 opacity-100 translate-y-2'
-              : 'max-h-0 opacity-55 -translate-y-2'
-          } whitespace-normal break-words leading-snug `}
-        >
-          {project.projectDescription}
-        </p>
-
-        <p
-          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
-          expandedProjects.has(project.id)
-            ? 'max-h-40 opacity-100 translate-y-2'
-            : 'max-h-0 opacity-55 -translate-y-2'
-            }`}
-          > {project.createdAt?.toDate
-          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}`
-          : 'Created at (date not available)'}
-        </p>
-
-      </div>
-    
-     </aside>
-    )));
-  }
-
-  const renderOtherProjects = (projectList) => {
-    return ( (showCompleteProjects 
-      ? projectList.filter(project => project.projectCategory === "others").filter(project => project.status ==="incomplete")
-      : projectList.filter(project => project.projectCategory === "others").filter(project => project.status ==="complete")
-    )
-    .map(project => (
-      <aside onClick={() => handleProjectClick(project)} 
-      key={project.id}
-      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start rounded-md 
-      ${projectClicked.id == project.id ? 'bg-indigo-600 text-white' : 'bg-white text-black'}`}> 
-      
-      <div onClick={(e) => {
-        e.stopPropagation();
-        handleExpandProject(project);}} 
-        className='flex justify-start items-start'> 
-        {expandedProjects.has(project.id) 
-        ? (<ChevronDownIcon className='w-5 h-5 text-red-500'></ChevronDownIcon>)
-        : (<ChevronRightIcon className='w-5 h-5 text-red-500'></ChevronRightIcon>)
-        }
-      </div>
-
-      <div className=" w-full flex flex-col justify-start items-start rounded-md">
-        <p className='flex w-full justify-start '>
-          <span className='capitalize font-bold text-lg w-4/6 text-start'> {project.projectName} </span>
-          <span className='w-2/6  flex justify-end mx-1 space-x-2'> 
-            <PencilIcon onClick={ () => handleEditProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold'>
-            </PencilIcon> 
-              
-            <TrashIcon onClick={ () => handleDeleteProjectClick(project)} className='w-1/3 w-5 h-5 hover:cursor-pointer text-red-500 font-bold'/>
-            <CheckIcon className='w-1/3 w-5 h-5 hover:cursor-pointer text-blue-500 font-bold'></CheckIcon> 
-          </span>
-       
-        </p>
-        <p
-          className={` text-start overflow-hidden text-md  duration-500 transform transition-all ${
-            expandedProjects.has(project.id)
-              ? 'max-h-40 opacity-100 translate-y-2'
-              : 'max-h-0 opacity-55 -translate-y-2'
-          } whitespace-normal break-words leading-snug `}
-        >
-          {project.projectDescription}
-        </p>
-
-        <p
-          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
-          expandedProjects.has(project.id)
-            ? 'max-h-40 opacity-100 translate-y-2'
-            : 'max-h-0 opacity-55 -translate-y-2'
-            }`}
-          > {project.createdAt?.toDate
-          ? `Created at ${project.createdAt.toDate().toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })}`
-          : 'Created at (date not available)'}
-        </p>
-
-      </div>
-    
-     </aside>
-    )));
-  }
-
+    </aside>
+  ));
+};
 
    //#endregion
 //
 
 // #region Edit Project
-
 const [showEditProjectModal, setShowEditProjectModal] = useState("");
 const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
-
-const projectEditNameRef = useRef();
-const projectEditDescriptionRef = useRef();
-const projectEditCategoryRef = useRef();
 
 const handleCompleteProject = (project) => {
   setProjectClicked(project)
@@ -585,8 +415,6 @@ try {
 const handleEditProjectClick = (project) => {
   setProjectClicked(project)
   setShowEditProjectModal(true);
-
-  console.log("project project", project.projectName);
 }
 
 const closeEditProjectModal = () =>{
@@ -596,12 +424,10 @@ const closeEditProjectModal = () =>{
 const handleConfirmEditProject = async (editProject) =>{
 editProject.preventDefault();
 console.log(projectClicked.projectName);
-
-
   let projectEditData = {
-    projectName: projectEditNameRef.current.value,
-    projectDescription: projectEditDescriptionRef.current.value,
-    projectCategory:projectEditCategoryRef.current.value,
+    projectName: projectNameRef .current.value,
+    projectDescription: projectDescriptionRef .current.value,
+    projectCategory:projectCategoryRef .current.value,
   }
   try 
   {
@@ -621,9 +447,6 @@ console.log(projectClicked.projectName);
 
   }
 }
-
-
-
 
 // #endregion
 
@@ -655,72 +478,6 @@ console.log(projectClicked.projectName);
 
 // #endregion
 
-// #region Create Task Handler
-  
-    const taskNameRef = useRef();
-    const descriptionRef = useRef();
-    const imageRef = useRef();
-    const taskStatusRef = useRef();
-
-    const handleTaskCreate  = async (createTask) => 
-    {
-    createTask.preventDefault();
-    console.log(taskNameRef.current.value);
-    const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
-    let formErrors = {};
-
-    const taskValue = taskNameRef.current.value.trim();
-
-    if (taskValue.length < 3) {
-      formErrors.name = "Task name must be at least 3 characters long.";
-    }
-  
-  
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return; // stop submission
-    }
-  
-  let taskData = {
-    name: taskNameRef.current.value,
-    status: "incomplete",
-  };
-
-    try {
-    await addDoc (taskRef, taskData);
-    setShowModal(false);
-    setFlashMessage("Task successfully created");
-    setShowFlashMessage(true);
-
-    setTimeout( () => {
-      setShowFlashMessage(false);
-    } , 2000);
-
-    } catch (createTask) {
-      
-    console.log(createTask);
-    }
-  
-  }
-  
-  const [showModal, setShowModal] = useState(false);
-
-    const handleAddTaskClick = () => {
-      setErrors({ task: "", description: "" });
-      setShowModal(true);  // Show modal when the button is clicked
-    };
-  
-    const handleCloseModal = () => {
-      setShowModal(false);  // Close modal when clicked outside or a close button
-      setErrors("");
-    };
-
-  
-    
-
-
-  // #endregion
-
 // #region Read Task Handler
 
     useEffect (() => {
@@ -740,7 +497,6 @@ console.log(projectClicked.projectName);
       return () => unsubscribe();
 
     }, [projectClicked]);
-
 
     const renderCompleteTasks = (taskList) => {
       return taskList.filter(task => task.status === "complete").map(task => (
@@ -779,12 +535,8 @@ console.log(projectClicked.projectName);
           </nav>
       ));
     };
-    
-
     // #endregion
     
-
-
 // #region Delete Task Handler
 
 const [showDeleteModal, setShowDeleteModal] = useState("");
@@ -810,26 +562,21 @@ const handleConfirmDelete = async(deleteTask) => {
     setShowDeleteModal(false);
     setFlashMessage("task deleted successfully");
     setShowFlashMessage(true);
-
-
     setTimeout( () => {
       setShowFlashMessage(false);
     } , 2000);
-
   } catch (error) {
     console.error("Failed to delete task:", error);
   }
 }
-
 // #endregion
 
     return (
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
-    
       <Header/>
 
-        <main className="flex w-full min-h-[100vh] items-center justify-center">
-          <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white'>
+        <main className="flex w-full min-h-[100vh] items-center justify-center ">
+          <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white '>
                 <article id="first column wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2  '>
                   <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}>
       
@@ -846,35 +593,23 @@ const handleConfirmDelete = async(deleteTask) => {
                     
                   <section id="categoryContainer" className={`h-full w-full flex-col items-center text-indigo-900  justify-center `}> 
 
-                    <aside id="personal" className="flex flex-col w-full">
-                      <div className="w-full flex items-center justify-center">
+                    <div id="personal" className="flex flex-col w-full flex items-center justify-center">
                           <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handlePersonalClick}> Personal </button>
-                      </div>
-
-                    </aside>    
-
-                    <aside id="work" className="flex flex-col w-full mt-3">
-                        <div className="w-full flex items-center justify-center">
+                    </div>    
+                    <div id="work" className="flex flex-col w-full flex items-center justify-center mt-3">
                           <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleWorkClick}> Work </button>
-                        </div>
-                    </aside>             
-          
-                     <aside id="gaming" className="flex flex-col w-full mt-3">
-                        <div className="w-full flex items-center justify-center">
+                    </div>             
+                     <div id="gaming" className="flex flex-col w-full flex items-center justify-center mt-3">
                           <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleGamingClick}> Gaming </button>
-                        </div>
-                    </aside> 
-
-                    <aside id="others" className="flex flex-col w-full mt-3">
-                        <div className="w-full flex items-center justify-center">
+                    </div> 
+                    <div id="others" className="flex flex-col w-full flex items-center justify-center mt-3">
                           <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleOthersClick}> Others </button>
-                        </div>
-                    </aside> 
+                    </div> 
 
-                </section>
+                  </section>
 
                 </nav>
-                </article>
+              </article>
 
                 <section className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md">
                   <article id="2ndColumn" className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> { /* task area */}
@@ -928,32 +663,10 @@ const handleConfirmDelete = async(deleteTask) => {
 
                     <nav className="w-full h-full flex flex-col items-center justify-start overflow-y-auto">
                   
-                      {clickedCategory === "personal" ? (
-                        renderPersonalProjects(firebaseProjects)
-                      ) : (
-
-                        clickedCategory.length <1 ? (
-                          <p>  select a category to view projects</p>) :( null)
-                      )}
-
-
-                      {clickedCategory === "work" ? (
-                        renderWorkProjects(firebaseProjects)
-                      ) : (
-                        null
-                      )}
-
-                      {clickedCategory === "gaming" ? (
-                        renderGamingProjects(firebaseProjects)
-                      ) : (
-                        null
-                      )}
-
-                      {clickedCategory === "others" ? (
-                        renderOtherProjects(firebaseProjects)
-                      ) : (
-                        null
-                      )}
+                      {clickedCategory.length < 1 
+                      ? (<p>Select a category to view projects</p> ) 
+                      : (  renderProjects() )
+                      }
 
                     </nav>
 
@@ -1032,7 +745,7 @@ const handleConfirmDelete = async(deleteTask) => {
 
                                 <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
                                   <p> <label> Task Name </label> </p>
-                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={updatedTaskName}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={taskNameRef}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
                                   <p className="text-red-500 text-sm"> {errors.name}</p>
                                 </div> 
 
@@ -1060,19 +773,19 @@ const handleConfirmDelete = async(deleteTask) => {
                     <div className='w-full h-1/3 flex items-center justify-center flex flex-col '> 
                       <p className='w-full h-1/3 flex items-center justify-center '> Project Name  </p>
                       <p className='w-full h-2/3 flex items-start justify-center'>
-                        <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectEditNameRef } defaultValue={projectClicked.projectName} type="text"/> 
+                        <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectNameRef} defaultValue={projectClicked.projectName} type="text"/> 
                        </p>
                     </div>
 
                     <div className='w-full h-1/3'> 
                       <p className='w-full h-1/4 flex justify-center'> Project Description</p>
-                      <p className='w-full h-3/4 mb-8 flex justify-center'> <textarea ref={projectEditDescriptionRef } defaultValue={projectClicked.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
+                      <p className='w-full h-3/4 mb-8 flex justify-center'> <textarea ref={projectDescriptionRef  } defaultValue={projectClicked.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
                     </div>
                     
                     <div className='w-full h-1/3 flex flex-col'> 
                       <p className='w-full h-1/3 flex items-center justify-center'>   
                         <label> Project Category: </label>
-                        <select ref={projectEditCategoryRef } defaultValue={projectClicked.projectCategory}>  
+                        <select ref={projectCategoryRef  } defaultValue={projectClicked.projectCategory}>  
                           <option value="personal"> Personal</option>
                           <option value="gaming"> Gaming</option>
                           <option value="work"> Work</option>
