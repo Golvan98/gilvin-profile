@@ -18,35 +18,35 @@ function MyHeadSpace(){
 
     const handleTaskCreate  = async (createTask) => 
     {
-    createTask.preventDefault();
-    const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
-    let formErrors = {};
-    const taskValue = taskNameRef.current.value.trim();
-    if (taskValue.length < 3) {
-      formErrors.name = "Task name must be at least 3 characters long.";
-    }
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return; // stop submission
-    }
-  let taskData = {
-    name: taskNameRef.current.value,
-    status: "incomplete",
-  };
+      createTask.preventDefault();
+      const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
+      let formErrors = {};
+      const taskValue = taskNameRef.current.value.trim();
+      if (taskValue.length < 3) {
+        formErrors.name = "Task name must be at least 3 characters long.";
+      }
+      if (Object.keys(formErrors).length > 0) {
+        setErrors(formErrors);
+        return; // stop submission
+      }
+      let taskData = {
+        name: taskNameRef.current.value,
+        status: "incomplete",
+      };
 
-    try {
-    await addDoc (taskRef, taskData);
-    setShowModal(false);
-    setFlashMessage("Task successfully created");
-    setShowFlashMessage(true);
-    setTimeout( () => {
-      setShowFlashMessage(false);
-    } , 2000);
-    } catch (createTask) {
-    console.log(createTask);
-    }
+      try {
+      await addDoc (taskRef, taskData);
+      setShowModal(false);
+      setFlashMessage("Task successfully created");
+      setShowFlashMessage(true);
+      setTimeout( () => {
+        setShowFlashMessage(false);
+      } , 2000);
+      } catch (createTask) {
+      console.log(createTask);
+      }
   
-  }
+    }
   
   const [showModal, setShowModal] = useState(false);
 
@@ -86,13 +86,12 @@ function MyHeadSpace(){
       setErrors("");
     }
 
-    const handleEditTaskSubmit = async(editTask) => {
+    const handleEditTaskSubmit = async(editTask) => 
+    {
       editTask.preventDefault();
-
       let updatedData = {
         name: taskNameRef .current.value,
       };
-      
       let formErrors = {};
       const titleEditValue = taskNameRef.current.value.trim();
       
@@ -120,7 +119,8 @@ function MyHeadSpace(){
       }
     }
 
-    const handleCompleteTask = async (taskId) => {
+    const handleCompleteTask = async (taskId) => 
+    {
       setClickedTask(taskId);
       let settleTask = {
         status: "complete"
@@ -138,15 +138,15 @@ function MyHeadSpace(){
       } catch (error) {
         console.error("Error updating", error);
       }
-
     }
 
-    const handleReturnTask = async (taskId) => {
+    const handleReturnTask = async (taskId) => 
+    {
       setClickedTask(taskId);
       let returnTask = {
       status: "incomplete"
       }
- try {
+      try {
         const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
         await updateDoc(taskEditRef, returnTask);
         setShowEditTaskModal(false);
@@ -158,8 +158,7 @@ function MyHeadSpace(){
       } catch (error) {
         console.error("Error updating", error);
       }
-
-}
+    }
 // #endregion
 
 // #region global refs and declarations
@@ -288,9 +287,8 @@ function MyHeadSpace(){
     setFireBaseProjects(allProjects);
   });
   
-  return () => unsubscribe(); // Cleanup
+  return () => unsubscribe(); 
     }, []);
- // yawa
 
     const renderProjectsByCategory = (projectList, category) => {
     const filteredProjects = projectList.filter(
@@ -326,14 +324,8 @@ function MyHeadSpace(){
             {project.projectName}
           </span>
           <span className="w-2/6 flex justify-end mx-1 space-x-2">
-            <PencilIcon
-              onClick={() => handleEditProjectClick(project)}
-              className="w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold"
-            />
-            <TrashIcon
-              onClick={() => handleDeleteProjectClick(project)}
-              className="w-5 h-5 hover:cursor-pointer text-red-500 font-bold"
-            />
+            <PencilIcon onClick={() => handleEditProjectClick(project)} className="w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold" />
+            <TrashIcon onClick={() => handleDeleteProjectClick(project)} className="w-5 h-5 hover:cursor-pointer text-red-500 font-bold" />
           </span>
         </p>
 
@@ -370,7 +362,6 @@ function MyHeadSpace(){
 };
 
    //#endregion
-//
 
 // #region Edit Project
 const [showEditProjectModal, setShowEditProjectModal] = useState("");
@@ -444,7 +435,6 @@ console.log(projectClicked.projectName);
         console.log(projectClicked.projectName);
       } catch (error) {
         console.error("Error updating", error);
-
   }
 }
 
@@ -484,18 +474,17 @@ console.log(projectClicked.projectName);
       if (!projectClicked?.id) return;
      // const projectRef = doc(firestore, "projects", projectClicked.id);
       const taskRef = collection(firestore, "projects" , projectClicked.id, "tasks");
-      const unsubscribe = onSnapshot(taskRef, (snapshot) => {
+      const unsubscribe = onSnapshot
+    (taskRef, (snapshot) => 
+    {
       const projectTasks = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
       }));
       setFirebaseTasks(projectTasks);
-
-      console.log(firebaseTasks);
-      });
-
+    }
+    );
       return () => unsubscribe();
-
     }, [projectClicked]);
 
     const renderCompleteTasks = (taskList) => {
@@ -575,19 +564,17 @@ const handleConfirmDelete = async(deleteTask) => {
         <body className={`bg-deepPurple w-full min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
       <Header/>
 
-        <main className="flex w-full min-h-[100vh] items-center justify-center ">
+        <main className="flex w-full min-h-[100vh] items-center justify-center bg- ">
           <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white '>
-                <article id="first column wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2  '>
-                  <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}>
+                <article id="first-column-wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */}
+                  <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}> 
       
                     <aside className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center `}> 
                       <div className=" w-full flex justify-center mx-4"> 
                         <div className={`items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-inherit  mx-4 rounded-md`}> Project Categories  </div>
                         
                       </div>
-                      <div className="mt-4"> 
-                        
-                      </div>
+                      <div className="mt-4"> { /* comment: filler div for margin and spacing*/} </div>
                       
                     </aside>
                     
@@ -611,8 +598,8 @@ const handleConfirmDelete = async(deleteTask) => {
                 </nav>
               </article>
 
-                <section className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md">
-                  <article id="2ndColumn" className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> { /* task area */}
+          <section id="2nd-column-wrapper" className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md"> { /* comment: 2nd-column-wrapper*/}
+                  <article  className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> 
 
                     <nav id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
                           <button onClick={toggleViewProjects} className='ml-4 mr-4'> 
@@ -662,19 +649,17 @@ const handleConfirmDelete = async(deleteTask) => {
                     </nav>
 
                     <nav className="w-full h-full flex flex-col items-center justify-start overflow-y-auto">
-                  
                       {clickedCategory.length < 1 
                       ? (<p>Select a category to view projects</p> ) 
                       : (  renderProjects() )
                       }
-
                     </nav>
 
                   </article>
-                </section>  
+          </section>  
 
-                <section className="h-5/6 w-2/5 mr-10 p-2 bg-indigo-300 rounded-md">
-                <article id="3rdColumn" className="h-full w-full flex flex-col bg-indigo-500 rounded-md ">
+          <section id="3rd-column-wrapper"  className="h-5/6 w-2/5 mr-10 p-2 bg-indigo-300 rounded-md"> {/* comment: third-column-wrapper */}
+                <article className="h-full w-full flex flex-col bg-indigo-500 rounded-md ">
 
                       <nav id="inProgressTasks" className="h-1/2 w-full  flex-1 flex-col items-start justify-start overflow-y-auto">
 
@@ -688,8 +673,7 @@ const handleConfirmDelete = async(deleteTask) => {
                             </button>
                             :    <div className="w-1/3">  </div>
                             }
-                      
-                              {/* Conditional rendering of Modal */}
+                              {/* comment: Conditional rendering of Modal */}
                               {showModal && (
                               <Modal onClose={handleCloseModal}>
                                 <form onSubmit={handleTaskCreate} className="min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm  text-black">
@@ -725,7 +709,7 @@ const handleConfirmDelete = async(deleteTask) => {
                       </nav>
 
                 </article>
-                </section>  
+          </section>  
                 
           </section>
         </main>
@@ -810,7 +794,6 @@ const handleConfirmDelete = async(deleteTask) => {
                   </form>
                 </Modal>
         )}
-
         { showDeleteProjectModal && (
               <Modal onClose={closeDeleteProjectModal}>
                 <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
@@ -825,7 +808,6 @@ const handleConfirmDelete = async(deleteTask) => {
               </Modal>
         )}
         </body>
- 
     );
 }
 export default MyHeadSpace;
