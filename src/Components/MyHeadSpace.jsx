@@ -566,7 +566,8 @@ const handleConfirmDelete = async(deleteTask) => {
 
         <main className="flex w-full min-h-[100vh] items-center justify-center bg- ">
           <section id="main article" className='w-4/5 h-4/5 mx-auto flex items-center justify-center bg-inherit bg-white '>
-                <article id="first-column-wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */}
+                
+          <article id="first-column-wrapper" className='w-1/5 h-5/6 my-12  flex flex-col mr-20 ml-10 bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */}
                   <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}> 
       
                     <aside className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center `}> 
@@ -596,12 +597,12 @@ const handleConfirmDelete = async(deleteTask) => {
                   </section>
 
                 </nav>
-              </article>
+          </article>
 
-          <section id="2nd-column-wrapper" className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md"> { /* comment: 2nd-column-wrapper*/}
-                  <article  className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> 
+          <article id="2nd-column-wrapper" className="h-5/6 w-2/5 mr-20 p-2 bg-indigo-300 rounded-md "> { /* comment: 2nd-column-wrapper*/}
+                  <nav  className="h-full w-full  flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> 
 
-                    <nav id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
+                    <aside id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
                           <button onClick={toggleViewProjects} className='ml-4 mr-4'> 
                             { showCompleteProjects ? ('View Completed Projects') : ('View Incomplete Projects') }
                             </button>
@@ -646,22 +647,22 @@ const handleConfirmDelete = async(deleteTask) => {
                               </form>
                             </Modal>
                           ) }   
-                    </nav>
+                    </aside>
 
-                    <nav className="w-full h-full flex flex-col items-center justify-start overflow-y-auto">
+                    <aside className="w-full h-full flex flex-col items-center justify-start overflow-y-auto">
                       {clickedCategory.length < 1 
                       ? (<p>Select a category to view projects</p> ) 
                       : (  renderProjects() )
                       }
-                    </nav>
+                    </aside>
 
-                  </article>
-          </section>  
+                  </nav>
+          </article>  
 
           <section id="3rd-column-wrapper"  className="h-5/6 w-2/5 mr-10 p-2 bg-indigo-300 rounded-md"> {/* comment: third-column-wrapper */}
-                <article className="h-full w-full flex flex-col bg-indigo-500 rounded-md ">
+                <nav className="h-full w-full flex flex-col bg-indigo-500 rounded-md ">
 
-                      <nav id="inProgressTasks" className="h-1/2 w-full  flex-1 flex-col items-start justify-start overflow-y-auto">
+                      <aside id="inProgressTasks" className="h-1/2 w-full  flex-1 flex-col items-start justify-start overflow-y-auto">
 
                         <aside className='text-center w-full p-4 text-white flex justify-center items-center  '> 
                           <div className="w-1/3">  </div>
@@ -699,16 +700,16 @@ const handleConfirmDelete = async(deleteTask) => {
                         
                         {projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
   
-                      </nav>
+                      </aside>
 
-                      <nav id="completeTasks" className="h-1/2 w-full flex  flex-1 flex-col items-start justify-start overflow-y-auto bg-indigo-500">
+                      <aside id="completeTasks" className="h-1/2 w-full flex  flex-1 flex-col items-start justify-start overflow-y-auto bg-indigo-500">
                         <aside className='text-center w-full p-4 text-white '> Tasks Completed </aside>
                              
                         {projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
                              
-                      </nav>
+                      </aside>
 
-                </article>
+                </nav>
           </section>  
                 
           </section>
