@@ -517,17 +517,16 @@ console.log(projectClicked.projectName);
 
     const renderCompleteTasks = (taskList) => {
       return taskList.filter(task => task.status === "complete").map(task => (
-        <nav className='w-full flex bg-red-300'>
-        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 px-4 py-2 ">  
+        <nav className='w-full flex'>
+        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
                       <div className='w-full flex'>
-                        <p className='w-full mx-4 flex'>
-                          <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} </span>
-                          <span className='w-1/6 flex'> 
-                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
-                            <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='text-blue-500 hover:cursor-pointer'/>
-                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                          </span>
-                        </p>
+                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
+                          <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
+                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
+                            <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
+                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                          </p>
+                        
                       </div>
           </aside>
           </nav>
@@ -537,16 +536,15 @@ console.log(projectClicked.projectName);
     const renderIncompleteTasks = (taskList) => {
       return taskList.filter(task => task.status === "incomplete").map(task => (
         <nav className='w-full flex'>
-        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 px-4 py-2">  
+        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
                       <div className='w-full flex'>
-                        <p className='w-full mx-4 flex'>
-                          <span className='w-auto flex-1 items-center justify-center text-black '> {task.name} </span>
-                          <span className='w-1/6 flex'> 
-                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className=" text-orange-300 cursor-pointer mr-2" />
-                            <CheckIcon onClick={ () => handleCompleteTask(task)} className='text-green-500 hover:cursor-pointer'/>
-                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                          </span>
-                        </p>
+                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
+                          <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
+                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
+                            <CheckIcon onClick={ () => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
+                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                          </p>
+                        
                       </div>
           </aside>
           </nav>
@@ -693,8 +691,8 @@ const handleConfirmDelete = async(deleteTask) => {
                         <aside id="inProgressTasks" className="h-1/2 w-full  flex-1 flex-col items-start justify-start overflow-y-auto">
 
                           <aside className='text-center w-full p-4 text-white flex justify-center items-center  '> 
-                            <div className="w-1/3">  </div>
-                            <div className="w-1/3"> Tasks in Progress </div>
+                            <div className="w-1/3 ">  </div>
+                            <div className="w-1/3 md:mr-8 xs:mr-1"> Tasks in Progress </div>
                         
                               {projectClicked ?
                               <button className="bg-white text-black p-2" onClick={handleAddTaskClick}> 
