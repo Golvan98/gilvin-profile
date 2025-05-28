@@ -18,6 +18,9 @@ export default {
         lightCyan: "#00E5FF",
     
       },
+      screens: {
+        xs: { max: '648px'}
+      }
     },
   },
   plugins: [],

@@ -196,6 +196,11 @@ function MyHeadSpace(){
     if (projectDescriptionValue.length <= 5){
       formErrors.description = "project must have a description with more than 5 characters"
     }
+    if (projectDescriptionValue.length > 50){
+      formErrors.description = "project must not have a description with more than 50 characters"
+    }
+
+
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return; // stop submission
@@ -301,7 +306,7 @@ function MyHeadSpace(){
     <aside
       onClick={() => handleProjectClick(project)}
       key={project.id}
-      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer p-7 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start 
+      className={`hover:bg-indigo-500 hover:text-white hover:border text-center project-item hover:cursor-pointer px-3 py-5 w-2/3 mt-2 rounded-md whitespace-nowrap flex items-center justify-start 
       ${projectClicked.id === project.id ? "bg-indigo-600 text-white" : "bg-white text-black"}`}
     >
       <div
@@ -312,18 +317,18 @@ function MyHeadSpace(){
         className="flex justify-start items-start"
       >
         {expandedProjects.has(project.id) ? (
-          <ChevronDownIcon className="w-5 h-5 text-red-500" />
+          <p className=''> <ChevronDownIcon className="w-5 h-5 text-green-500 md:w-3 xs:w-3 lg:w-5" /> </p>
         ) : (
-          <ChevronRightIcon className="w-5 h-5 text-red-500" />
+          <ChevronRightIcon className="w-5 h-5 text-green-500 md:w-3 xs:w-3 lg:w-5" />
         )}
       </div>
 
       <div className="w-full flex flex-col justify-start items-start rounded-md">
         <p className="flex w-full justify-start">
-          <span className="capitalize font-bold text-lg w-4/6 text-start">
+          <span className="capitalize font-bold w-4/6 flex items-center">
             {project.projectName}
           </span>
-          <span className="w-2/6 flex justify-end mx-1 space-x-2">
+          <span className="w-2/6 flex justify-end mx-1 space-x-1">
             <PencilIcon onClick={() => handleEditProjectClick(project)} className="w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold" />
             <TrashIcon onClick={() => handleDeleteProjectClick(project)} className="w-5 h-5 hover:cursor-pointer text-red-500 font-bold" />
           </span>
@@ -332,7 +337,7 @@ function MyHeadSpace(){
         <p
           className={`text-start overflow-hidden text-md duration-500 transform transition-all ${
             expandedProjects.has(project.id)
-              ? "max-h-40 opacity-100 translate-y-2"
+              ? "max-h-40 opacity-100 translate-y-1 xs:-translate-y-1"
               : "max-h-0 opacity-55 -translate-y-2"
           } whitespace-normal break-words leading-snug`}
         >
@@ -340,9 +345,9 @@ function MyHeadSpace(){
         </p>
 
         <p
-          className={`whitespace-normal break-words leading-snug text-start text-xs overflow-hidden duration-500 transform transition-all ${
+          className={`whitespace-normal break-words leading-snug text-start overflow-hidden duration-500 transform transition-all ${
             expandedProjects.has(project.id)
-              ? "max-h-40 opacity-100 translate-y-2"
+              ? "max-h-40 opacity-100 translate-y-1 xs:-translate-y-1"
               : "max-h-0 opacity-55 -translate-y-2"
           }`}
         >
@@ -415,20 +420,43 @@ const closeEditProjectModal = () =>{
 const handleConfirmEditProject = async (editProject) =>{
 editProject.preventDefault();
 console.log(projectClicked.projectName);
+
+  let formErrors = {};
+
   let projectEditData = {
     projectName: projectNameRef .current.value,
     projectDescription: projectDescriptionRef .current.value,
     projectCategory:projectCategoryRef .current.value,
   }
+
+  let projectDescriptionValue = projectDescriptionRef.current.value.trim();
+  let projectNameValue = projectNameRef.current.value.trim();
+
+  if(projectDescriptionValue.length > 50){
+    formErrors.description = "project description must not exceed 50 characters"
+  }
+  if(projectNameValue.length > 20){
+      formErrors.name = "project must not exceed 20 characters"
+    }
+  if(projectNameValue.length <1 ){
+    formErrors.name = "project must have a name"
+  }
+  
+  if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // stop submission
+    }
+
   try 
   {
-       
+
  const projectToEditRef = doc(firestore, "projects", projectClicked.id);
         await updateDoc(projectToEditRef, projectEditData)
         console.log("Document updated");
         setShowEditProjectModal(false);
         setFlashMessage("Project Edited successfully");
         setShowFlashMessage(true);
+        setErrors("");
         setTimeout( () => {
           setShowFlashMessage(false);
         } , 2000);
@@ -565,7 +593,7 @@ const handleConfirmDelete = async(deleteTask) => {
       <Header/>
 
         <main className="flex w-full min-h-[100vh] items-center justify-center bg-inherit mt-8 ">
-          <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-auto '>
+          <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white '>
                 
             <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */}
                     <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}> 
@@ -599,8 +627,8 @@ const handleConfirmDelete = async(deleteTask) => {
                   </nav>
             </article>
 
-            <article id="2nd-column-wrapper" className="flex-shrink-0 h-5/6 w-2/5 p-2 bg-indigo-300 rounded-md "> { /* comment: 2nd-column-wrapper*/}
-                    <nav  className="h-full w-full flex flex-col items-center justify-center text-black bg-indigo-500 rounded-md "> 
+            <article id="2nd-column-wrapper" className="flex-shrink-0 h-5/6 w-2/5 p-2 bg-indigo-300 rounded-md text-black "> { /* comment: 2nd-column-wrapper*/}
+                    <nav  className="h-full w-full flex flex-col items-center justify-center bg-indigo-500 rounded-md "> 
 
                       <aside id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
                             <button onClick={toggleViewProjects} className='ml-4 mr-4'> 
@@ -610,37 +638,37 @@ const handleConfirmDelete = async(deleteTask) => {
                           
                             { showAddProjectModal && (
                               <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
-                                <form onSubmit={handleCreateProjectSubmit} className="w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700">
+                                <form onSubmit={handleCreateProjectSubmit} className="w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center">
                                     {/* Close Button */}
                                     <aside className="flex flex-col h-1/3 w-full"> 
                                     <div className='w-full flex justify-end items-center pr-4 h-1/5 mt-1 '>
-                                      <button type="button" onClick={handleCloseAddProjectModal} className="text-black text-xs">✕</button>
+                                      <button type="button" onClick={handleCloseAddProjectModal} className="text-black">✕</button>
                                     </div>
                                     {/* Project Name */}
                                     <div className='w-full h-4/5 flex items-center justify-center flex-col'>
-                                      <label className='w-2/3 text-sm font-semibold'>Project Name</label>
-                                      <input ref={projectNameRef} type="text" placeholder="Input project name here" className="w-2/3 h-1/2 border border-indigo-700 text-black"/>
-                                      {errors.name && ( <p className="text-red-500 text-xs mt-1">{errors.name}</p>  )}
+                                      <label className='w-2/3 font-semibold'>Project Name</label>
+                                      <input ref={projectNameRef} type="text" placeholder="Input project name here" className="w-2/3 h-1/2 border border-indigo-700 "/>
+                                      {errors.name && ( <p className="text-red-500 mt-1">{errors.name}</p>  )}
                                     </div>  
                                     </aside>
                                     {/* Project Description */}
                                     <div className='w-full h-1/3 flex flex-col items-center justify-center'>
                                       <label className='w-2/3 text-sm font-semibold'>Project Description</label>
-                                      <textarea ref={projectDescriptionRef} placeholder="Input project description here" className="text-xs border border-indigo-700 w-2/3 h-[60%] text-black p-1"/>
-                                    {errors.description && ( <p className="text-red-500 text-xs mt-1">{errors.description}</p> )}
+                                      <textarea ref={projectDescriptionRef} placeholder="Input project description here" className="text-xs border border-indigo-700 w-2/3 h-[60%] p-1"/>
+                                    {errors.description && ( <p className="text-xs mt-1">{errors.description}</p> )}
                                     </div>
 
                                     {/* Project Category & Submit */}
                                     <div className='w-full h-1/3 flex flex-col items-center justify-start'>
                                       <label className='text-sm font-semibold'>Project Category:</label>
-                                      <select ref={projectCategoryRef} defaultValue={clickedCategory} className="border border-indigo-700 w-2/3 text-black mt-1" >
+                                      <select ref={projectCategoryRef} defaultValue={clickedCategory} className="border border-indigo-700 w-2/3  mt-1" >
                                         <option value="personal">Personal</option>
                                         <option value="work">Work</option>
                                         <option value="gaming">Gaming</option>
                                         <option value="others">Others</option>
                                       </select>
 
-                                      <button type="submit"className="mt-4 w-1/3 bg-indigo-700 hover:bg-indigo-800 text-white text-sm py-1 rounded" >
+                                      <button type="submit"className="mt-4 w-1/3 bg-indigo-700 hover:bg-indigo-800 text-sm py-1 rounded" >
                                         Create Project
                                       </button>
                                     </div>
@@ -757,14 +785,21 @@ const handleConfirmDelete = async(deleteTask) => {
                   <form onSubmit={handleConfirmEditProject } className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
                     <div className='w-full h-1/3 flex items-center justify-center flex flex-col '> 
                       <p className='w-full h-1/3 flex items-center justify-center '> Project Name  </p>
-                      <p className='w-full h-2/3 flex items-start justify-center'>
+                      <p className='w-full h-2/3 flex flex-col items-center justify-center'>
                         <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectNameRef} defaultValue={projectClicked.projectName} type="text"/> 
+                        <span className='text-red-500'> {errors.name} </span>
                        </p>
+                       
                     </div>
 
-                    <div className='w-full h-1/3'> 
+                    <div className='w-full h-1/3 items-center justify-center'> 
                       <p className='w-full h-1/4 flex justify-center'> Project Description</p>
-                      <p className='w-full h-3/4 mb-8 flex justify-center'> <textarea ref={projectDescriptionRef  } defaultValue={projectClicked.projectDescription} className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/></p>
+                      <p className='w-full h-3/4 mb-8 flex flex-col justify-center items-center'> <textarea ref={projectDescriptionRef } 
+                      defaultValue={projectClicked.projectDescription} 
+                      className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/>
+                        <span className='text-red-500 text-center mx-auto'> {errors.description} </span>
+                      </p>
+                      
                     </div>
                     
                     <div className='w-full h-1/3 flex flex-col'> 
