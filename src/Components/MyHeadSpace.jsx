@@ -189,16 +189,17 @@ function MyHeadSpace(){
     const projectNameValue = projectNameRef.current.value.trim();
     const projectDescriptionValue = projectDescriptionRef.current.value.trim();
 
-    if (projectNameValue.length <= 0 )
-    {
-      formErrors.name = "project must have a name"
+
+
+  if(projectDescriptionValue.length > 100){
+    formErrors.description = "project description must not exceed 100 characters"
+  }
+  if(projectNameValue.length > 40){
+      formErrors.name = "project must not exceed 40 characters"
     }
-    if (projectDescriptionValue.length <= 5){
-      formErrors.description = "project must have a description with more than 5 characters"
-    }
-    if (projectDescriptionValue.length > 50){
-      formErrors.description = "project must not have a description with more than 50 characters"
-    }
+  if(projectNameValue.length <1 ){
+    formErrors.name = "project must have a name"
+  }
 
 
     if (Object.keys(formErrors).length > 0) {
@@ -325,7 +326,7 @@ function MyHeadSpace(){
 
       <div className="w-full flex flex-col justify-start items-start rounded-md">
         <p className="flex w-full justify-start">
-          <span className="capitalize font-bold w-4/6 flex items-center">
+          <span className="capitalize font-bold w-4/6 flex items-center whitespace-normal break-words leading-snug text-start">
             {project.projectName}
           </span>
           <span className="w-2/6 flex justify-end mx-1 space-x-1">
@@ -432,11 +433,11 @@ console.log(projectClicked.projectName);
   let projectDescriptionValue = projectDescriptionRef.current.value.trim();
   let projectNameValue = projectNameRef.current.value.trim();
 
-  if(projectDescriptionValue.length > 50){
-    formErrors.description = "project description must not exceed 50 characters"
+  if(projectDescriptionValue.length > 100){
+    formErrors.description = "project description must not exceed 100 characters"
   }
-  if(projectNameValue.length > 20){
-      formErrors.name = "project must not exceed 20 characters"
+  if(projectNameValue.length > 40){
+      formErrors.name = "project must not exceed 40 characters"
     }
   if(projectNameValue.length <1 ){
     formErrors.name = "project must have a name"
