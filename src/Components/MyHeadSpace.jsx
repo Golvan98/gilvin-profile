@@ -654,7 +654,7 @@ const handleConfirmDelete = async(deleteTask) => {
                                     <div className='w-full h-1/3 flex flex-col items-center justify-center'>
                                       <label className='w-2/3 text-sm font-semibold'>Project Description</label>
                                       <textarea ref={projectDescriptionRef} placeholder="Input project description here" className="text-xs border border-indigo-700 w-2/3 h-[60%] p-1"/>
-                                    {errors.description && ( <p className="text-xs mt-1">{errors.description}</p> )}
+                                    {errors.description && ( <p className="text-xs text-red-500 mt-1">{errors.description}</p> )}
                                     </div>
 
                                     {/* Project Category & Submit */}
@@ -831,13 +831,13 @@ const handleConfirmDelete = async(deleteTask) => {
         )}
         { showDeleteProjectModal && (
               <Modal onClose={closeDeleteProjectModal}>
-                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[30vh] flex flex-col items-center justify-center text-black">
-                  <div className="w-full h-1/2 flex items-end justify-center mx-4"> 
-                    <p className="mx-4"> Are you sure you want to delete  project {projectClicked.projectName}? </p>
+                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[25vh] flex flex-col items-center justify-center text-black ">
+                  <div className="w-full h-1/2 flex items-center justify-center mx-4  text-center"> 
+                    <p className="mx-4 md:mt-2 md:text-[5px] lg:text-[15px]"> Are you sure you want to delete project {projectClicked.projectName}? </p>
                   </div>
-                  <div className="w-full h-1/2 flex justify-between items-center mx-4 ">    
-                      <button type="submit" className="bg-red-300 ml-12"> Yes</button>
-                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12"> No</button>
+                  <div className="w-full h-1/2 flex justify-center items-center">    
+                      <button type="submit" className="bg-red-300 ml-12 mr-2 p-2"> Yes</button>
+                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12 ml-2 p-2"> No</button>
                     </div>
                 </form>
               </Modal>
