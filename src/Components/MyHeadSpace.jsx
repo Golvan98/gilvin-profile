@@ -781,53 +781,53 @@ const handleConfirmDelete = async(deleteTask) => {
 
         { showEditProjectModal &&  (
                 <Modal onClose={closeEditProjectModal}>
-                  <form onSubmit={handleConfirmEditProject } className='w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center text-indigo-700'>
-                    <div className='w-full h-1/3 flex items-center justify-center flex flex-col '> 
-                      <p className='w-full h-1/3 flex items-center justify-center '> Project Name  </p>
-                      <p className='w-full h-2/3 flex flex-col items-center justify-center'>
-                        <input className="w-2/3 h-1/2 border border-indigo-700" ref={projectNameRef} defaultValue={projectClicked.projectName} type="text"/> 
-                        <span className='text-red-500'> {errors.name} </span>
-                       </p>
-                       
-                    </div>
-
-                    <div className='w-full h-1/3 items-center justify-center'> 
-                      <p className='w-full h-1/4 flex justify-center'> Project Description</p>
-                      <p className='w-full h-3/4 mb-8 flex flex-col justify-center items-center'> <textarea ref={projectDescriptionRef } 
-                      defaultValue={projectClicked.projectDescription} 
-                      className=" border border-indigo-700 text-xs w-2/3 h-4/5 "/>
-                        <span className='text-red-500 text-center mx-auto'> {errors.description} </span>
-                      </p>
-                      
-                    </div>
+                  <form onSubmit={handleConfirmEditProject} className="w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white text-indigo-700 p-6 rounded-lg space-y-6">
                     
-                    <div className='w-full h-1/3 flex flex-col'> 
-                      <p className='w-full h-1/3 flex items-center justify-center'>   
-                        <label> Project Category: </label>
-                        <select ref={projectCategoryRef  } defaultValue={projectClicked.projectCategory}>  
-                          <option value="personal"> Personal</option>
-                          <option value="gaming"> Gaming</option>
-                          <option value="work"> Work</option>
-                          <option value="others"> Others</option>
-                        </select>
-                      </p>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-black">Edit Project</p>
+                    </div>
 
-                      <p className="w-full h-2/3 flex items-center justify-between">
-                        <button type="submit" className="w-1/3 bg-indigo-700 text-white ml-4 mr-0.5 text-xs py-4 text-center"  >
-                          Edit Project
-                        </button>
-                        {showCompleteProjects  ? (  <button onClick={(e) => { handleCompleteProject(projectClicked.id); }}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium">Project Name</label>
+                      <input ref={projectNameRef} defaultValue={projectClicked.projectName} type="text" className="w-full border border-indigo-700 px-3 py-2 text-sm rounded" />
+                      {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium">Project Description</label>
+                      <textarea ref={projectDescriptionRef} defaultValue={projectClicked.projectDescription} className="w-full border border-indigo-700 px-3 py-2 text-sm rounded resize-none h-24"  />
+                      {errors.description && (
+                        <span className="text-red-500 text-sm">{errors.description}</span>
+                      )}
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium">Project Category</label>
+                      <select ref={projectCategoryRef} defaultValue={projectClicked.projectCategory} className="w-full border border-indigo-700 px-3 py-2 text-sm rounded" >
+                        <option value="personal">Personal</option>
+                        <option value="gaming">Gaming</option>
+                        <option value="work">Work</option>
+                        <option value="others">Others</option>
+                      </select>
+                    </div>
+
+                    <div className="flex justify-between pt-4">
+                      <button type="submit"  className="w-1/2 bg-indigo-700 text-white text-xs py-2 rounded mr-2"   >
+                        Edit Project
+                      </button>
+                      {showCompleteProjects ? (
+                        <button onClick={() => handleCompleteProject(projectClicked.id)} type="button"className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
                           Mark as Complete
-                        </button> )
-                        : ( <button onClick={(e) => { handleUndoCompleteProject(projectClicked.id); }}className="w-1/3 bg-green-700 text-white mr-4 ml-0.5 text-xs py-4 text-center" >
+                        </button>
+                      ) : (
+                        <button  onClick={() => handleUndoCompleteProject(projectClicked.id)} type="button" className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
                           Mark as Incomplete
                         </button>
-                        )
-                        }
-                      </p>
-                    </div>  
+                      )}
+                    </div>
                   </form>
                 </Modal>
+
         )}
         { showDeleteProjectModal && (
               <Modal onClose={closeDeleteProjectModal}>
