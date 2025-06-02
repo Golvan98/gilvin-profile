@@ -3,7 +3,7 @@ import HamburgerMenu from './HamburgerMenu.jsx';
 import Footer from './Footer.jsx';
 import { Link } from 'react-router-dom';
 import Header from './Header.jsx';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { firestore } from "../firebase.js"
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import Modal from './Modal.jsx';
@@ -588,13 +588,20 @@ const handleConfirmDelete = async(deleteTask) => {
 // #endregion
 
     return (
-        <body className={`bg-deepPurple w-full min-h-[100vh] lg:min-h-[100vh] flex flex-col ${classes.myHeadSpaceSetting}` }>
+        <body className={`bg-deepPurple w-full min-h-[100vh] lg:min-h-[100vh]  flex flex-col ${classes.myHeadSpaceSetting}` }>
       <Header/>
 
-        <main className="flex w-full min-h-[100vh] items-center justify-center bg-inherit mt-8 ">
-          <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white '>
+        <main className="flex w-full min-h-[100vh]  items-center justify-center bg-inherit mt-8 flex flex-col ">
+          <h2 className='text-center text-white mb-4'> This to do app is currenly live and is being updated daily by Gilvin, if you want to test this out temprorarily, click this link
+              <p className='text-blue-500 '> 
+                <Link to="/yourHeadSpace"> here </Link> 
+                <span className="text-white"> it's the same, but the projects you create will be gone when you revisit the page</span>
+              </p>
+              
+          </h2>
+          <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white '> 
                 
-            <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */}
+            <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */} 
                     <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}> 
         
                       <aside className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center `}> 
@@ -834,7 +841,7 @@ const handleConfirmDelete = async(deleteTask) => {
               <Modal onClose={closeDeleteProjectModal}>
                 <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[25vh] flex flex-col items-center justify-center text-black ">
                   <div className="w-full h-1/2 flex items-center justify-center mx-4  text-center"> 
-                    <p className="mx-4 md:mt-2 md:text-[5px] lg:text-[15px]"> Are you sure you want to delete project {projectClicked.projectName}? </p>
+                    <p className="mx-4 md:mt-2 md:text-[5px] lg:text-[12px] py-1"> Are you sure you want to delete project {projectClicked.projectName}? </p>
                   </div>
                   <div className="w-full  flex justify-center items-center">    
                       <button type="submit" className="bg-red-300 ml-12 mr-2 "> Yes</button>
