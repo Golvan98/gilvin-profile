@@ -637,39 +637,40 @@ const handleConfirmDelete = async(deleteTask) => {
                           
                             { showAddProjectModal && (
                               <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
-                                <form onSubmit={handleCreateProjectSubmit} className="w-[25vw] h-[40vh] bg-white flex flex-col items-center justify-center">
+                                <form onSubmit={handleCreateProjectSubmit} className="w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white flex flex-col items-center justify-center">
                                     {/* Close Button */}
-                                    <aside className="flex flex-col h-1/3 w-full"> 
-                                    <div className='w-full flex justify-end items-center pr-4 h-1/5 mt-1 '>
-                                      <button type="button" onClick={handleCloseAddProjectModal} className="text-black">✕</button>
-                                    </div>
-                                    {/* Project Name */}
-                                    <div className='w-full h-4/5 flex items-center justify-center flex-col'>
-                                      <label className='w-2/3 font-semibold'>Project Name</label>
-                                      <input ref={projectNameRef} type="text" placeholder="Input project name here" className="w-2/3 h-1/2 border border-indigo-700 "/>
-                                      {errors.name && ( <p className="text-red-500 mt-1">{errors.name}</p>  )}
-                                    </div>  
+                                    <aside className="flex flex-col  w-full"> 
+                                      <div className='w-full flex justify-end items-center pr-4 h-1/5 mt-1 '>
+                                        <button type="button" onClick={handleCloseAddProjectModal} className="text-black">✕</button>
+                                      </div>
+                                      {/* Project Name */}
+                                      <div className='w-full h-4/5 flex items-center justify-center flex-col'>
+                                        <label className='w-2/3 font-semibold'>Project Name</label>
+                                        <input ref={projectNameRef} type="text" placeholder="Input project name here" className="w-2/3 px-1 h-full font-lg border border-indigo-700 "/>
+                                        {errors.name && ( <p className="text-red-500 mt-1">{errors.name}</p>  )}
+                                      </div>  
                                     </aside>
                                     {/* Project Description */}
-                                    <div className='w-full h-1/3 flex flex-col items-center justify-center'>
-                                      <label className='w-2/3 text-sm font-semibold'>Project Description</label>
-                                      <textarea ref={projectDescriptionRef} placeholder="Input project description here" className="text-xs border border-indigo-700 w-2/3 h-[60%] p-1"/>
-                                    {errors.description && ( <p className="text-xs text-red-500 mt-1">{errors.description}</p> )}
-                                    </div>
+                                      <div className='w-full h-1/3 flex flex-col items-center justify-center mt-1'>
+                                        <label className='w-2/3 text-sm font-semibold'>Project Description</label>
+                                        <textarea ref={projectDescriptionRef} placeholder="Input project description here" className="text-xs border border-indigo-700 w-2/3 h-[60%] px-1 py-2"/>
+                                      {errors.description && ( <p className="text-xs text-red-500 mt-1">{errors.description}</p> )}
+                                      </div>
 
                                     {/* Project Category & Submit */}
-                                    <div className='w-full h-1/3 flex flex-col items-center justify-start'>
+                                    <div className='w-full h-1/3 flex flex-col items-center justify-start mt-2'>
                                       <label className='text-sm font-semibold'>Project Category:</label>
-                                      <select ref={projectCategoryRef} defaultValue={clickedCategory} className="border border-indigo-700 w-2/3  mt-1" >
+                                      <select ref={projectCategoryRef} defaultValue={clickedCategory} className="border border-indigo-700 w-2/3 py-2 mt-1" >
                                         <option value="personal">Personal</option>
                                         <option value="work">Work</option>
                                         <option value="gaming">Gaming</option>
                                         <option value="others">Others</option>
                                       </select>
 
-                                      <button type="submit"className="mt-4 w-1/3 bg-indigo-700 hover:bg-indigo-800 text-sm py-1 rounded" >
+                                      <div className='mb-2 w-1/3'> <button type="submit"className="my-2 w-full bg-indigo-700 hover:bg-indigo-800 text-sm py-1 rounded " >
                                         Create Project
                                       </button>
+                                      </div>
                                     </div>
                                 </form>
                               </Modal>
@@ -835,9 +836,9 @@ const handleConfirmDelete = async(deleteTask) => {
                   <div className="w-full h-1/2 flex items-center justify-center mx-4  text-center"> 
                     <p className="mx-4 md:mt-2 md:text-[5px] lg:text-[15px]"> Are you sure you want to delete project {projectClicked.projectName}? </p>
                   </div>
-                  <div className="w-full h-1/2 flex justify-center items-center">    
-                      <button type="submit" className="bg-red-300 ml-12 mr-2 p-2"> Yes</button>
-                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12 ml-2 p-2"> No</button>
+                  <div className="w-full  flex justify-center items-center">    
+                      <button type="submit" className="bg-red-300 ml-12 mr-2 "> Yes</button>
+                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12 ml-2 "> No</button>
                     </div>
                 </form>
               </Modal>
