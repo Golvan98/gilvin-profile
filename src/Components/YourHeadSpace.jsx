@@ -24,6 +24,7 @@ function YourHeadSpace()
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
+  const [errors, setErrors] = useState("");
 
   const categories = ['personal', 'work', 'gaming', 'others'];
 
@@ -34,6 +35,16 @@ function YourHeadSpace()
   const renderProjects = () => {
     return ;
   };
+
+  const handleOpenAddProjectModal = () => {
+      setShowAddProjectModal(true);
+  }
+
+  const handleCloseAddProjectModal = () => {
+    setShowAddProjectModal(false);
+  }
+
+  
     
 const [projects, setProjects] = useState(
     [
@@ -46,25 +57,60 @@ const [projects, setProjects] = useState(
 // #region projectSection
 const projectNameRef = useRef();
 const projectCategoryRef = useRef();
+const projectDescriptionRef = useRef();
 
 // #endregion
 const handleDummy = () => {
 
 }
 
-const addProject = () => {
+const handleCreateProjectSubmit = async(createProject)  => {
+  createProject.preventDefault();
+
+  let formErrors = {}
 
   let projectData = {
     projectName : projectNameRef.current.value,
-    projectCategory : projectCategoryRef.current.value
+    projectCategory : projectCategoryRef.current.value,
+    projectDescription : projectDescriptionRef.current.value
+  }
+
+  const projectNameValue = projectNameRef.current.value.trim();
+  const projectDescriptionValue = projectDescriptionRef.current.value.trim();
+
+  if (projectNameValue.length < 1 ) {
+    formErrors.name = "project must have a name"
+  }
+  if (projectNameValue.length > 25 ) {
+    formErrors.name = "project must not have a name of more than 25 characters"
+  }
+
+  if(projectDescriptionValue.length > 75) {
+    formErrors.description = "project must not have a description of more than 75 characters"
+  }
+
+  if(Object.keys(formErrors).length > 0) {
+    setErrors(formErrors);
+    console.log("errors are", formErrors);
+    return;
   }
 
   const newProject = {
     id: crypto.randomUUID(),
     name: projectData.projectName,
-    category: projectData.projectCategory
+    category: projectData.projectCategory,
+    description: projectData.projectDescription
   };
+
+  try {
   setProjects(prev => [...prev, newProject]);
+  setErrors("");
+  console.log("projects currently in session", projects);
+  }
+   catch (error) {
+    console.error("something went wrong", error)
+   }
+  
 };
 
 
@@ -196,7 +242,7 @@ const addProject = () => {
                             <button onClick={handleDummy} className='ml-4 mr-4'> 
                               { showCompleteProjects ? ('View Completed Projects') : ('View Incomplete Projects') }
                               </button>
-                            <button className='bg-white hover:bg-indigo-400 hover:text-white mr-4' onClick={handleDummy}> + Add a Project  </button>
+                            <button className='bg-white hover:bg-indigo-400 hover:text-white mr-4' onClick={handleOpenAddProjectModal}> + Add a Project  </button>
                           
                             { showAddProjectModal && (
                               <Modal onClose={handleCloseAddProjectModal}> { /*Add Project Modal  */}
