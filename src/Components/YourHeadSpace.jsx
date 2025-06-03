@@ -14,9 +14,11 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, Chev
 function YourHeadSpace() 
 {
 
+  
+  const [expandedProjects, setExpandedProjects] = useState(new Set());
   const [showCompleteProjects, setShowCompleteProjects] = useState(true);
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
-  const [clickedCategory, setClickedCategory]  = useState(false);
+  const [clickedCategory, setClickedCategory]  = useState("");
   const [projectClicked, setProjectClicked] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showFlashMessage, setShowFlashMessage] = useState("");
@@ -25,15 +27,33 @@ function YourHeadSpace()
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
   const [errors, setErrors] = useState("");
+  const [flashMessage, setFlashMessage] = useState("");
 
+
+   const handleExpandProject = (project) => 
+  {
+    console.log("hi, expanded projects are", expandedProjects);
+   setExpandedProjects(prev => {
+    const newSet = new Set(prev);
+    if (newSet.has(project.id)){
+      newSet.delete(project.id);
+    } else{
+      newSet.add(project.id);
+    }
+    return newSet;
+   })
+  }
   const categories = ['personal', 'work', 'gaming', 'others'];
 
   const handleCategoryClick = (category) => {
+    setClickedCategory(category);
   console.log("Clicked category:", category);
+  console.log("test", temporaryProjects)
 };
 
   const renderProjects = () => {
-    return ;
+    return renderProjectsByCategory(temporaryProjects, clickedCategory);
+    
   };
 
   const handleOpenAddProjectModal = () => {
@@ -46,12 +66,12 @@ function YourHeadSpace()
 
   
     
-const [projects, setProjects] = useState(
+const [temporaryProjects, setTemporaryProjects] = useState(
     [
-        { id:'project1', name:'Project Dummy 1', category:'work'},
-        { id:'project2', name:'Dummy Project 2', category:'personal'},
-        { id:'project2', name:'3rd Project Dummy', category:'gaming'},
-        { id:'project2', name:'Dummy Project, 4th', category:'others'},
+        { id:'project1', projectName:'Project Dummy 1', projectCategory:'work', status:'incomplete'},
+        { id:'project2', projectName:'Dummy Project 2', projectCategory:'personal', status:'incomplete'},
+        { id:'project3', projectName:'3rd Project Dummy', projectCategory:'gaming', status:'incomplete'},
+        { id:'project4', projectName:'Dummy Project, 4th', projectCategory:'others', status:'incomplete'},
     ]);
 
 // #region projectSection
@@ -72,7 +92,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
   let projectData = {
     projectName : projectNameRef.current.value,
     projectCategory : projectCategoryRef.current.value,
-    projectDescription : projectDescriptionRef.current.value
+    projectDescription : projectDescriptionRef.current.value,
   }
 
   const projectNameValue = projectNameRef.current.value.trim();
@@ -97,15 +117,22 @@ const handleCreateProjectSubmit = async(createProject)  => {
 
   const newProject = {
     id: crypto.randomUUID(),
-    name: projectData.projectName,
-    category: projectData.projectCategory,
-    description: projectData.projectDescription
+    projectCategory: projectData.projectCategory,
+    projectDescription: projectData.projectDescription,
+    projectName: projectData.projectName,
+    status: "incomplete"
   };
 
   try {
-  setProjects(prev => [...prev, newProject]);
+  setTemporaryProjects(prev => [...prev, newProject]);
   setErrors("");
-  console.log("projects currently in session", projects);
+  setShowAddProjectModal(false);
+  setFlashMessage("Project Created");
+  setShowFlashMessage(true);
+   setTimeout( () => {
+          setShowFlashMessage(false);
+        } , 2000);
+  console.log("projects currently in session", temporaryProjects);
   }
    catch (error) {
     console.error("something went wrong", error)
@@ -113,9 +140,8 @@ const handleCreateProjectSubmit = async(createProject)  => {
   
 };
 
-
- const renderProjectsByCategory = (projectList, category) => {
-    const filteredProjects = projectList.filter(
+ const renderProjectsByCategory = (temporaryProjects, category) => {
+    const filteredProjects = temporaryProjects.filter(
       (project) =>
         project.projectCategory === category &&
         project.status === (showCompleteProjects ? "incomplete" : "complete")
@@ -190,7 +216,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
       <Header/>
 
         <main className="flex w-full min-h-[100vh]  items-center justify-center bg-inherit mt-8 flex flex-col ">
-          <h2 className='text-center text-white mb-4 flex'> This demo uses in-memory stage management only. To explore my live projects with real data, click  
+          <h2 className='text-center text-white mb-4 flex'>  This demo uses in-memory stage management only. To explore my live projects with real data, click  
               <p className='text-blue-500 ml-0.5'> 
                 <Link to="/myHeadSpace" > here </Link> 
                 <span className="text-white"> </span>
