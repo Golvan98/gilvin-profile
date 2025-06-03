@@ -28,6 +28,41 @@ function YourHeadSpace()
   const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
   const [errors, setErrors] = useState("");
   const [flashMessage, setFlashMessage] = useState("");
+  
+
+   const handleOpenEditProjectModal = (project) => {
+    setProjectClicked(project);
+    setShowEditProjectModal(true);
+    console.log("current project clicked and to edit is", project);
+   }
+   const handleCloseEditProjectModal = () => {
+    setShowEditProjectModal(false);
+   }
+
+   const handleConfirmEditProject  = () => {
+    console.log("im clicked hello");
+   }
+
+   const handleOpenDeleteProjectModal = (project) => {
+    setProjectClicked(project);
+    setShowDeleteProjectModal(true);
+   }
+   
+   const handleCloseDeleteProjectModal = () => {
+    setShowDeleteProjectModal(false);
+   }
+
+   const handleDeleteProjectSubmit = (e) => {
+    e.preventDefault();
+
+    setTemporaryProjects(prevProjects => prevProjects.filter(demproject => demproject.id !== projectClicked.id));
+    setShowDeleteProjectModal(false);
+    setFlashMessage("Temporary Project Deleted");
+    setShowFlashMessage(true);
+    setTimeout ( () => {
+      setShowFlashMessage(false)}, 1000
+    );
+   }
 
 
    const handleExpandProject = (project) => 
@@ -174,8 +209,8 @@ const handleCreateProjectSubmit = async(createProject)  => {
             {project.projectName}
           </span>
           <span className="w-2/6 flex justify-end mx-1 space-x-1">
-            <PencilIcon onClick={() => handleEditProjectClick(project)} className="w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold" />
-            <TrashIcon onClick={() => handleDeleteProjectClick(project)} className="w-5 h-5 hover:cursor-pointer text-red-500 font-bold" />
+            <PencilIcon onClick={() => handleOpenEditProjectModal(project)} className="w-5 h-5 hover:cursor-pointer text-yellow-500 font-bold" />
+            <TrashIcon onClick={() => handleOpenDeleteProjectModal(project)} className="w-5 h-5 hover:cursor-pointer text-red-500 font-bold" />
           </span>
         </p>
 
@@ -361,14 +396,14 @@ const handleCreateProjectSubmit = async(createProject)  => {
                               )}
                           </aside>
                           
-                          {projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
+                          {/* projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) */}
     
                         </aside>
 
                         <aside id="completeTasks" className="h-1/2 w-full flex  flex-1 flex-col items-start justify-start overflow-y-auto bg-indigo-500">
                           <aside className='text-center w-full p-4 text-white '> Tasks Completed </aside>
                               
-                          {projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
+                          {/* projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) */}
                               
                         </aside>
 
@@ -416,7 +451,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
         )}
 
         { showEditProjectModal &&  (
-                <Modal onClose={closeEditProjectModal}>
+                <Modal onClose={handleCloseEditProjectModal}>
                   <form onSubmit={handleConfirmEditProject} className="w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white text-indigo-700 p-6 rounded-lg space-y-6">
                     
                     <div className="text-center">
@@ -465,8 +500,8 @@ const handleCreateProjectSubmit = async(createProject)  => {
                 </Modal>
         )}
         { showDeleteProjectModal && (
-              <Modal onClose={closeDeleteProjectModal}>
-                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[25vh] flex flex-col items-center justify-center text-black ">
+              <Modal onClose={handleCloseDeleteProjectModal}>
+                <form onSubmit={handleDeleteProjectSubmit}  className="w-[20vw] h-[25vh] flex flex-col items-center justify-center text-black ">
                   <div className="w-full h-1/2 flex items-center justify-center mx-4  text-center"> 
                     <p className="mx-4 md:mt-2 md:text-[5px] lg:text-[12px] py-1"> Are you sure you want to delete project {projectClicked.projectName}? </p>
                   </div>
