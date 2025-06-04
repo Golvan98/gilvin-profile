@@ -36,12 +36,63 @@ function YourHeadSpace()
     console.log("current project clicked and to edit is", project);
    }
    const handleCloseEditProjectModal = () => {
+   
     setShowEditProjectModal(false);
    }
 
-   const handleConfirmEditProject  = () => {
-    console.log("im clicked hello");
+   const handleConfirmEditProject = async(e,project) => {
+    e.preventDefault();
+
+    let projectData = {
+    projectName : projectNameRef.current.value,
+    projectCategory : projectCategoryRef.current.value,
+    projectDescription : projectDescriptionRef.current.value,
+  }
+
+  let formErrors = {};
+
+  const projectNameValue = projectNameRef.current.value.trim();
+  const projectCategoryValue = projectCategoryRef.current.value.trim();
+  const projectDescriptionValue = projectDescriptionRef.current.value.trim();
+
+  if (projectNameValue.length < 1 ) {
+    formErrors.name = "project must have a name"
+  }
+  if (projectNameValue.length > 25 ) {
+    formErrors.name = "project must not have a name of more than 25 characters"
+  }
+
+  if(projectDescriptionValue.length > 75) {
+    formErrors.description = "project must not have a description of more than 75 characters"
+  }
+
+  if(Object.keys(formErrors).length > 0){
+    setErrors(formErrors);
+    return;
+  }
+
+
+  try {  
+
+    const updatedProjects = temporaryProjects.map((p) =>
+      p.id === project.id
+        ? { ...p, ...projectData }  // updated project
+        : p                         // all the others unchanged
+    );
+    
+    setTemporaryProjects(updatedProjects);
+    setFlashMessage("project edited");
+    setShowFlashMessage(true);
+    setTimeout( () => {
+      setShowFlashMessage(false);
+    }, 2000);
+    setShowEditProjectModal(false);
+    }
+    catch (error) {
+      console.error("something went wrong", error);
+    }
    }
+
 
    const handleOpenDeleteProjectModal = (project) => {
     setProjectClicked(project);
@@ -99,7 +150,6 @@ function YourHeadSpace()
     setShowAddProjectModal(false);
   }
 
-  
     
 const [temporaryProjects, setTemporaryProjects] = useState(
     [
@@ -452,7 +502,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
 
         { showEditProjectModal &&  (
                 <Modal onClose={handleCloseEditProjectModal}>
-                  <form onSubmit={handleConfirmEditProject} className="w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white text-indigo-700 p-6 rounded-lg space-y-6">
+                  <form onSubmit={ (e) => (handleConfirmEditProject(e,projectClicked))} className="w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white text-indigo-700 p-6 rounded-lg space-y-6">
                     
                     <div className="text-center">
                       <p className="text-lg font-bold text-black">Edit Project</p>
