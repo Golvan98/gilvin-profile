@@ -93,6 +93,29 @@ function YourHeadSpace()
     }
    }
 
+   const handleCompleteProject = (project) => {
+    let completeProject = {
+      status: "complete"
+    }
+
+    
+    const completedProjects = temporaryProjects.map( (p) => 
+        p.id == project.id 
+    ? { ...p, ...completeProject}
+    : p
+    );
+
+    setTemporaryProjects(completedProjects);
+    setShowEditProjectModal(false);
+    setFlashMessage("project marked as complete");
+    setShowFlashMessage(true);
+    setTimeout = ( () => {
+    setShowFlashMessage(false);
+   } , 1000 )
+   console.log("all dem projects are", temporaryProjects);
+
+   }
+
 
    const handleOpenDeleteProjectModal = (project) => {
     setProjectClicked(project);
@@ -537,11 +560,11 @@ const handleCreateProjectSubmit = async(createProject)  => {
                         Edit Project
                       </button>
                       {showCompleteProjects ? (
-                        <button onClick={() => handleCompleteProject(handleDummy.id)} type="button"className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
+                        <button onClick={() => handleCompleteProject(projectClicked)} type="button"className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
                           Mark as Complete
                         </button>
                       ) : (
-                        <button  onClick={() => handleUndoCompleteProject(handleDummy.id)} type="button" className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
+                        <button  onClick={() => handleUndoCompleteProject(projectClicked)} type="button" className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
                           Mark as Incomplete
                         </button>
                       )}
