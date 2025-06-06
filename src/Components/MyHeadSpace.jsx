@@ -599,6 +599,11 @@ const handleConfirmDelete = async(deleteTask) => {
               </p>
               
           </h2>
+
+          <section id="main article" className='w-4/5 bg-white text-back flex justify-center items-center text-center'> 
+            <p className='mt-2'> Currently Viewing: {showCompleteProjects ? (<span> Incomplete </span>) : (<span> complete </span>)} Projects </p>
+          </section>
+
           <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white '> 
                 
             <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */} 

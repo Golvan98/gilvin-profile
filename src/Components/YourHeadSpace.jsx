@@ -16,7 +16,7 @@ function YourHeadSpace()
 
   
   const [expandedProjects, setExpandedProjects] = useState(new Set());
-  const [showCompleteProjects, setShowCompleteProjects] = useState(true);
+  const [showInCompleteProjects, setShowInCompleteProjects] = useState(true);
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
   const [clickedCategory, setClickedCategory]  = useState("");
   const [projectClicked, setProjectClicked] = useState(false);
@@ -30,9 +30,11 @@ function YourHeadSpace()
   const [flashMessage, setFlashMessage] = useState("");
 
   const toggleProjectStatusView = () => {
-    setShowCompleteProjects(!showCompleteProjects);
-    console.log(" showCompleteProjects state is" , showCompleteProjects);
+    setShowInCompleteProjects(!showInCompleteProjects);
+    console.log(" showCompleteProjects state is" , setShowInCompleteProjects);
   }
+
+
   
 
    const handleOpenEditProjectModal = (project) => {
@@ -99,12 +101,34 @@ function YourHeadSpace()
     }
    }
 
+   const handleUndoCompleteProject = (project) => {
+    let completeProject = {
+      status: "incomplete"
+    }
+
+    const completedProjects = temporaryProjects.map( (p) => 
+        p.id == project.id 
+    ? { ...p, ...completeProject}
+    : p
+    );
+
+    setTemporaryProjects(completedProjects);
+    setShowEditProjectModal(false);
+    setFlashMessage("project marked as incomplete");
+    setShowFlashMessage(true);
+    setTimeout(() => {
+    setShowFlashMessage(false)}, 1000);
+   console.log("all dem projects are", temporaryProjects);
+   }
+
+
+
+
    const handleCompleteProject = (project) => {
     let completeProject = {
       status: "complete"
     }
 
-    
     const completedProjects = temporaryProjects.map( (p) => 
         p.id == project.id 
     ? { ...p, ...completeProject}
@@ -117,15 +141,8 @@ function YourHeadSpace()
     setShowFlashMessage(true);
     setTimeout(() => {
     setShowFlashMessage(false)}, 1000);
-
-
-
-
-
    console.log("all dem projects are", temporaryProjects);
-
    }
-
 
    const handleOpenDeleteProjectModal = (project) => {
     setProjectClicked(project);
@@ -147,9 +164,6 @@ function YourHeadSpace()
       setShowFlashMessage(false)}, 1000
     );
    }
-
-   
-
 
    const handleExpandProject = (project) => 
   {
@@ -265,7 +279,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
     const filteredProjects = temporaryProjects.filter(
       (project) =>
         project.projectCategory === category &&
-        project.status === (showCompleteProjects ? "incomplete" : "complete")
+        project.status === (showInCompleteProjects ? "incomplete" : "complete")
     );
 
   return filteredProjects.map((project) => (
@@ -344,8 +358,11 @@ const handleCreateProjectSubmit = async(createProject)  => {
               </p>
               
           </h2>
-          <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white '> 
-                
+          <section id="main article" className='w-4/5 bg-white text-back flex justify-center items-center text-center'> 
+            <p className='mt-2'> Currently Viewing: {showInCompleteProjects ? (<span> Incomplete </span>) : (<span> complete </span>)} Projects </p>
+           </section>
+          <section id="main article" className='w-4/5 h-full mx-auto flex flex-col flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white text-center'> 
+             
             <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */} 
                     <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}> 
         
@@ -387,7 +404,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
 
                       <aside id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
                             <button onClick={toggleProjectStatusView} className='ml-4 mr-4'> 
-                              { showCompleteProjects ? ('View Completed Projects') : ('View Incomplete Projects') }
+                              { showInCompleteProjects ? ('View Completed Projects') : ('View Incomplete Projects') }
                               </button>
                             <button className='bg-white hover:bg-indigo-400 hover:text-white mr-4' onClick={handleOpenAddProjectModal}> + Add a Project  </button>
                           
@@ -572,7 +589,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
                       <button type="submit"  className="w-1/2 bg-indigo-700 text-white text-xs py-2 rounded mr-2"   >
                         Edit Project
                       </button>
-                      {showCompleteProjects ? (
+                      {showInCompleteProjects ? (
                         <button onClick={() => handleCompleteProject(projectClicked)} type="button"className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
                           Mark as Complete
                         </button>
