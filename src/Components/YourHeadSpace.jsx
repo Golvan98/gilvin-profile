@@ -88,11 +88,11 @@ function YourHeadSpace()
     setTemporaryProjects(updatedProjects);
     setFlashMessage("project edited");
     setShowFlashMessage(true);
-    setTimeout( () => {
-      setShowFlashMessage(false);
-    }, 1000);
-
     setShowEditProjectModal(false);
+   
+    setTimeout ( () => {
+      setShowFlashMessage(false)}, 1000
+    );
     }
     catch (error) {
       console.error("something went wrong", error);
@@ -115,9 +115,13 @@ function YourHeadSpace()
     setShowEditProjectModal(false);
     setFlashMessage("project marked as complete");
     setShowFlashMessage(true);
-    setTimeout = ( () => {
-    setShowFlashMessage(false);
-   } , 1000 )
+    setTimeout(() => {
+    setShowFlashMessage(false)}, 1000);
+
+
+
+
+
    console.log("all dem projects are", temporaryProjects);
 
    }
@@ -143,6 +147,8 @@ function YourHeadSpace()
       setShowFlashMessage(false)}, 1000
     );
    }
+
+   
 
 
    const handleExpandProject = (project) => 
