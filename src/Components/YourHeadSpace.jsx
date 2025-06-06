@@ -28,6 +28,11 @@ function YourHeadSpace()
   const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
   const [errors, setErrors] = useState("");
   const [flashMessage, setFlashMessage] = useState("");
+
+  const toggleProjectStatusView = () => {
+    setShowCompleteProjects(!showCompleteProjects);
+    console.log(" showCompleteProjects state is" , showCompleteProjects);
+  }
   
 
    const handleOpenEditProjectModal = (project) => {
@@ -85,7 +90,8 @@ function YourHeadSpace()
     setShowFlashMessage(true);
     setTimeout( () => {
       setShowFlashMessage(false);
-    }, 2000);
+    }, 1000);
+
     setShowEditProjectModal(false);
     }
     catch (error) {
@@ -239,7 +245,8 @@ const handleCreateProjectSubmit = async(createProject)  => {
   setShowFlashMessage(true);
    setTimeout( () => {
           setShowFlashMessage(false);
-        } , 2000);
+        } , 1000);
+
   console.log("projects currently in session", temporaryProjects);
   }
    catch (error) {
@@ -373,7 +380,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
                     <nav  className="h-full w-full flex flex-col items-center justify-center bg-indigo-500 rounded-md "> 
 
                       <aside id="addTaskSection" className="w-full flex items-center justify-between my-4"> 
-                            <button onClick={handleDummy} className='ml-4 mr-4'> 
+                            <button onClick={toggleProjectStatusView} className='ml-4 mr-4'> 
                               { showCompleteProjects ? ('View Completed Projects') : ('View Incomplete Projects') }
                               </button>
                             <button className='bg-white hover:bg-indigo-400 hover:text-white mr-4' onClick={handleOpenAddProjectModal}> + Add a Project  </button>
