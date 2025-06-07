@@ -13,8 +13,6 @@ import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, Chev
 
 function YourHeadSpace() 
 {
-
-  
   const [expandedProjects, setExpandedProjects] = useState(new Set());
   const [showInCompleteProjects, setShowInCompleteProjects] = useState(true);
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
@@ -29,14 +27,23 @@ function YourHeadSpace()
   const [errors, setErrors] = useState("");
   const [flashMessage, setFlashMessage] = useState("");
 
+
+  const handleProjectClick = (project) => {
+    setProjectClicked(project);
+  }
+
+const [temporaryTasks, setTemporaryTasks] = useState(
+    [
+        { taskId:'task1', id:'project1', projectName:'Project Dummy 1', projectCategory:'work', status:'incomplete'},
+        { taskId:'task2', id:'project2', projectName:'Dummy Project 2', projectCategory:'personal', status:'incomplete'},
+        { taskId:'task3', id:'project3', projectName:'3rd Project Dummy', projectCategory:'gaming', status:'incomplete'},
+        { taskId:'task4', id:'project4', projectName:'Dummy Project, 4th', projectCategory:'others', status:'incomplete'},
+    ]);
+
   const toggleProjectStatusView = () => {
     setShowInCompleteProjects(!showInCompleteProjects);
     console.log(" showCompleteProjects state is" , setShowInCompleteProjects);
   }
-
-
-  
-
    const handleOpenEditProjectModal = (project) => {
     setProjectClicked(project);
     setShowEditProjectModal(true);
@@ -77,7 +84,6 @@ function YourHeadSpace()
     setErrors(formErrors);
     return;
   }
-
 
   try {  
 
@@ -359,7 +365,7 @@ const handleCreateProjectSubmit = async(createProject)  => {
               
           </h2>
           <section id="main article" className='w-4/5 bg-white text-back flex justify-center items-center text-center'> 
-            <p className='mt-2'> Currently Viewing: {showInCompleteProjects ? (<span> Incomplete </span>) : (<span> complete </span>)} Projects </p>
+            <p className='mt-2'> Currently Viewing: {showInCompleteProjects ? (<span> Incomplete </span>) : (<span> Complete </span>)} Projects </p>
            </section>
           <section id="main article" className='w-4/5 h-full mx-auto flex flex-col flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white text-center'> 
              
