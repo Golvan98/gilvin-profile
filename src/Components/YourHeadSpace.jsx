@@ -26,6 +26,8 @@ function YourHeadSpace()
   const [errors, setErrors] = useState("");
   const [flashMessage, setFlashMessage] = useState("");
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
+  const [ clickedTask, setClickedTask] = useState("");
 
   
 const [temporaryTasks, setTemporaryTasks] = useState(
@@ -105,16 +107,40 @@ const [temporaryTasks, setTemporaryTasks] = useState(
 
   const [clickedProjectTasks, setClickedProjectTasks] = useState([]);
 
-useEffect(() => {
-  if (!projectClicked?.id) return;
+    useEffect(() => {
+      if (!projectClicked?.id) return;
 
-  const filteredTasks = temporaryTasks.filter(task => task.id === projectClicked.id);
-  setClickedProjectTasks(filteredTasks);
-  console.log("Filtered tasks: ", filteredTasks);
-}, [projectClicked, temporaryTasks]);
+      const filteredTasks = temporaryTasks.filter(task => task.id === projectClicked.id);
+      setClickedProjectTasks(filteredTasks);
+      console.log("Filtered tasks: ", filteredTasks);
+    }, [projectClicked, temporaryTasks]);
 
+ const handleOpenDeleteTaskModal = (task) => {
+    setShowDeleteTaskModal(true);
+    setClickedTask(task);
+    // setClickedProjectTasks(prevTask => prevTask.filter(prevTask.taskId == clickedTask.taskId));
+  }
+  
 
+  const handleCloseDeleteTaskModal = () => {
+    setShowDeleteTaskModal(false);
+  }
 
+  const handleConfirmDeleteTask = (e) =>{
+    e.preventDefault();
+    setTemporaryTasks(prev =>
+    prev.filter(task => task.taskId !== clickedTask.taskId)
+  );
+    setClickedProjectTasks(prevTasks => prevTasks.filter(task => task.taskId !== clickedTask.taskId));
+    setFlashMessage("task deleted");
+    setShowFlashMessage(true);
+    setTimeout ( () => {
+    setShowFlashMessage(false) }, 1000);
+    setShowDeleteTaskModal(false);
+    
+    // setClickedProjectTasks(prevTasks => prevTasks.filter(prevTasks.id == clickedTask.id))
+    //    setTemporaryProjects(prevProjects => prevProjects.filter(demproject => demproject.id !== projectClicked.id));
+  }
   const toggleProjectStatusView = () => {
     setShowInCompleteProjects(!showInCompleteProjects);
     console.log(" showCompleteProjects state is" , !showInCompleteProjects);
@@ -433,7 +459,7 @@ const handleCreateProjectSubmit = async(e)  => {
                           <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
                             <PencilIcon  onClick={handleDummy} className="w-1/3 text-orange-300 cursor-pointer" />
                             <ArrowPathIcon onClick={handleDummy} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
-                            <TrashIcon onClick={handleDummy} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                            <TrashIcon onClick={ () => handleOpenDeleteTaskModal(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                           </p>
                         
                       </div>
@@ -451,7 +477,7 @@ const handleCreateProjectSubmit = async(e)  => {
                                   <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
                                     <PencilIcon  onClick={handleDummy} className="w-1/3 text-orange-300 cursor-pointer" />
                                     <CheckIcon onClick={handleDummy} className='w-1/3 text-green-500 hover:cursor-pointer'/>
-                                    <TrashIcon onClick={handleDummy} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                                    <TrashIcon onClick={() => handleOpenDeleteTaskModal(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                                   </p>                        
                               </div>
                   </aside>
@@ -654,12 +680,12 @@ const handleCreateProjectSubmit = async(e)  => {
                               </form>
                               </Modal>
         )}
-        { showDeleteModal && (
+        { showDeleteTaskModal && (
                               <Modal onClose={handleCloseDeleteTaskModal}>
-                              <form onSubmit={handleConfirmDelete} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
+                              <form onSubmit={handleConfirmDeleteTask} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-center rounded-sm">
                                 <div> Are you sure that you want to delete this task? </div>
                                 <div className="flex w-full justify-between mt-8">  
-                                  <button className='ml-12 bg-red-500'> Yes </button>
+                                  <button onClick={handleConfirmDeleteTask} className='ml-12 bg-red-500'> Yes </button>
                                   <button onClick={handleDummy} className='mr-12 bg-green-400'> No </button>
                                 </div>
                               </form>
