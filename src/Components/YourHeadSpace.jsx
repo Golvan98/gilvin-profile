@@ -3,7 +3,6 @@ import classes from './MyHeadSpace.module.css'
 import Modal from './Modal.jsx';
 import { Link } from 'react-router-dom';
 import HamburgerMenu from './HamburgerMenu.jsx';
-
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import { firestore } from "../firebase.js"
@@ -27,18 +26,31 @@ function YourHeadSpace()
   const [errors, setErrors] = useState("");
   const [flashMessage, setFlashMessage] = useState("");
 
+  
+const [temporaryTasks, setTemporaryTasks] = useState(
+    [
+        { taskId:'task1', id:'project1', projectName:'Dummy Task for Work', projectCategory:'work', status:'incomplete'},
+        { taskId:'task2', id:'project2', projectName:'Dummy Task for Personal', projectCategory:'personal', status:'incomplete'},
+        { taskId:'task3', id:'project3', projectName:'Dummy Task for gaming', projectCategory:'gaming', status:'incomplete'},
+        { taskId:'task4', id:'project4', projectName:'Dummy Task for Others', projectCategory:'others', status:'incomplete'},
+    ]);
+    
 
   const handleProjectClick = (project) => {
     setProjectClicked(project);
   }
 
-const [temporaryTasks, setTemporaryTasks] = useState(
-    [
-        { taskId:'task1', id:'project1', projectName:'Project Dummy 1', projectCategory:'work', status:'incomplete'},
-        { taskId:'task2', id:'project2', projectName:'Dummy Project 2', projectCategory:'personal', status:'incomplete'},
-        { taskId:'task3', id:'project3', projectName:'3rd Project Dummy', projectCategory:'gaming', status:'incomplete'},
-        { taskId:'task4', id:'project4', projectName:'Dummy Project, 4th', projectCategory:'others', status:'incomplete'},
-    ]);
+  const [clickedProjectTasks, setClickedProjectTasks] = useState([]);
+
+useEffect(() => {
+  if (!projectClicked?.id) return;
+
+  const filteredTasks = temporaryTasks.filter(task => task.id === projectClicked.id);
+  setClickedProjectTasks(filteredTasks);
+  console.log("Filtered tasks: ", filteredTasks);
+}, [projectClicked, temporaryTasks]);
+
+
 
   const toggleProjectStatusView = () => {
     setShowInCompleteProjects(!showInCompleteProjects);
@@ -47,7 +59,6 @@ const [temporaryTasks, setTemporaryTasks] = useState(
    const handleOpenEditProjectModal = (project) => {
     setProjectClicked(project);
     setShowEditProjectModal(true);
-    console.log("current project clicked and to edit is", project);
    }
    const handleCloseEditProjectModal = () => {
    
@@ -189,7 +200,6 @@ const [temporaryTasks, setTemporaryTasks] = useState(
   const handleCategoryClick = (category) => {
     setClickedCategory(category);
   console.log("Clicked category:", category);
-  console.log("test", temporaryProjects)
 };
 
   const renderProjects = () => {
