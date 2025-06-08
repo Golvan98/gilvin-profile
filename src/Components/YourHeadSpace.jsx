@@ -25,16 +25,79 @@ function YourHeadSpace()
   const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
   const [errors, setErrors] = useState("");
   const [flashMessage, setFlashMessage] = useState("");
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
 
   
 const [temporaryTasks, setTemporaryTasks] = useState(
     [
-        { taskId:'task1', id:'project1', projectName:'Dummy Task for Work', projectCategory:'work', status:'incomplete'},
-        { taskId:'task2', id:'project2', projectName:'Dummy Task for Personal', projectCategory:'personal', status:'incomplete'},
-        { taskId:'task3', id:'project3', projectName:'Dummy Task for gaming', projectCategory:'gaming', status:'incomplete'},
-        { taskId:'task4', id:'project4', projectName:'Dummy Task for Others', projectCategory:'others', status:'incomplete'},
+        { taskId:'task1', id:'project1', taskName:'Dummy Task for Work',     status:'incomplete'},
+        { taskId:'task2', id:'project2', taskName:'Dummy Task for Personal', status:'incomplete'},
+        { taskId:'task3', id:'project3', taskName:'Dummy Task for gaming',   status:'incomplete'},
+        { taskId:'task4', id:'project4', taskName:'Dummy Task for Others',   status:'incomplete'},
     ]);
-    
+
+   useEffect(() => {
+  let timeout;
+  if (showFlashMessage) {
+    timeout = setTimeout(() => {
+      setShowFlashMessage(false);
+    }, 1000);
+  }
+  return () => clearTimeout(timeout);
+}, [showFlashMessage]);
+
+
+  const openAddTaskModal = () => {
+    setShowAddTaskModal(true);
+  }
+
+  const handleCloseAddTaskModal = () => {
+    setShowAddTaskModal(false);
+  }
+
+  const taskNameRef = useRef();
+ 
+  const handleAddTaskSubmit = (e) => {
+
+    let formErrors = {}
+
+    const taskNameRefValue = taskNameRef.current.value.trim();
+    e.preventDefault();
+
+
+    if(taskNameRefValue.length == 0) {
+      formErrors.name = "task must have a name"
+    }
+    if(taskNameRefValue.length >50 ) {
+      formErrors.name = "task must have no more than 50 characters"
+    }
+
+    if(Object.keys(formErrors).length > 0){
+      setErrors(formErrors);
+      return;
+    }
+      try {
+    const taskData = {
+      taskId : crypto.randomUUID(),
+      taskName : taskNameRef.current.value,
+      status : "incomplete",
+      id: projectClicked.id,
+    }
+
+    setTemporaryTasks(prevTasks => [...prevTasks, taskData ]);
+    setShowAddTaskModal(false);
+    setFlashMessage("task added successfully");
+    setShowFlashMessage(true);
+    setTimeout ( () => {
+      setShowFlashMessage(false);
+    } , 1500);
+        console.log("tasks are now", temporaryTasks);
+
+    } catch (error) {
+      console.log("something went wrong, error:", error);
+    }
+  }
+
 
   const handleProjectClick = (project) => {
     setProjectClicked(project);
@@ -54,7 +117,7 @@ useEffect(() => {
 
   const toggleProjectStatusView = () => {
     setShowInCompleteProjects(!showInCompleteProjects);
-    console.log(" showCompleteProjects state is" , setShowInCompleteProjects);
+    console.log(" showCompleteProjects state is" , !showInCompleteProjects);
   }
    const handleOpenEditProjectModal = (project) => {
     setProjectClicked(project);
@@ -234,8 +297,8 @@ const handleDummy = () => {
 
 }
 
-const handleCreateProjectSubmit = async(createProject)  => {
-  createProject.preventDefault();
+const handleCreateProjectSubmit = async(e)  => {
+  e.preventDefault();
 
   let formErrors = {}
 
@@ -282,8 +345,6 @@ const handleCreateProjectSubmit = async(createProject)  => {
    setTimeout( () => {
           setShowFlashMessage(false);
         } , 1000);
-
-  console.log("projects currently in session", temporaryProjects);
   }
    catch (error) {
     console.error("something went wrong", error)
@@ -361,6 +422,42 @@ const handleCreateProjectSubmit = async(createProject)  => {
     </aside>
   ));
 };
+
+  
+          const renderCompleteTasks = (clickedProjectTasks) => {
+      return clickedProjectTasks.filter(task => task.status === "complete").map(task => (
+        <nav className='w-full flex'>
+        <aside key={task.taskId} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
+                      <div className='w-full flex'>
+                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
+                          <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
+                            <PencilIcon  onClick={handleDummy} className="w-1/3 text-orange-300 cursor-pointer" />
+                            <ArrowPathIcon onClick={handleDummy} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
+                            <TrashIcon onClick={handleDummy} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                          </p>
+                        
+                      </div>
+          </aside>
+          </nav>
+      ));
+    };
+          
+          const renderIncompleteTasks = (clickedProjectTasks) => {
+              return clickedProjectTasks.filter(task => task.status === "incomplete").map(task => (
+                <nav className='w-full flex'>
+                <aside key={task.taskId} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
+                              <div className='w-full flex'>
+                                  <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.taskName} </p>
+                                  <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
+                                    <PencilIcon  onClick={handleDummy} className="w-1/3 text-orange-300 cursor-pointer" />
+                                    <CheckIcon onClick={handleDummy} className='w-1/3 text-green-500 hover:cursor-pointer'/>
+                                    <TrashIcon onClick={handleDummy} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+                                  </p>                        
+                              </div>
+                  </aside>
+                  </nav>
+              ));
+            };
 
     return(
      <body className={`bg-deepPurple w-full min-h-[100vh] lg:min-h-[100vh]  flex flex-col ${classes.myHeadSpaceSetting}` }>
@@ -486,15 +583,15 @@ const handleCreateProjectSubmit = async(createProject)  => {
                             <div className="w-1/3 md:mr-8 xs:mr-1"> Tasks in Progress </div>
                         
                               {projectClicked ?
-                              <button className="bg-white text-black p-2" onClick={handleDummy}> 
+                              <button className="bg-white text-black p-2" onClick={openAddTaskModal}> 
                                   + Add a Task
                               </button>
                               :    <div className="w-1/3">  </div>
                               }
                                 {/* comment: Conditional rendering of Modal */}
-                                {showModal && (
-                                <Modal onClose={handleDummy}>
-                                  <form onSubmit={handleDummy} className="min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm  text-black">
+                                {showAddTaskModal && (
+                                <Modal onClose={handleCloseAddTaskModal}>
+                                  <form onSubmit={handleAddTaskSubmit} className="min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm  text-black">
                                     
                                     <div className="mt-4 font-bold text-lg">  Create Task </div>
                             
@@ -515,14 +612,14 @@ const handleCreateProjectSubmit = async(createProject)  => {
                               )}
                           </aside>
                           
-                          {/* projectClicked && (firebaseTasks.length > 0 ? renderIncompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) */}
+                          { projectClicked && (clickedProjectTasks.length > 0 ? renderIncompleteTasks(clickedProjectTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) }
     
                         </aside>
 
                         <aside id="completeTasks" className="h-1/2 w-full flex  flex-1 flex-col items-start justify-start overflow-y-auto bg-indigo-500">
                           <aside className='text-center w-full p-4 text-white '> Tasks Completed </aside>
                               
-                          {/* projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) */}
+                          { projectClicked && (clickedProjectTasks.length > 0 ? renderCompleteTasks(clickedProjectTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) }
                               
                         </aside>
 
