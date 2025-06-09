@@ -28,7 +28,6 @@ function YourHeadSpace()
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
   const [ clickedTask, setClickedTask] = useState("");
-
   
 const [temporaryTasks, setTemporaryTasks] = useState(
     [
@@ -101,6 +100,12 @@ const [temporaryTasks, setTemporaryTasks] = useState(
   }
 
 
+  const openEditTaskModal = (task) => {
+    setShowEditTaskModal(true);
+    setClickedTask(task);
+  }
+
+
   const handleProjectClick = (project) => {
     setProjectClicked(project);
   }
@@ -121,6 +126,55 @@ const [temporaryTasks, setTemporaryTasks] = useState(
     // setClickedProjectTasks(prevTask => prevTask.filter(prevTask.taskId == clickedTask.taskId));
   }
   
+  const closeEditTaskModal = () => {
+    setShowEditTaskModal(false);
+  }
+  
+  const handleEditTaskSubmit  = (e) => {
+    e.preventDefault();
+
+    let formErrors = {}
+
+    const taskNameRefValue = taskNameRef.current.value.trim();
+
+    if(taskNameRefValue.length == 0){
+      formErrors.name = "task must have a name"
+    }
+    if(taskNameRefValue.length > 50){
+      formErrors.name = "task name must not exceed more than 50 characters"
+    }
+
+    if(Object.keys(formErrors).length > 0){
+      setErrors(formErrors);
+      return;
+    }
+
+    const newClickedTaskData = {
+      taskName: taskNameRef.current.value
+    }
+      try {
+    const finalNewClickedTaskData = temporaryTasks.map
+    ( 
+      (t) =>
+      t.taskId === clickedTask.taskId
+    ? {...t, ...newClickedTaskData}
+    : t
+    );
+    setShowEditTaskModal(false);
+    setTemporaryTasks(finalNewClickedTaskData);
+    setFlashMessage("task edited successfully");
+    setShowFlashMessage(true);
+    setTimeout ( () => {
+      setShowFlashMessage(false);
+    } , 1000);
+
+  } catch(error) {
+    console.log("error editing task", error);
+  }
+
+  }
+
+  
 
   const handleCloseDeleteTaskModal = () => {
     setShowDeleteTaskModal(false);
@@ -133,7 +187,7 @@ const [temporaryTasks, setTemporaryTasks] = useState(
   );
     setClickedProjectTasks(prevTasks => prevTasks.filter(task => task.taskId !== clickedTask.taskId));
     setFlashMessage("task deleted");
-    setShowFlashMessage(true);
+    setShowFlashMessage(true);  
     setTimeout ( () => {
     setShowFlashMessage(false) }, 1000);
     setShowDeleteTaskModal(false);
@@ -226,9 +280,6 @@ const [temporaryTasks, setTemporaryTasks] = useState(
     setShowFlashMessage(false)}, 1000);
    console.log("all dem projects are", temporaryProjects);
    }
-
-
-
 
    const handleCompleteProject = (project) => {
     let completeProject = {
@@ -448,7 +499,6 @@ const handleCreateProjectSubmit = async(e)  => {
     </aside>
   ));
 };
-
   
           const renderCompleteTasks = (clickedProjectTasks) => {
       return clickedProjectTasks.filter(task => task.status === "complete").map(task => (
@@ -457,7 +507,7 @@ const handleCreateProjectSubmit = async(e)  => {
                       <div className='w-full flex'>
                           <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
                           <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
-                            <PencilIcon  onClick={handleDummy} className="w-1/3 text-orange-300 cursor-pointer" />
+                            <PencilIcon  onClick={() =>openEditTaskModal(task)} className="w-1/3 text-orange-300 cursor-pointer" />
                             <ArrowPathIcon onClick={handleDummy} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
                             <TrashIcon onClick={ () => handleOpenDeleteTaskModal(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                           </p>
@@ -475,7 +525,7 @@ const handleCreateProjectSubmit = async(e)  => {
                               <div className='w-full flex'>
                                   <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.taskName} </p>
                                   <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
-                                    <PencilIcon  onClick={handleDummy} className="w-1/3 text-orange-300 cursor-pointer" />
+                                    <PencilIcon  onClick={() =>openEditTaskModal(task)} className="w-1/3 text-orange-300 cursor-pointer" />
                                     <CheckIcon onClick={handleDummy} className='w-1/3 text-green-500 hover:cursor-pointer'/>
                                     <TrashIcon onClick={() => handleOpenDeleteTaskModal(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                                   </p>                        
@@ -664,13 +714,13 @@ const handleCreateProjectSubmit = async(e)  => {
          { /* All Modals */ }
         { showEditTaskModal &&   
         (
-                              <Modal onClose={handleCloseEditTaskModal}> 
-                              <form onSubmit={handleEditTaskSubmit} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
+                              <Modal onClose={closeEditTaskModal}> 
+                              <form onSubmit={(e) =>handleEditTaskSubmit(e, clickedTask)} className="text-black min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm">
                                 <div className="mt-4 font-bold text-lg">  Edit Task </div>
 
                                 <div className={`ml-12 p-2 rounded-sm mt-4 flex flex-col w-full  ${classes.smallFontSetting} items-start`}> 
                                   <p> <label> Task Name </label> </p>
-                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={taskNameRef}  defaultValue={clickedTask.name}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
+                                  <p className='w-full flex items-start justify-start'> <input type="text" ref={taskNameRef}  defaultValue={clickedTask.taskName}  className="border-2 border-black w-4/5 bg-white text-black placeholder-gray-500 p-1"/> </p>
                                   <p className="text-red-500 text-sm"> {errors.name}</p>
                                 </div> 
 
