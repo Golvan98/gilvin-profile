@@ -129,6 +129,45 @@ const [temporaryTasks, setTemporaryTasks] = useState(
   const closeEditTaskModal = () => {
     setShowEditTaskModal(false);
   }
+
+  const handleCompleteTask = (task) => {
+    const completedTask = {
+      status: "complete"
+    }
+    
+    const newCompletedTasks = temporaryTasks.map((t) => 
+    t.taskId == task.taskId
+    ?{ ...t, ...completedTask }
+    : t );
+
+    setTemporaryTasks(newCompletedTasks);
+    setFlashMessage("task marked as complete");
+    setShowFlashMessage(true);
+    setTimeout( () => {
+      setShowFlashMessage(false);
+    } , 2000);
+
+  }
+
+  const handleUnCompleteTask  = (task) => {
+    const unCompletedTask = {
+      status: "incomplete"
+    }
+    
+    const newUnCompletedTasks = temporaryTasks.map((t) => 
+    t.taskId == task.taskId
+    ?{ ...t, ...unCompletedTask }
+    : t );
+
+    setTemporaryTasks(newUnCompletedTasks);
+    setFlashMessage("task marked as complete");
+    setShowFlashMessage(true);
+    setTimeout( () => {
+      setShowFlashMessage(false);
+    } , 2000);
+  }
+
+  
   
   const handleEditTaskSubmit  = (e) => {
     e.preventDefault();
@@ -171,10 +210,7 @@ const [temporaryTasks, setTemporaryTasks] = useState(
   } catch(error) {
     console.log("error editing task", error);
   }
-
   }
-
-  
 
   const handleCloseDeleteTaskModal = () => {
     setShowDeleteTaskModal(false);
@@ -505,10 +541,10 @@ const handleCreateProjectSubmit = async(e)  => {
         <nav className='w-full flex'>
         <aside key={task.taskId} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
                       <div className='w-full flex'>
-                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
+                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.taskName} </p>
                           <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
                             <PencilIcon  onClick={() =>openEditTaskModal(task)} className="w-1/3 text-orange-300 cursor-pointer" />
-                            <ArrowPathIcon onClick={handleDummy} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
+                            <ArrowPathIcon onClick={() => handleUnCompleteTask(task)} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
                             <TrashIcon onClick={ () => handleOpenDeleteTaskModal(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                           </p>
                         
@@ -526,7 +562,7 @@ const handleCreateProjectSubmit = async(e)  => {
                                   <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.taskName} </p>
                                   <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
                                     <PencilIcon  onClick={() =>openEditTaskModal(task)} className="w-1/3 text-orange-300 cursor-pointer" />
-                                    <CheckIcon onClick={handleDummy} className='w-1/3 text-green-500 hover:cursor-pointer'/>
+                                    <CheckIcon onClick={ () => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
                                     <TrashIcon onClick={() => handleOpenDeleteTaskModal(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                                   </p>                        
                               </div>
