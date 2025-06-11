@@ -160,7 +160,7 @@ const [temporaryTasks, setTemporaryTasks] = useState(
     : t );
 
     setTemporaryTasks(newUnCompletedTasks);
-    setFlashMessage("task marked as complete");
+    setFlashMessage("task marked as incomplete");
     setShowFlashMessage(true);
     setTimeout( () => {
       setShowFlashMessage(false);

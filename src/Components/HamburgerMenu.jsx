@@ -3,7 +3,7 @@ import Hamburger from 'hamburger-react'
 import { Link } from 'react-router-dom';
 import classes from './MainPage.module.css';
 
-function HamburgerMenu (toggled, toggle)
+function HamburgerMenu ({toggled, toggle, toggleOpenLoginModal })
 {
 
 
@@ -30,6 +30,7 @@ function HamburgerMenu (toggled, toggle)
               <li className={`p-2 hover:bg-gray-200 cursor-pointer  ${classes.burgerFont}`} onClick={() => scrollToSection("shit")}>Home</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={ () => scrollToSection("footer")}>About</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={ () => scrollToSection("footer")}>Contact</li>
+              <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => toggleOpenLoginModal()}>Login</li>
             </ul>
           </div>
         )}

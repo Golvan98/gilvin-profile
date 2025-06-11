@@ -7,12 +7,15 @@ import { useState } from 'react';
 import Header from './Header.jsx';
 import HamburgerMenu from './HamburgerMenu.jsx';
 import { useRef } from 'react';
+import LoginModal from '../Components/Modals/LoginModal.jsx'
 
 
 
 function MainPage() { 
   
- 
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const openLoginModal = () => setShowLoginModal(true);
+  const closeLoginModal = () => setShowLoginModal(false);
 
     
 
@@ -29,15 +32,14 @@ function MainPage() {
   }; */
 
   return (
-
+   
    
 
     <body  className="bg-deepPurple w-full min-h-[100vh] flex flex-col">
       
-      <Header>
-       
-      </Header>
+      <Header toggleOpenLoginModal={openLoginModal}/>
 
+      {showLoginModal && <LoginModal onClose={closeLoginModal} />}
 
 
     <main className="bg-deepPurple text-white min-h-[90vh] flex overflow-auto flex-col ">
@@ -84,6 +86,7 @@ function MainPage() {
 
       </main>
     </body>
+    
   );
 }
 

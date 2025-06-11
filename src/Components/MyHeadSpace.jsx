@@ -9,8 +9,15 @@ import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimesta
 import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
 import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CheckIcon, ArrowPathIcon, ArrowUturnLeftIcon  } from '@heroicons/react/24/outline';
+import LoginModal from './Modals/LoginModal.jsx';
 
 function MyHeadSpace(){
+
+     const [showLoginModal, setShowLoginModal] = useState(false);
+      const openLoginModal = () => setShowLoginModal(true);
+      const closeLoginModal = () => setShowLoginModal(false);
+
+    
 
   // #region Create Task Handler
     const taskNameRef = useRef();
@@ -588,8 +595,13 @@ const handleConfirmDelete = async(deleteTask) => {
 // #endregion
 
     return (
+
+      
         <body className={`bg-deepPurple w-full min-h-[100vh] lg:min-h-[100vh]  flex flex-col ${classes.myHeadSpaceSetting}` }>
-      <Header/>
+        <Header toggleOpenLoginModal={openLoginModal}/>
+        {showLoginModal && (
+          <LoginModal onClose={closeLoginModal}></LoginModal>
+      )}
 
         <main className="flex w-full min-h-[100vh]  items-center justify-center bg-inherit mt-8 flex flex-col ">
           <h2 className='text-center text-white mb-4'> This to do app is currenly live and is being updated daily by Gilvin, if you want to test this out temprorarily, click this link
