@@ -61,7 +61,7 @@ function HamburgerMenu ({toggled, toggle, toggleOpenLoginModal })
               <li className={`p-2 hover:bg-gray-200 cursor-pointer  ${classes.burgerFont}`} onClick={() => scrollToSection("shit")}>Home</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={ () => scrollToSection("footer")}>About</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={ () => scrollToSection("footer")}>Contact</li>
-              <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => toggleOpenLoginModal()}>Login</li>
+             { !currentUser && <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => toggleOpenLoginModal()}>Login</li> }
              { currentUser && <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={handleLogout}>Logout</li>}
             </ul>
           </div>

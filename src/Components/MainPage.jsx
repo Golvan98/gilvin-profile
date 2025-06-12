@@ -17,13 +17,20 @@ function MainPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
+  const [flashMessage, setFlashMessage] = useState("");
+  const [showFlashMessage, setShowFlashMessage] = useState(false);
 
   useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {
     if (user) {
       console.log("User is logged in:", user);
+       setFlashMessage(`Logged in as ${user.displayName}`);
+      setShowFlashMessage(true);
+      setTimeout ( () => {
+        setShowFlashMessage(false);
+      }, 1000);
       setCurrentUser(user); // or set isLoggedIn(true)
-    
+      
     } else {
       console.log("No user is logged in");
       setCurrentUser(null); // or set isLoggedIn(false)
@@ -32,10 +39,6 @@ function MainPage() {
 
   return () => unsubscribe();
 }, []);
-
-
-
-
 
   /*const handleSubmit = async () => {
     await addDoc(collection(db, 'messages'), {
@@ -100,6 +103,11 @@ function MainPage() {
         
 
       </main>
+      {showFlashMessage && (
+          <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+            {flashMessage}
+          </div>
+        )}
     </body>
     
   );
