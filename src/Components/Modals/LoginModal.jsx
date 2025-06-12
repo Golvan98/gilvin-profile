@@ -1,19 +1,53 @@
-// LoginModal.jsx
+import classes from '../Modal.module.css';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../../firebase'; // adjust path if needed
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+
 function LoginModal({ onClose }) {
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Logged in as:", user.displayName);
+      onClose();
+    } catch (error) {
+      console.error("Google login failed", error);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white text-black p-6 rounded shadow-lg w-80">
-        <h2 className="text-lg font-bold mb-4">Login</h2>
-        <p>This is a placeholder login modal.</p>
+  <section className={`${classes.backdrop} text-lg xs:text-sm md:text-base lg:text-lg`}>
+    <aside className={classes.modal}>
+      <div className="w-[90vw] max-w-md h-[40vh] bg-white p-4 xs:p-2 rounded-lg flex flex-col justify-center items-center overflow-y-auto">
+        
+        <p className="text-center font-bold text-sm xs:text-xs mb-4 xs:mt-20">
+          This personal CRUD app reflects my real-time development activity.
+          Signing in won't grant edit access to my projects, but you can explore
+          the demo version <Link to="/yourHeadSpace" className="text-blue-700 underline">here</Link>.
+        </p>
+
+        <button
+          onClick={handleGoogleLogin}
+          className="bg-indigo-700 text-white text-sm px-4 py-2 xs:text-xs xs:px-2 xs:py-1 rounded mb-2"
+        >
+          Sign in with Google
+        </button>
+
         <button
           onClick={onClose}
-          className="mt-4 px-4 py-2 bg-purple-600 text-white rounded"
+          className="text-xs underline text-gray-600"
         >
           Close
         </button>
+
       </div>
-    </div>
-  );
+    </aside>
+  </section>
+);
+
 }
 
 export default LoginModal;

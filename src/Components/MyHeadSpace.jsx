@@ -10,8 +10,30 @@ import Modal from './Modal.jsx';
 import tasks from '../assets/tasks'
 import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CheckIcon, ArrowPathIcon, ArrowUturnLeftIcon  } from '@heroicons/react/24/outline';
 import LoginModal from './Modals/LoginModal.jsx';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
+
+
+
 
 function MyHeadSpace(){
+
+    useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!user) {
+     
+    } else {
+      setShowLoginModal(false);
+      setFlashMessage(`Logged in as ${user.displayName}`);
+      setShowFlashMessage(true);
+      setTimeout ( () => {
+        setShowFlashMessage(false);
+      }, 1000);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
 
      const [showLoginModal, setShowLoginModal] = useState(false);
       const openLoginModal = () => setShowLoginModal(true);
@@ -191,6 +213,13 @@ function MyHeadSpace(){
   const [showAddProjectModal, setShowAddProjectModal] = useState("");
   
   const handleCreateProjectSubmit =  async (createProject) => {
+
+    if (!auth.currentUser) {
+    console.log("Not authenticated");
+    return;
+  }
+
+
     createProject.preventDefault();
     let formErrors = {}
     const projectNameValue = projectNameRef.current.value.trim();

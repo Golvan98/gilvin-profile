@@ -3,12 +3,13 @@ import SecondSection from './SecondSection.jsx';
 import ThirdSection from './ThirdSection.jsx';
 import Footer from './Footer.jsx';
 import FourthSection from './FourthSection.jsx'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './Header.jsx';
 import HamburgerMenu from './HamburgerMenu.jsx';
 import { useRef } from 'react';
 import LoginModal from '../Components/Modals/LoginModal.jsx'
-
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 function MainPage() { 
@@ -17,7 +18,21 @@ function MainPage() {
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
 
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is logged in:", user);
+      setCurrentUser(user); // or set isLoggedIn(true)
     
+    } else {
+      console.log("No user is logged in");
+      setCurrentUser(null); // or set isLoggedIn(false)
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
 
 
