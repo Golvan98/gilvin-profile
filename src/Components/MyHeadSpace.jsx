@@ -38,7 +38,8 @@ function MyHeadSpace(){
      const [showLoginModal, setShowLoginModal] = useState(false);
       const openLoginModal = () => setShowLoginModal(true);
       const closeLoginModal = () => setShowLoginModal(false);
-
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
     
 
   // #region Create Task Handler
@@ -144,7 +145,15 @@ function MyHeadSpace(){
           setShowFlashMessage(false);
         } , 2000);
       } catch (error) {
-        console.error("Error updating", error);
+        if (error.code === "permission-denied") {
+        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowErrorMessage(true);
+        setTimeout(() => {
+          setShowErrorMessage(false);
+        }, 4000);
+        } else {
+          console.error("Failed to add project", error);
+        }
       }
     }
 
@@ -165,8 +174,16 @@ function MyHeadSpace(){
           setShowFlashMessage(false);
         } , 2000);
       } catch (error) {
-        console.error("Error updating", error);
-      }
+        if (error.code === "permission-denied") {
+        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowErrorMessage(true);
+        setTimeout(() => {
+          setShowErrorMessage(false);
+        }, 4000);
+        } else {
+          console.error("Failed to add project", error);
+        }
+        }
     }
 
     const handleReturnTask = async (taskId) => 
@@ -185,8 +202,16 @@ function MyHeadSpace(){
           setShowFlashMessage(false);
         } , 2000);
       } catch (error) {
-        console.error("Error updating", error);
-      }
+        if (error.code === "permission-denied") {
+        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowErrorMessage(true);
+        setTimeout(() => {
+          setShowErrorMessage(false);
+        }, 4000);
+        } else {
+          console.error("Failed to add project", error);
+        }
+        }
     }
 // #endregion
 
@@ -213,11 +238,6 @@ function MyHeadSpace(){
   const [showAddProjectModal, setShowAddProjectModal] = useState("");
   
   const handleCreateProjectSubmit =  async (createProject) => {
-
-    if (!auth.currentUser) {
-    console.log("Not authenticated");
-    return;
-  }
 
 
     createProject.preventDefault();
@@ -259,8 +279,16 @@ function MyHeadSpace(){
       } , 2000)
     } 
     catch (error){
-      console.log("failed to add project", error);
-    }  
+      if (error.code === "permission-denied") {
+      setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+      setShowErrorMessage(true);
+      setTimeout(() => {
+        setShowErrorMessage(false);
+      }, 4000);
+      } else {
+        console.error("Failed to add project", error);
+      }
+      }  
   }
 
   const handleAddProject = () => {
@@ -423,7 +451,15 @@ try {
   setTimeout ( () => {setShowFlashMessage(false)}, 2000);
   console.log("attempt for", projectClicked.projectName)
 } catch (error) {
-  console.error("unable to complete project", error);
+  if (error.code === "permission-denied") {
+    setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+    setShowErrorMessage(true);
+    setTimeout(() => {
+      setShowErrorMessage(false);
+    }, 4000);
+  } else {
+    console.error("Failed to add project", error);
+  }
 }
 }
 
@@ -441,7 +477,15 @@ try {
   setTimeout ( () => {setShowFlashMessage(false)}, 2000);
   console.log("attempt for", projectClicked.projectName)
 } catch (error) {
-  console.error("unable to complete project", error);
+  if (error.code === "permission-denied") {
+    setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+    setShowErrorMessage(true);
+    setTimeout(() => {
+      setShowErrorMessage(false);
+    }, 4000);
+  } else {
+    console.error("Failed to add project", error);
+  }
 }
 }
 
@@ -499,7 +543,15 @@ console.log(projectClicked.projectName);
         } , 2000);
         console.log(projectClicked.projectName);
       } catch (error) {
-        console.error("Error updating", error);
+        if (error.code === "permission-denied") {
+        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowErrorMessage(true);
+        setTimeout(() => {
+          setShowErrorMessage(false);
+        }, 4000);
+      } else {
+        console.error("Failed to add project", error);
+      }
   }
 }
 
@@ -618,7 +670,15 @@ const handleConfirmDelete = async(deleteTask) => {
       setShowFlashMessage(false);
     } , 2000);
   } catch (error) {
-    console.error("Failed to delete task:", error);
+    if (error.code === "permission-denied") {
+    setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+    setShowErrorMessage(true);
+    setTimeout(() => {
+      setShowErrorMessage(false);
+    }, 4000);
+    } else {
+      console.error("Failed to add project", error);
+    }
   }
 }
 // #endregion
@@ -799,6 +859,11 @@ const handleConfirmDelete = async(deleteTask) => {
         {showFlashMessage && (
           <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
             {flashMessage}
+          </div>
+        )}
+        {showErrorMessage && (
+          <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300">
+            {errorMessage}
           </div>
         )}
         <Footer/>
