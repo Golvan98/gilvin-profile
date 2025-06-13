@@ -9,7 +9,6 @@ import { firestore } from "../firebase.js"
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import { TrashIcon, ClipboardDocumentListIcon, PencilIcon, ChevronDownIcon, ChevronUpIcon, ChevronRightIcon, CheckIcon, ArrowPathIcon, ArrowUturnLeftIcon  } from '@heroicons/react/24/outline';
 
-
 function YourHeadSpace() 
 {
   const [expandedProjects, setExpandedProjects] = useState(new Set());
@@ -45,8 +44,7 @@ const [temporaryTasks, setTemporaryTasks] = useState(
     }, 1000);
   }
   return () => clearTimeout(timeout);
-}, [showFlashMessage]);
-
+  }, [showFlashMessage]);
 
   const openAddTaskModal = () => {
     setShowAddTaskModal(true);
@@ -55,16 +53,12 @@ const [temporaryTasks, setTemporaryTasks] = useState(
   const handleCloseAddTaskModal = () => {
     setShowAddTaskModal(false);
   }
-
   const taskNameRef = useRef();
- 
   const handleAddTaskSubmit = (e) => {
 
     let formErrors = {}
-
     const taskNameRefValue = taskNameRef.current.value.trim();
     e.preventDefault();
-
 
     if(taskNameRefValue.length == 0) {
       formErrors.name = "task must have a name"
@@ -99,12 +93,10 @@ const [temporaryTasks, setTemporaryTasks] = useState(
     }
   }
 
-
   const openEditTaskModal = (task) => {
     setShowEditTaskModal(true);
     setClickedTask(task);
   }
-
 
   const handleProjectClick = (project) => {
     setProjectClicked(project);
@@ -146,7 +138,6 @@ const [temporaryTasks, setTemporaryTasks] = useState(
     setTimeout( () => {
       setShowFlashMessage(false);
     } , 2000);
-
   }
 
   const handleUnCompleteTask  = (task) => {
@@ -166,8 +157,6 @@ const [temporaryTasks, setTemporaryTasks] = useState(
       setShowFlashMessage(false);
     } , 2000);
   }
-
-  
   
   const handleEditTaskSubmit  = (e) => {
     e.preventDefault();
@@ -583,13 +572,13 @@ const handleCreateProjectSubmit = async(e)  => {
               </p>
               
           </h2>
-          <section id="main article" className='w-4/5 bg-white text-back flex justify-center items-center text-center'> 
+          <section className='w-4/5 bg-white text-back  justify-center items-center text-center'> 
             <p className='mt-2'> Currently Viewing: {showInCompleteProjects ? (<span> Incomplete </span>) : (<span> Complete </span>)} Projects </p>
            </section>
-          <section id="main article" className='w-4/5 h-full mx-auto flex flex-col flex-wrap items-center justify-center bg-inherit bg-white overflow-auto text-white text-center'> 
+          <section id="main article" className='w-4/5 h-full mx-auto flex flex-wrap items-center justify-center bg-inherit bg-white overflow-y-auto text-white text-center'> 
              
-            <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2' > {/* comment: first-column-wrapper */} 
-                    <nav id="Projects" className={`h-full w-full h-full  items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md   `}> 
+            <article id="first-column-wrapper" className='flex-shrink-0 w-1/4 mx-2 h-5/6 my-12 lg:w-1/5  flex flex-col bg-indigo-300 rounded-md p-2'> {/* comment: first-column-wrapper */} 
+                    <nav id="Projects" className={`h-full w-full items-center justify-start overflow-y-auto bg-indigo-500 flex flex-col rounded-md`}> 
         
                       <aside className={`mt-10 w-full mb-2 font-bold  ${classes.secondTaskBox} flex flex-col items-center justify-center `}> 
                         <div className=" w-full flex justify-center mx-4"> 
@@ -690,7 +679,7 @@ const handleCreateProjectSubmit = async(e)  => {
 
                         <aside id="inProgressTasks" className="h-1/2 w-full  flex-1 flex-col items-start justify-start overflow-y-auto">
 
-                          <aside className='text-center w-full p-4 text-white flex justify-center items-center  '> 
+                          <div className='text-center w-full p-4 text-white flex justify-center items-center  '> 
                             <div className="w-1/3 ">  </div>
                             <div className="w-1/3 md:mr-8 xs:mr-1"> Tasks in Progress </div>
                         
@@ -722,7 +711,7 @@ const handleCreateProjectSubmit = async(e)  => {
                                   </form>
                                 </Modal>
                               )}
-                          </aside>
+                          </div>
                           
                           { projectClicked && (clickedProjectTasks.length > 0 ? renderIncompleteTasks(clickedProjectTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>) }
     
@@ -843,7 +832,5 @@ const handleCreateProjectSubmit = async(e)  => {
         </body>
     );
 }
-
-
 
 export default  YourHeadSpace;

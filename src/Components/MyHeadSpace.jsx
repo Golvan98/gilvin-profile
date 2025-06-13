@@ -13,9 +13,6 @@ import LoginModal from './Modals/LoginModal.jsx';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 
-
-
-
 function MyHeadSpace(){
 
     useEffect(() => {
@@ -72,8 +69,17 @@ function MyHeadSpace(){
       setTimeout( () => {
         setShowFlashMessage(false);
       } , 2000);
-      } catch (createTask) {
-      console.log(createTask);
+      } catch (error) {
+      if (error.code === "permission-denied") {
+        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowErrorMessage(true);
+        setShowModal(false);
+        setTimeout(() => {
+        setShowErrorMessage(false);
+        }, 4000);
+        } else {
+          console.error("Failed to add project", error);
+        }
       }
   
     }
@@ -147,6 +153,7 @@ function MyHeadSpace(){
       } catch (error) {
         if (error.code === "permission-denied") {
         setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowEditTaskModal(false);
         setShowErrorMessage(true);
         setTimeout(() => {
           setShowErrorMessage(false);
@@ -281,6 +288,7 @@ function MyHeadSpace(){
     catch (error){
       if (error.code === "permission-denied") {
       setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+      setShowAddProjectModal(false);
       setShowErrorMessage(true);
       setTimeout(() => {
         setShowErrorMessage(false);
@@ -453,6 +461,7 @@ try {
 } catch (error) {
   if (error.code === "permission-denied") {
     setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+    setShowEditProjectModal(false);
     setShowErrorMessage(true);
     setTimeout(() => {
       setShowErrorMessage(false);
@@ -479,6 +488,7 @@ try {
 } catch (error) {
   if (error.code === "permission-denied") {
     setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+    setShowEditProjectModal(false);
     setShowErrorMessage(true);
     setTimeout(() => {
       setShowErrorMessage(false);
@@ -545,6 +555,7 @@ console.log(projectClicked.projectName);
       } catch (error) {
         if (error.code === "permission-denied") {
         setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+        setShowEditProjectModal(false);
         setShowErrorMessage(true);
         setTimeout(() => {
           setShowErrorMessage(false);
@@ -672,6 +683,7 @@ const handleConfirmDelete = async(deleteTask) => {
   } catch (error) {
     if (error.code === "permission-denied") {
     setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
+    setShowDeleteModal(false);
     setShowErrorMessage(true);
     setTimeout(() => {
       setShowErrorMessage(false);
@@ -701,7 +713,7 @@ const handleConfirmDelete = async(deleteTask) => {
               
           </h2>
 
-          <section id="main article" className='w-4/5 bg-white text-back flex justify-center items-center text-center'> 
+          <section className='w-4/5 bg-white text-back flex justify-center items-center text-center'> 
             <p className='mt-2'> Currently Viewing: {showCompleteProjects ? (<span> Incomplete </span>) : (<span> Complete </span>)} Projects </p>
           </section>
 

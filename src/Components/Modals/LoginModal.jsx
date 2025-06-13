@@ -25,7 +25,7 @@ function LoginModal({ onClose }) {
       
       <p className="text-center font-bold text-sm xs:text-xs mb-4 xs:mt-12 px-2">
         The "myHeadSpace" CRUD app reflects my real-time development activity.
-        Signing in won't grant edit access to my projects, but you can explore
+        Signing in won't grant WRITE access to my projects, but you can explore
         the demo version <Link to="/yourHeadSpace" className="text-blue-700 underline">here</Link>.
       </p>
 
