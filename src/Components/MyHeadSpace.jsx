@@ -15,6 +15,20 @@ import { auth } from "../firebase";
 
 function MyHeadSpace(){
 
+  const activateAuthMessageError = () => {
+  setErrorMessage(
+  <>  
+     Hey there! 👋 You’re not authorized to edit Gilvin’s projects. 👉
+     <Link to="/yourHeadSpace" className="underline text-blue-500">Click here </Link>
+     to explore the demo version instead
+  </>
+  );
+  setShowErrorMessage(true);
+  setTimeout(() => {
+    setShowErrorMessage(false);
+  }, 4000);
+};
+
     useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -32,12 +46,11 @@ function MyHeadSpace(){
   return () => unsubscribe();
 }, []);
 
-     const [showLoginModal, setShowLoginModal] = useState(false);
-      const openLoginModal = () => setShowLoginModal(true);
-      const closeLoginModal = () => setShowLoginModal(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const openLoginModal = () => setShowLoginModal(true);
+    const closeLoginModal = () => setShowLoginModal(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showErrorMessage, setShowErrorMessage] = useState(false);
-    
 
   // #region Create Task Handler
     const taskNameRef = useRef();
@@ -71,24 +84,18 @@ function MyHeadSpace(){
       } , 2000);
       } catch (error) {
       if (error.code === "permission-denied") {
-        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-        setShowErrorMessage(true);
-        setShowModal(false);
-        setTimeout(() => {
-        setShowErrorMessage(false);
-        }, 4000);
+        activateAuthMessageError();
         } else {
           console.error("Failed to add project", error);
         }
       }
-  
     }
   
   const [showModal, setShowModal] = useState(false);
 
     const handleAddTaskClick = () => {
-      setErrors({ task: "", description: "" });
-      setShowModal(true);  // Show modal when the button is clicked
+    setErrors({ task: "", description: "" });
+    setShowModal(true);  // Show modal when the button is clicked
     };
     const handleCloseModal = () => {
       setShowModal(false);  // Close modal when clicked outside or a close button
@@ -152,12 +159,7 @@ function MyHeadSpace(){
         } , 2000);
       } catch (error) {
         if (error.code === "permission-denied") {
-        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-        setShowEditTaskModal(false);
-        setShowErrorMessage(true);
-        setTimeout(() => {
-          setShowErrorMessage(false);
-        }, 4000);
+        activateAuthMessageError();
         } else {
           console.error("Failed to add project", error);
         }
@@ -182,11 +184,7 @@ function MyHeadSpace(){
         } , 2000);
       } catch (error) {
         if (error.code === "permission-denied") {
-        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-        setShowErrorMessage(true);
-        setTimeout(() => {
-          setShowErrorMessage(false);
-        }, 4000);
+        activateAuthMessageError();
         } else {
           console.error("Failed to add project", error);
         }
@@ -210,11 +208,7 @@ function MyHeadSpace(){
         } , 2000);
       } catch (error) {
         if (error.code === "permission-denied") {
-        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-        setShowErrorMessage(true);
-        setTimeout(() => {
-          setShowErrorMessage(false);
-        }, 4000);
+        activateAuthMessageError();
         } else {
           console.error("Failed to add project", error);
         }
@@ -287,12 +281,7 @@ function MyHeadSpace(){
     } 
     catch (error){
       if (error.code === "permission-denied") {
-      setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-      setShowAddProjectModal(false);
-      setShowErrorMessage(true);
-      setTimeout(() => {
-        setShowErrorMessage(false);
-      }, 4000);
+      activateAuthMessageError();
       } else {
         console.error("Failed to add project", error);
       }
@@ -460,12 +449,7 @@ try {
   console.log("attempt for", projectClicked.projectName)
 } catch (error) {
   if (error.code === "permission-denied") {
-    setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-    setShowEditProjectModal(false);
-    setShowErrorMessage(true);
-    setTimeout(() => {
-      setShowErrorMessage(false);
-    }, 4000);
+    activateAuthMessageError();
   } else {
     console.error("Failed to add project", error);
   }
@@ -487,12 +471,7 @@ try {
   console.log("attempt for", projectClicked.projectName)
 } catch (error) {
   if (error.code === "permission-denied") {
-    setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-    setShowEditProjectModal(false);
-    setShowErrorMessage(true);
-    setTimeout(() => {
-      setShowErrorMessage(false);
-    }, 4000);
+    activateAuthMessageError();
   } else {
     console.error("Failed to add project", error);
   }
@@ -554,12 +533,7 @@ console.log(projectClicked.projectName);
         console.log(projectClicked.projectName);
       } catch (error) {
         if (error.code === "permission-denied") {
-        setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-        setShowEditProjectModal(false);
-        setShowErrorMessage(true);
-        setTimeout(() => {
-          setShowErrorMessage(false);
-        }, 4000);
+        activateAuthMessageError();
       } else {
         console.error("Failed to add project", error);
       }
@@ -682,12 +656,7 @@ const handleConfirmDelete = async(deleteTask) => {
     } , 2000);
   } catch (error) {
     if (error.code === "permission-denied") {
-    setErrorMessage("Unauthorized: Only Gilvin can perform this action.");
-    setShowDeleteModal(false);
-    setShowErrorMessage(true);
-    setTimeout(() => {
-      setShowErrorMessage(false);
-    }, 4000);
+    activateAuthMessageError();
     } else {
       console.error("Failed to add project", error);
     }
