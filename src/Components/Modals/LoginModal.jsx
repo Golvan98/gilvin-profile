@@ -19,11 +19,11 @@ function LoginModal({ onClose }) {
   };
 
   return (
-  <section className={`${classes.backdrop} text-lg xs:text-sm md:text-base lg:text-lg`}>
+<section className={`${classes.backdrop} text-lg xs:text-sm md:text-base lg:text-lg`}>
   <aside className={classes.modal}>
-    <div className="w-[90vw] max-w-md h-[25vh] bg-white p-4 xs:p-2 rounded-lg flex flex-col justify-between items-center overflow-y-auto">
+    <div className="w-[90vw] max-w-md h-[22vh] bg-white p-4 xs:p-2 rounded-lg flex flex-col items-center  overflow-y-auto">
       
-      <p className="text-center font-bold text-sm xs:text-xs mb-4 xs:mt-12 px-2">
+      <p className="text-center font-bold text-sm xs:text-xs mb-4 xs:mt-12 px-2 mt-8">
         The "myHeadSpace" CRUD app reflects my real-time development activity.
         Signing in won't grant WRITE access to my projects, but you can explore
         the demo version <Link to="/yourHeadSpace" className="text-blue-700 underline">here</Link>.
