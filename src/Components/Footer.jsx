@@ -6,14 +6,14 @@ function Footer()
 {
    
     return (
-        <footer id="footer" className={`min-h-[150px] flex items-center justify-between text-center mt-12  ${classes.smallScreenText} text-center  border-t border-gray-700`}>
+        <footer id="footer" className={`min-h-[150px] flex items-center justify-between text-center mt-12  ${classes.smallScreenText} text-center  border-t border-gray-700 text-white`}>
             
 
            
             <div className="w-1/3 h-full flex flex-col mt-12">
                 <p className="mt-2 h-1/4"> About</p>
 
-                <p className="h-3/4 w-full text-center"> Hello, my name is Gilvin Zalsos and I currently am an entry-level React Developer, I have different projects under my belt.
+                <p className="h-3/4 w-full text-center"> I have different projects under my belt.
                 Feel free to contact me in whatever medium you see fit </p>
             </div>
 
