@@ -13,6 +13,7 @@ import LoginModal from './Modals/LoginModal.jsx';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import AddProjectModal from './Modals/AddProjectModal.jsx';
+import EditProjectModal from './Modals/EditProjectModal.jsx';
 
 function MyHeadSpace(){
 
@@ -387,111 +388,17 @@ function MyHeadSpace(){
 const [showEditProjectModal, setShowEditProjectModal] = useState("");
 const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
 
-const handleCompleteProject = (project) => {
-  setProjectClicked(project)
-  const projectToCompleteRef = doc(firestore, "projects", projectClicked.id);
-  let Data = {
-    status: "complete"
-  }
-try {
-  updateDoc(projectToCompleteRef, Data);
-  setShowEditProjectModal(false);
-  setFlashMessage("project marked as complete");
-  setShowFlashMessage(true);
-  setTimeout ( () => {setShowFlashMessage(false)}, 2000);
-  console.log("attempt for", projectClicked.projectName)
-} catch (error) {
-  if (error.code === "permission-denied") {
-    activateAuthMessageError();
-  } else {
-    console.error("Failed to add project", error);
-  }
-}
-}
-
-const handleUndoCompleteProject = (project) => {
-  setProjectClicked(project)
-  const projectToCompleteRef = doc(firestore, "projects", projectClicked.id);
-  let Data = {
-    status: "incomplete"
-  }
-try {
-  updateDoc(projectToCompleteRef, Data);
-  setShowEditProjectModal(false);
-  setFlashMessage("project marked as complete");
-  setShowFlashMessage(true);
-  setTimeout ( () => {setShowFlashMessage(false)}, 2000);
-  console.log("attempt for", projectClicked.projectName)
-} catch (error) {
-  if (error.code === "permission-denied") {
-    activateAuthMessageError();
-  } else {
-    console.error("Failed to add project", error);
-  }
-}
-}
-
 const handleEditProjectClick = (project) => {
   setProjectClicked(project)
   setShowEditProjectModal(true);
+  console.log("hello");
 }
 
 const closeEditProjectModal = () =>{
   setShowEditProjectModal(false);
 }
 
-const handleConfirmEditProject = async (editProject) =>{
-editProject.preventDefault();
-console.log(projectClicked.projectName);
 
-  let formErrors = {};
-
-  let projectEditData = {
-    projectName: projectNameRef .current.value,
-    projectDescription: projectDescriptionRef .current.value,
-    projectCategory:projectCategoryRef .current.value,
-  }
-
-  let projectDescriptionValue = projectDescriptionRef.current.value.trim();
-  let projectNameValue = projectNameRef.current.value.trim();
-
-  if(projectDescriptionValue.length > 100){
-    formErrors.description = "project description must not exceed 100 characters"
-  }
-  if(projectNameValue.length > 40){
-      formErrors.name = "project must not exceed 40 characters"
-    }
-  if(projectNameValue.length <1 ){
-    formErrors.name = "project must have a name"
-  }
-  
-  if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return; // stop submission
-    }
-
-  try 
-  {
-
- const projectToEditRef = doc(firestore, "projects", projectClicked.id);
-        await updateDoc(projectToEditRef, projectEditData)
-        console.log("Document updated");
-        setShowEditProjectModal(false);
-        setFlashMessage("Project Edited successfully");
-        setShowFlashMessage(true);
-        setErrors("");
-        setTimeout( () => {
-          setShowFlashMessage(false);
-        } , 2000);
-        console.log(projectClicked.projectName);
-      } catch (error) {
-        if (error.code === "permission-denied") {
-        activateAuthMessageError();
-      } else {
-        console.error("Failed to add project", error);
-      }
-  }
-}
 
 // #endregion
 
@@ -800,54 +707,11 @@ const handleConfirmDelete = async(deleteTask) => {
         )}
 
         { showEditProjectModal &&  (
-                <Modal onClose={closeEditProjectModal}>
-                  <form onSubmit={handleConfirmEditProject} className="w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white text-indigo-700 p-6 rounded-lg space-y-6">
-                    
-                    <div className="text-center">
-                      <p className="text-lg font-bold text-black">Edit Project</p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium">Project Name</label>
-                      <input ref={projectNameRef} defaultValue={projectClicked.projectName} type="text" className="w-full border border-indigo-700 px-3 py-2 text-sm rounded" />
-                      {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium">Project Description</label>
-                      <textarea ref={projectDescriptionRef} defaultValue={projectClicked.projectDescription} className="w-full border border-indigo-700 px-3 py-2 text-sm rounded resize-none h-24"  />
-                      {errors.description && (
-                        <span className="text-red-500 text-sm">{errors.description}</span>
-                      )}
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="block text-sm font-medium">Project Category</label>
-                      <select ref={projectCategoryRef} defaultValue={projectClicked.projectCategory} className="w-full border border-indigo-700 px-3 py-2 text-sm rounded" >
-                        <option value="personal">Personal</option>
-                        <option value="gaming">Gaming</option>
-                        <option value="work">Work</option>
-                        <option value="others">Others</option>
-                      </select>
-                    </div>
-
-                    <div className="flex justify-between pt-4">
-                      <button type="submit"  className="w-1/2 bg-indigo-700 text-white text-xs py-2 rounded mr-2"   >
-                        Edit Project
-                      </button>
-                      {showCompleteProjects ? (
-                        <button onClick={() => handleCompleteProject(projectClicked.id)} type="button"className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
-                          Mark as Complete
-                        </button>
-                      ) : (
-                        <button  onClick={() => handleUndoCompleteProject(projectClicked.id)} type="button" className="w-1/2 bg-green-700 text-white text-xs py-2 rounded ml-2" >
-                          Mark as Incomplete
-                        </button>
-                      )}
-                    </div>
-                  </form>
-                </Modal>
-
+                <EditProjectModal projectClicked={projectClicked} closeEditProjectModal={closeEditProjectModal} projectNameRef={projectNameRef} projectDescriptionRef={projectDescriptionRef}  projectCategoryRef={projectCategoryRef}
+                            projectRef={projectRef} activateAuthMessageError={activateAuthMessageError} showCompleteProjects={showCompleteProjects}
+                            clickedCategory={clickedCategory} setShowEditProjectModal={setShowEditProjectModal}  handleEditProjectClick={handleEditProjectClick}
+                            flashMessage={flashMessage} setFlashMessage={setFlashMessage} showFlashMessage={showFlashMessage} setShowFlashMessage={setShowFlashMessage} setProjectClicked={setProjectClicked} 
+                />
         )}
         { showDeleteProjectModal && (
               <Modal onClose={closeDeleteProjectModal}>
