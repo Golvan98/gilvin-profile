@@ -1,11 +1,9 @@
-
 import classes from '../Modal.module.css'
 import React, { useState, useEffect } from 'react';
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
 import { firestore } from "../../firebase.js"
 
-
- function EditProjectModal ({closeEditProjectModal, projectNameRef, projectDescriptionRef, projectClicked,
+function EditProjectModal ({closeEditProjectModal, projectNameRef, projectDescriptionRef, projectClicked,
     projectCategoryRef, projectRef, activateAuthMessageError, clickedCategory, handleCloseAddProjectModal, 
     setShowEditProjectModal, flashMessage, setFlashMessage, showFlashMessage, setShowFlashMessage, showCompleteProjects, showEditProjectModal, handleEditProjectClick, setProjectClicked}) 
 {
@@ -55,8 +53,6 @@ try {
 }
 }
 
-
-
 const handleConfirmEditProject = async (e) =>{
 e.preventDefault();
 
@@ -85,7 +81,6 @@ e.preventDefault();
       setErrors(formErrors);
       return; // stop submission
     }
-
   try 
   {
 
@@ -160,7 +155,5 @@ return (
 </div>
 </section>
 )
-
 }
-
 export default EditProjectModal;

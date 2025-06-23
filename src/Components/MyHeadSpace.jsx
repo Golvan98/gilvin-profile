@@ -14,6 +14,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import AddProjectModal from './Modals/AddProjectModal.jsx';
 import EditProjectModal from './Modals/EditProjectModal.jsx';
+import CreateTaskModal from './Modals/CreateTaskModal.jsx';
 
 function MyHeadSpace(){
 
@@ -58,40 +59,6 @@ function MyHeadSpace(){
     const taskNameRef = useRef();
     const taskStatusRef = useRef();
 
-    const handleTaskCreate  = async (createTask) => 
-    {
-      createTask.preventDefault();
-      const taskRef = collection(firestore, "projects", projectClicked.id, "tasks");
-      let formErrors = {};
-      const taskValue = taskNameRef.current.value.trim();
-      if (taskValue.length < 3) {
-        formErrors.name = "Task name must be at least 3 characters long.";
-      }
-      if (Object.keys(formErrors).length > 0) {
-        setErrors(formErrors);
-        return; // stop submission
-      }
-      let taskData = {
-        name: taskNameRef.current.value,
-        status: "incomplete",
-      };
-
-      try {
-      await addDoc (taskRef, taskData);
-      setShowModal(false);
-      setFlashMessage("Task successfully created");
-      setShowFlashMessage(true);
-      setTimeout( () => {
-        setShowFlashMessage(false);
-      } , 2000);
-      } catch (error) {
-      if (error.code === "permission-denied") {
-        activateAuthMessageError();
-        } else {
-          console.error("Failed to add project", error);
-        }
-      }
-    }
   
   const [showModal, setShowModal] = useState(false);
 
@@ -238,7 +205,7 @@ function MyHeadSpace(){
   const projectCategoryRef = useRef();
   const projectDescriptionRef = useRef();
   const projectStatusRef = useRef();
-  const [showAddProjectModal, setShowAddProjectModal] = useState("");
+  const [showAddProjectModal, setShowAddProjectModal] = useState(false);
   
 
 
@@ -383,7 +350,6 @@ function MyHeadSpace(){
 };
 
    //#endregion
-
 // #region Edit Project
 const [showEditProjectModal, setShowEditProjectModal] = useState("");
 const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
@@ -397,8 +363,6 @@ const handleEditProjectClick = (project) => {
 const closeEditProjectModal = () =>{
   setShowEditProjectModal(false);
 }
-
-
 
 // #endregion
 
@@ -460,10 +424,9 @@ const closeEditProjectModal = () =>{
                             <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                           </p>
-                        
                       </div>
-          </aside>
-          </nav>
+        </aside>
+        </nav>
       ));
     };
    
@@ -625,25 +588,9 @@ const handleConfirmDelete = async(deleteTask) => {
                               }
                                 {/* comment: Conditional rendering of Modal */}
                                 {showModal && (
-                                <Modal onClose={handleCloseModal}>
-                                  <form onSubmit={handleTaskCreate} className="min-w-[20vw] min-h-[20vh] flex flex-col items-center justify-start rounded-sm  text-black">
-                                    
-                                    <div className="mt-4 font-bold text-lg">  Create Task </div>
-                            
-                                    <div className=" mx-auto p-2 rounded-sm mt-4 flex flex-col w-full items-start justify-center "> 
-                                  
-                                      <span className='text-center w-full'> <label> Task Name </label> </span>
-                                      <span className="w-full flex items-center justify-center"> <input type="text" ref={taskNameRef} placeholder="enter task name" className="border-2 border-black w-1/2 bg-white text-black placeholder-gray-500 p-1"/> </span>
-                                      <span className="text-red-500 text-sm">{errors.name && errors.name} </span>
-                                    
-                                    </div> 
-
-                                    <div className="p-2 rounded-sm mt-4 flex  w-full items-start justify-center"> 
-                                      <button className="bg-white border border-black text-indigo-700">Create Task</button>
-                                    </div>
-                                                            
-                                  </form>
-                                </Modal>
+                                <CreateTaskModal taskNameRef={taskNameRef} taskStatusRef={taskStatusRef} onClose={handleCloseModal} errors={errors} setErrors={setErrors} projectClicked={projectClicked}
+                                flashMessage={flashMessage} setShowFlashMessage={setShowFlashMessage} showFlashMessage={showFlashMessage} showModal={showModal} setShowModal={setShowModal} setFlashMessage={setFlashMessage}
+                                activateAuthMessageError={activateAuthMessageError}/>
                               )}
                           </aside>
                           

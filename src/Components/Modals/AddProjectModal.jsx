@@ -1,6 +1,8 @@
 import classes from '../Modal.module.css'
 import React, { useState, useEffect } from 'react';
 import { addDoc,collection, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "@firebase/firestore"
+import { firestore } from "../../firebase.js"
+
 
 function AddProjectModal ( { onClose, projectNameRef, projectDescriptionRef, projectCategoryRef, setShowAddProjectModal, clickedCategory, activateAuthMessageError, projectRef, flashMessage, setFlashMessage, showFlashMessage, setShowFlashMessage }) {
 const [errors, setErrors] = useState({});
@@ -90,12 +92,9 @@ return (
                 </div>
         </div>
 </form>
-
 </section>
 
 )
-
-
 }
 
 export default AddProjectModal;
