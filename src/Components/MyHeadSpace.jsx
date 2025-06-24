@@ -16,6 +16,7 @@ import AddProjectModal from './Modals/AddProjectModal.jsx';
 import EditProjectModal from './Modals/EditProjectModal.jsx';
 import CreateTaskModal from './Modals/CreateTaskModal.jsx';
 import EditTaskModal from './Modals/EditTaskModal.jsx';
+import DeleteProjectModal from './Modals/DeleteProjectModal.jsx';
 
 function MyHeadSpace(){
 
@@ -337,22 +338,7 @@ const closeEditProjectModal = () =>{
     setProjectClicked(project)
     setShowDeleteProjectModal(true);
   }
- const handleConfirmProjectDelete = async (deleteProject) => 
-  {
-   const projectToDeleteRef = doc(firestore, "projects", projectClicked.id);;
-  deleteProject.preventDefault();
-
-  try{
-    await deleteDoc(projectToDeleteRef);
-    setShowDeleteProjectModal(false);
-    setFlashMessage(`project ${projectClicked.projectName} deleted`);
-    setShowFlashMessage(true);
-    setTimeout( () => { setShowFlashMessage(false); } , 2000);
-    
-  } catch  (error) {
-    console.log("error deleting project", error);
-  }
- }
+ 
 
 // #endregion
 
@@ -611,17 +597,9 @@ const handleConfirmDelete = async(deleteTask) => {
                 />
         )}
         { showDeleteProjectModal && (
-              <Modal onClose={closeDeleteProjectModal}>
-                <form onSubmit={handleConfirmProjectDelete}  className="w-[20vw] h-[25vh] flex flex-col items-center justify-center text-black ">
-                  <div className="w-full h-1/2 flex items-center justify-center mx-4  text-center"> 
-                    <p className="mx-4 md:mt-2 md:text-[5px] lg:text-[12px] py-1"> Are you sure you want to delete project {projectClicked.projectName}? </p>
-                  </div>
-                  <div className="w-full  flex justify-center items-center">    
-                      <button type="submit" className="bg-red-300 ml-12 mr-2 "> Yes</button>
-                      <button onClick={closeDeleteProjectModal}className="bg-green-300 mr-12 ml-2 "> No</button>
-                    </div>
-                </form>
-              </Modal>
+            <DeleteProjectModal closeDeleteProjectModal={closeDeleteProjectModal} projectClicked={projectClicked} setFlashMessage={setFlashMessage}
+             showFlashMessage={showFlashMessage}  activateAuthMessageError={activateAuthMessageError} setShowDeleteProjectModal={setShowDeleteProjectModal}     
+             setShowFlashMessage={setShowFlashMessage} />
         )}
         </body>
     );
