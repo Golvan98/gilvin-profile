@@ -37,7 +37,7 @@ function ThirdSection ()
                     </p>
 
                     <p className="mt-2">
-                    Test it out <Link to={"/myHeadSpace"} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline hover:text-blue-700">here</Link>
+                    Test it out <Link to="/myHeadSpace" className="text-blue-500 underline hover:text-blue-700">here</Link>.
                     </p>
 
 
