@@ -1,4 +1,5 @@
 import classes from  './ThirdSection.module.css';
+import { Link } from 'react-router-dom';
 
 
 function ThirdSection ()
@@ -36,7 +37,7 @@ function ThirdSection ()
                     </p>
 
                     <p className="mt-2">
-                    Test it out <a href="https://gilvin-profile.vercel.app/myHeadSpace" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline hover:text-blue-700">here</a>
+                    Test it out <Link to={"/myHeadSpace"} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline hover:text-blue-700">here</Link>
                     </p>
 
 
