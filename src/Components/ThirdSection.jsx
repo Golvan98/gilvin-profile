@@ -19,6 +19,40 @@ function ThirdSection ()
                     {/* Image Section */}
                     <article className="w-1/2 flex justify-center p-4">
                     <img 
+                        src="https://i.imgur.com/cKJsfT8.png"  
+                        className="w-full max-w-[768px] h-auto object-contain"
+                        alt="Project Screenshot"
+                    />
+                    </article>
+
+                    {/* Text Section */}
+                    <article className="w-1/2 flex flex-col justify-center 0 text-center p-6">
+                    <p className=" w-full py-2 text-xl font-bold max-[768px]:text-xs"> myHeadSpace  </p>
+
+                    <p className={`w-full text-xl leading-relaxed mt-4 ${classes.smallScreenText}`}>
+                        myHeadSpace is a personal productivity web app I built to showcase my skills in React and Firebase. 
+                        It allows users to create, organize, and manage categorized projects and tasks in real time. 
+                        The app features CRUD functionality, responsive UI, and live project updates using Firebase Firestore
+                         — giving recruiters a live demo of my frontend and backend integration skills
+                    </p>
+
+                    <p className={`w-full flex justify-center items-center mt-6 ${classes.smallScreenText}`}>
+                        <a href="https://github.com/Golvan98/gilvin-profile" target="_blank" className="bg-white text-black p-2 rounded-md shadow-md hover:bg-gray-200 transition">
+                        View Code Here
+                        </a>
+                    </p>
+                    </article>
+                </aside>
+            </figure>
+
+            <figure className="w-full text-2xl mt-12">
+                {/* Section Title */}
+
+                {/* Project Section */}
+                <aside id="projectSection" className="flex justify-center min-h-[400px]">
+                    {/* Image Section */}
+                    <article className="w-1/2 flex justify-center p-4">
+                    <img 
                         src="https://i.imgur.com/3pUhHUo.png"  
                         className="w-full max-w-[768px] h-auto object-contain"
                         alt="Project Screenshot"
@@ -27,7 +61,7 @@ function ThirdSection ()
 
                     {/* Text Section */}
                     <article className="w-1/2 flex flex-col justify-center 0 text-center p-6">
-                    <p className=" w-full py-2 text-xl font-bold max-[768px]:text-xs">Needs Assessment Survey</p>
+                    <p className=" w-full py-2 text-xl font-bold max-[768px]:text-xs"> Automated Needs Assessment Survey</p>
 
                     <p className={`w-full text-xl leading-relaxed mt-4 ${classes.smallScreenText}`}>
                         The Needs Assessment Survey was my college project aimed at automating school counselors' 
@@ -43,7 +77,6 @@ function ThirdSection ()
                     </article>
                 </aside>
             </figure>
-
 
 
            <figure className="w-full text-2xl mt-24">

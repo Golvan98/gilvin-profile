@@ -69,10 +69,6 @@ function MainPage() {
 
           <div  id="shit" className="h-1/3 flex items-center justify-center text-black "> 
           
-            
-          
-         
-      
           </div>
 
           <div className="h-auto flex items-center justify-center "> 
@@ -80,12 +76,11 @@ function MainPage() {
           you need to know (both personal and professional) about me.  </p>
           </div>
 
-
         </aside>
 
 
         <aside className="w-1/2 h-full flex items-center justify-center ">
-        <div className="w-auto h-1/2 rounded-lg flex items-center justify-center bg-red-300">
+        <div className="w-auto h-1/2 rounded-lg flex items-center justify-center bg-white">
               <img src="https://i.imgur.com/OWZxfoV.jpeg" className="object-contain w-full h-full" alt="Example" />  
               </div> 
         </aside>
@@ -94,7 +89,7 @@ function MainPage() {
       </article>
 
 
-         <SecondSection/> 
+        <SecondSection/> 
         <ThirdSection/>
        
          <Footer/> 

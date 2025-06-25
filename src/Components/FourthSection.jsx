@@ -5,7 +5,7 @@ function ThirdSection ()
 {
 
     return (
-        <section id="section1" className="w-auto text-white flex flex-col ">
+            <section id="section1" className="w-auto text-white flex flex-col ">
            
 
            <figure className="w-full text-2xl mt-12">
@@ -41,6 +41,7 @@ function ThirdSection ()
                         </a>
                     </p>
                     </article>
+                    
                 </aside>
             </figure>
 
