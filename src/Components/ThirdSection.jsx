@@ -29,12 +29,16 @@ function ThirdSection ()
                     <article className="w-1/2 flex flex-col justify-center 0 text-center p-6">
                     <p className=" w-full py-2 text-xl font-bold max-[768px]:text-xs"> myHeadSpace  </p>
 
-                    <p className={`w-full text-xl leading-relaxed mt-4 ${classes.smallScreenText}`}>
-                        myHeadSpace is a personal productivity web app I built to showcase my skills in React and Firebase. 
-                        It allows users to create, organize, and manage categorized projects and tasks in real time. 
-                        The app features CRUD functionality, responsive UI, and live project updates using Firebase Firestore
-                         — giving recruiters a live demo of my frontend and backend integration skills
+                    <p className="text-base leading-relaxed mt-4">
+                    The Needs Assessment Survey was my college project aimed at automating school counselors' 
+                    long-standing mental health assessments. I used PHP & a live MySQL database to collect 
+                    student inputs and visualize demographic insights through pie charts and graphs.
                     </p>
+
+                    <p className="mt-2">
+                    Test it out <a href="https://gilvin-profile.vercel.app/myHeadSpace" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline hover:text-blue-700">here</a>
+                    </p>
+
 
                     <p className={`w-full flex justify-center items-center mt-6 ${classes.smallScreenText}`}>
                         <a href="https://github.com/Golvan98/gilvin-profile" target="_blank" className="bg-white text-black p-2 rounded-md shadow-md hover:bg-gray-200 transition">
