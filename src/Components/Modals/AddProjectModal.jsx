@@ -55,7 +55,8 @@ const handleCreateProjectSubmit =  async (createProject) => {
   }
 
 return (
-<section className={`${classes.backdrop}`}>
+<section className={`${classes.backdrop}`} onClick={onClose}>
+<aside onClick={(e) => e.stopPropagation()}>
 <form onSubmit={handleCreateProjectSubmit} className={`w-[90vw] max-w-lg h-[50vh] overflow-y-auto ${classes.modal} bg-white flex flex-col items-center justify-center`}>
                                     {/* Close Button */}
     <aside className="flex flex-col  w-full"> 
@@ -92,6 +93,7 @@ return (
                 </div>
         </div>
 </form>
+</aside>
 </section>
 
 )

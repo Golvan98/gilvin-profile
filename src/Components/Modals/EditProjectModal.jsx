@@ -105,9 +105,10 @@ e.preventDefault();
 }
 
 return (
-<section className={`${classes.backdrop}`} onClick={closeEditProjectModal}>
-<div onClick={(e) => e.stopPropagation()}>
-    <form onSubmit={handleConfirmEditProject} className={` ${classes.modal} w-[90vw] max-w-lg h-[50vh] overflow-y-auto bg-white text-indigo-700 p-6 rounded-lg space-y-6`}>
+
+<section className={`${classes.backdrop} `} onClick={closeEditProjectModal}>
+<div onClick={(e) => e.stopPropagation()} >
+    <form onSubmit={handleConfirmEditProject} className={` ${classes.modal} w-[90vw] max-w-lg h-[50vh] text-indigo-700 p-6 rounded-lg space-y-6 overflow-y-auto`}>
                     
         <div className="text-center">
             <p className="text-lg font-bold text-black">Edit Project</p>
