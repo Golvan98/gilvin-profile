@@ -31,9 +31,7 @@ function ThirdSection ()
                     <p className=" w-full py-2 text-xl font-bold max-[768px]:text-xs"> myHeadSpace  </p>
 
                     <p className="text-base leading-relaxed mt-4">
-                    The Needs Assessment Survey was my college project aimed at automating school counselors' 
-                    long-standing mental health assessments. I used PHP & a live MySQL database to collect 
-                    student inputs and visualize demographic insights through pie charts and graphs.
+                    myHeadSpace is a personal productivity web app I built using React and Firebase. It lets me create, categorize, and manage projects and tasks in real time. I implemented full CRUD functionality, a responsive UI, and live updates through Firebase Firestore — giving recruiters a transparent view of my current development pipeline.
                     </p>
 
                     <p className="mt-2">
