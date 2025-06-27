@@ -390,7 +390,6 @@ const closeEditProjectModal = () =>{
                             <CheckIcon onClick={ () => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
                           </p>
-                        
                       </div>
           </aside>
           </nav>
@@ -454,16 +453,42 @@ const handleCloseDeleteTaskModal = () =>{
                     <section id="categoryContainer" className={`h-full w-full flex-col items-center text-indigo-900  justify-center `}> 
 
                       <div id="personal" className="flex flex-col w-full flex items-center justify-center">
-                            <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handlePersonalClick}> Personal </button>
+                            <button 
+                             className={`${ clickedCategory === "personal"
+                                ? "bg-indigo-700 text-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                : "bg-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                } ${classes.smallCategorySetting} ${classes.bigCategorySetting}`}
+                                      onClick={handlePersonalClick}
+                                > Personal 
+                            </button>
+
                       </div>    
                       <div id="work" className="flex flex-col w-full flex items-center justify-center mt-3">
-                            <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleWorkClick}> Work </button>
+                            <button  className={`${ clickedCategory === "work"
+                                     ? "bg-indigo-700 text-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                     : "bg-white h-full  mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                     } ${classes.smallCategorySetting} ${classes.bigCategorySetting}`}
+                                     onClick={handleWorkClick}
+                                     > Work 
+                            </button>
                       </div>             
                       <div id="gaming" className="flex flex-col w-full flex items-center justify-center mt-3">
-                            <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleGamingClick}> Gaming </button>
+                            <button  className={`${ clickedCategory === "gaming"
+                                     ? "bg-indigo-700 text-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                     : "bg-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                     } ${classes.smallCategorySetting} ${classes.bigCategorySetting}`}
+                                     onClick={handleGamingClick}
+                                     > Gaming 
+                            </button>
                       </div> 
                       <div id="others" className="flex flex-col w-full flex items-center justify-center mt-3">
-                            <button className={`w-2/3 items-center justify-center text-center ${classes.smallCategorySetting} ${classes.bigCategorySetting} bg-white h-full hover:bg-gray-300  mx-2 rounded-lg`} onClick={handleOthersClick}> Others </button>
+                            <button  className={`${ clickedCategory === "others"
+                                     ? "bg-indigo-700 text-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                     : "bg-white h-full mx-2 rounded-lg w-2/3 items-center justify-center text-center"
+                                     } ${classes.smallCategorySetting} ${classes.bigCategorySetting}`}
+                                     onClick={handleOthersClick}
+                                     > Others 
+                            </button>
                       </div> 
 
                     </section>
