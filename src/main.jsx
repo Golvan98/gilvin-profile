@@ -7,9 +7,7 @@ import ReactDOM from 'react-dom/client';
 import {RouterProvider, createBrowserRouter} from 'react-router-dom';
 import MyHeadSpace from './Components/MyHeadSpace.jsx';
 import YourHeadSpace from './Components/YourHeadSpace.jsx';
-
-
-
+import TestPage from './Components/TestPage.jsx';
 
 
 
@@ -17,7 +15,8 @@ import YourHeadSpace from './Components/YourHeadSpace.jsx';
 const router = createBrowserRouter([
   { path: '/', element: <App/>},
   { path: '/myHeadSpace', element:<MyHeadSpace/>},
-  { path: '/yourHeadSpace', element: <YourHeadSpace/>}
+  { path: '/yourHeadSpace', element: <YourHeadSpace/>},
+  {path: '/testpage', element: <TestPage/>}
 ]);
 
 createRoot(document.getElementById('root')).render(
