@@ -365,70 +365,90 @@ const closeEditProjectModal = () =>{
     }, [projectClicked]);
 
     const renderCompleteTasks = (taskList) => {
-      return taskList.filter(task => task.status === "complete").map(task => (
-        <nav className='w-full flex'>
-        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
-                      <div className='w-full flex'>
-                          <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center  sm:text-xs mx-2'>
-                          <span className=''> {task.name} </span>
-                          { task.dateCompleted && (<span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start  sm:text-xs text-gray-600'>  Date Completed:
-                          {task.dateCompleted.toDate().toLocaleString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                          </span>) }
-                          </p>
-                          <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
-                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
-                            <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
-                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                          </span>
-                           
-                      </div>
+  return taskList
+    .filter(task => task.status === "complete")
+    .sort((a, b) => {
+      if (!a.dateCompleted || !b.dateCompleted) return 0;
+      return b.dateCompleted.toDate() - a.dateCompleted.toDate(); // descending
+    })
+    .map(task => (
+      <nav className='w-full flex' key={task.id}>
+        <aside className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0">
+          <div className='w-full flex'>
+            <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center sm:text-xs mx-2'>
+              <span>{task.name}</span>
+
+              {task.dateCompleted && (
+                <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
+                  Date Completed:{" "}
+                  {task.dateCompleted.toDate().toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
+            </p>
+
+            <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center'> 
+              <PencilIcon onClick={() => handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
+              <ArrowPathIcon onClick={() => handleReturnTask(task)} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
+              <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+            </span>
+          </div>
         </aside>
-        </nav>
-      ));
-    };
+      </nav>
+    ));
+};
+
    
-    const renderIncompleteTasks = (taskList) => {
-      return taskList.filter(task => task.status === "incomplete").map(task => (
-        <nav className='w-full flex'>
-        <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
-                      <div className='w-full flex'>
-                          <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center  sm:text-xs mx-2'>
-                          <span className=''> {task.name} </span>
-                         {(task.dateReturned || task.dateCreated) && (
-                        <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
-                          
-                          {(task.dateReturned || task.dateCreated) && (
-                          <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
-                            {task.dateReturned ? "Date Returned From Complete:" : "Date Completed:"}{" "}
-                            {(task.dateReturned ?? task.dateCreated).toDate().toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
-                          )}
-                          
-                        </span>
-                         )}
-                          </p>
-                          <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
-                            <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
-                            <CheckIcon onClick={ () => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
-                            <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                          </span>
-                      </div>
-          </aside>
-          </nav>
-      ));
-    };
+  const renderIncompleteTasks = (taskList) => {
+  
+    return taskList
+    .filter(task => task.status === "incomplete")
+    .sort((a, b) => {
+      const aDate = a.dateReturned ?? a.dateCreated;
+      const bDate = b.dateReturned ?? b.dateCreated;
+
+      // Fallback if either date is missing
+      if (!aDate || !bDate) return 0;
+
+      return bDate.toDate() - aDate.toDate(); // descending order
+    })
+    .map(task => (
+      <nav className='w-full flex' key={task.id}>
+        <aside className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0">  
+          <div className='w-full flex'>
+            <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center sm:text-xs mx-2'>
+              <span>{task.name}</span>
+
+              {(task.dateReturned || task.dateCreated) && (
+                <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
+                  {task.dateReturned ? "Date Marked as Incomplete:" : "Date Completed:"}{" "}
+                  {(task.dateReturned ?? task.dateCreated).toDate().toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
+            </p>
+
+            <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center'> 
+              <PencilIcon onClick={() => handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
+              <CheckIcon onClick={() => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
+              <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
+            </span>
+          </div>
+        </aside>
+      </nav>
+    ));
+};
+
     // #endregion
     
 // #region Delete Task Handler
