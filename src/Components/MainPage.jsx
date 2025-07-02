@@ -67,7 +67,7 @@ function MainPage() {
 
         <aside className="flex flex-col justify justify-start w-1/2 items-center gap-12">
 
-          <div  id="shit" className="h-1/3 flex items-center justify-center text-black "> 
+          <div  className="h-1/3 flex items-center justify-center text-black "> 
           
           </div>
 

@@ -23,6 +23,7 @@ const handleTaskCreate  = async (createTask) =>
       let taskData = {
         name: taskNameRef.current.value,
         status: "incomplete",
+        dateCreated: new Date()
       };
 
       try {

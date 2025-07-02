@@ -105,7 +105,8 @@ function MyHeadSpace(){
     {
       setClickedTask(taskId);
       let settleTask = {
-        status: "complete"
+        status: "complete",
+        dateCompleted: new Date()
       }
       try {
         const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
@@ -130,7 +131,8 @@ function MyHeadSpace(){
     {
       setClickedTask(taskId);
       let returnTask = {
-      status: "incomplete"
+      status: "incomplete",
+      dateReturned: new Date()
       }
       try {
         const taskEditRef = doc(firestore, "projects", projectClicked.id, "tasks", taskId.id);
@@ -367,12 +369,24 @@ const closeEditProjectModal = () =>{
         <nav className='w-full flex'>
         <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
                       <div className='w-full flex'>
-                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
-                          <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
+                          <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center  sm:text-xs mx-2'>
+                          <span className=''> {task.name} </span>
+                          { task.dateCompleted && (<span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start  sm:text-xs text-gray-600'>  Date Completed:
+                          {task.dateCompleted.toDate().toLocaleString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                          </span>) }
+                          </p>
+                          <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
                             <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
                             <ArrowPathIcon onClick={ () => handleReturnTask(task)} className='w-1/3 text-blue-500 hover:cursor-pointer'/>
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                          </p>
+                          </span>
+                           
                       </div>
         </aside>
         </nav>
@@ -384,12 +398,32 @@ const closeEditProjectModal = () =>{
         <nav className='w-full flex'>
         <aside key={task.id} className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0 xs:p-0 ">  
                       <div className='w-full flex'>
-                          <p className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-center  sm:text-xs mx-2'> {task.name} </p>
-                          <p className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
+                          <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center  sm:text-xs mx-2'>
+                          <span className=''> {task.name} </span>
+                         {(task.dateReturned || task.dateCreated) && (
+                        <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
+                          
+                          {(task.dateReturned || task.dateCreated) && (
+                          <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
+                            {task.dateReturned ? "Date Returned From Complete:" : "Date Completed:"}{" "}
+                            {(task.dateReturned ?? task.dateCreated).toDate().toLocaleString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                          )}
+                          
+                        </span>
+                         )}
+                          </p>
+                          <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center '> 
                             <PencilIcon  onClick={ ()=> handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
                             <CheckIcon onClick={ () => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
                             <TrashIcon onClick={() => handleDeleteTaskClick(task)} className="w-1/3 font-bold text-red-500 hover:text-red-700 cursor-pointer"/>
-                          </p>
+                          </span>
                       </div>
           </aside>
           </nav>
@@ -553,7 +587,7 @@ const handleCloseDeleteTaskModal = () =>{
                         </aside>
 
                         <aside id="completeTasks" className="h-1/2 w-full flex  flex-1 flex-col items-start justify-start overflow-y-auto bg-indigo-500">
-                          <aside className='text-center w-full p-4 text-white '> Tasks Completed </aside>
+                          <aside className='text-center w-full p-4 text-white flex flex-col '> Tasks Completed </aside>
                               
                           {projectClicked && (firebaseTasks.length > 0 ? renderCompleteTasks(firebaseTasks) : <p className='mx-8 text-white'> There are currently no tasks for this project...</p>)}
                               
