@@ -431,7 +431,7 @@ const renderCompleteTasks = (taskList) => {
               <span>{task.name}</span>
               {(task.dateReturned || task.dateCreated) && (
                 <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
-                  {task.dateReturned ? "Date Marked as Incomplete:" : "Date Completed:"}{" "}
+                  {task.dateReturned ? "Date Marked as Incomplete:" : "Date Created:"}{" "}
                   {(task.dateReturned ?? task.dateCreated).toDate().toLocaleString("en-US", {
                     year: "numeric",
                     month: "short",
