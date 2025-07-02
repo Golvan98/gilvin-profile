@@ -342,7 +342,6 @@ const closeEditProjectModal = () =>{
     setShowDeleteProjectModal(true);
   }
  
-
 // #endregion
 
 // #region Read Task Handler
@@ -364,13 +363,19 @@ const closeEditProjectModal = () =>{
       return () => unsubscribe();
     }, [projectClicked]);
 
-    const renderCompleteTasks = (taskList) => {
+const renderCompleteTasks = (taskList) => {
   return taskList
-    .filter(task => task.status === "complete")
-    .sort((a, b) => {
-      if (!a.dateCompleted || !b.dateCompleted) return 0;
-      return b.dateCompleted.toDate() - a.dateCompleted.toDate(); // descending
-    })
+     .filter(task => task.status === "complete")
+      .sort((a, b) => {
+    const aDate = a.dateCompleted?.toDate?.();
+    const bDate = b.dateCompleted?.toDate?.();
+
+    if (!aDate && !bDate) return 0;
+    if (!aDate) return 1;
+    if (!bDate) return -1;
+
+    return bDate - aDate; // descending
+  })
     .map(task => (
       <nav className='w-full flex' key={task.id}>
         <aside className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0">
@@ -407,23 +412,23 @@ const closeEditProjectModal = () =>{
   const renderIncompleteTasks = (taskList) => {
   
     return taskList
-    .filter(task => task.status === "incomplete")
-    .sort((a, b) => {
-      const aDate = a.dateReturned ?? a.dateCreated;
-      const bDate = b.dateReturned ?? b.dateCreated;
+     .filter(task => task.status === "incomplete")
+      .sort((a, b) => {
+    const aDate = a.dateCompleted?.toDate?.();
+    const bDate = b.dateCompleted?.toDate?.();
 
-      // Fallback if either date is missing
-      if (!aDate || !bDate) return 0;
+    if (!aDate && !bDate) return 0;
+    if (!aDate) return 1;
+    if (!bDate) return -1;
 
-      return bDate.toDate() - aDate.toDate(); // descending order
-    })
+    return bDate - aDate; // descending
+  })
     .map(task => (
       <nav className='w-full flex' key={task.id}>
         <aside className="w-full h-auto bg-white text-black flex items-center justify-center flex-col border hover:bg-indigo-100 lg:px-4 lg:py-3 md:px-0 md:py-0 xs:p-0">  
           <div className='w-full flex'>
             <p className='flex flex-col lg:w-5/6 md:w-4/6 xs:w-4/6 items-start justify-center sm:text-xs mx-2'>
               <span>{task.name}</span>
-
               {(task.dateReturned || task.dateCreated) && (
                 <span className='lg:w-5/6 md:w-4/6 xs:w-4/6 items-center justify-start sm:text-xs text-gray-600'>
                   {task.dateReturned ? "Date Marked as Incomplete:" : "Date Completed:"}{" "}
@@ -437,7 +442,6 @@ const closeEditProjectModal = () =>{
                 </span>
               )}
             </p>
-
             <span className='lg:w-1/6 md:w-2/6 xs:w-2/6 flex items-center justify-center'> 
               <PencilIcon onClick={() => handleEditTaskClick(task)} className="w-1/3 text-orange-300 cursor-pointer" />
               <CheckIcon onClick={() => handleCompleteTask(task)} className='w-1/3 text-green-500 hover:cursor-pointer'/>
